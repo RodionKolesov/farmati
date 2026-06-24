@@ -1,0 +1,114 @@
+// Prisma-схема Farmati. Для разработки — SQLite (ноль внешних сервисов).
+// Для прода: смените provider на "postgresql" и DATABASE_URL на строку Neon.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String             @id @default(cuid())
+  email        String             @unique
+  passwordHash String
+  name         String             @default("")
+  phone        String             @default("")
+  bonusBalance Int                @default(0)
+  createdAt    DateTime           @default(now())
+  orders       Order[]
+  bonusTxs     BonusTransaction[]
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  name        String
+  category    String
+  price       Int
+  image       String
+  description String      @default("")
+  badge       String?
+  items       OrderItem[]
+}
+
+model Course {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  title       String
+  price       Int
+  oldPrice    Int?
+  lessonsCount Int        @default(0)
+  duration    String      @default("")
+  image       String
+  summary     String      @default("")
+  badge       String?
+  items       OrderItem[]
+  lessonItems Lesson[]
+}
+
+model Lesson {
+  id       String  @id @default(cuid())
+  courseId String
+  course   Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title    String
+  videoUrl String  @default("") // ссылка для встраивания (YouTube/VK embed)
+  free     Boolean @default(false)
+  order    Int     @default(0)
+}
+
+model Order {
+  id             String             @id @default(cuid())
+  userId         String
+  user           User               @relation(fields: [userId], references: [id])
+  status         String             @default("pending") // pending | paid
+  amount         Int                // итог к оплате (товары - бонусы + доставка)
+  subtotal       Int                // сумма позиций до бонусов
+  bonusEarned    Int                @default(0)
+  bonusSpent     Int                @default(0)
+  deliveryMethod String             @default("courier") // courier | pickup
+  deliveryCost   Int                @default(0)
+  customerName   String             @default("")
+  customerPhone  String             @default("")
+  address        String             @default("")
+  comment        String             @default("")
+  paymentId      String?            @unique
+  createdAt      DateTime           @default(now())
+  items          OrderItem[]
+  bonusTxs       BonusTransaction[]
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
+  courseId  String?
+  course    Course?  @relation(fields: [courseId], references: [id])
+  title     String
+  price     Int
+  qty       Int      @default(1)
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  message   String   @default("")
+  createdAt DateTime @default(now())
+}
+
+model BonusTransaction {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  orderId   String?
+  order     Order?   @relation(fields: [orderId], references: [id])
+  delta     Int
+  type      String   // earn | spend
+  note      String   @default("")
+  createdAt DateTime @default(now())
+}

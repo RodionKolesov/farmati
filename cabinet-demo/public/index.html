@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Farmati — личный кабинет</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <a class="logo" href="/">Farmati<span>.cosmetics</span></a>
+  <button id="logout" class="link" style="display:none">Выйти</button>
+</header>
+
+<main class="wrap">
+  <!-- Экран авторизации -->
+  <section id="auth" class="card auth">
+    <div class="tabs2">
+      <button class="t2 is-active" data-mode="signin">Вход</button>
+      <button class="t2" data-mode="signup">Регистрация</button>
+    </div>
+    <form id="authForm">
+      <div id="nameRow" style="display:none">
+        <label>Имя</label>
+        <input id="name" placeholder="Анна" />
+        <label>Телефон</label>
+        <input id="phone" placeholder="+7 999 000-00-00" />
+      </div>
+      <label>Email</label>
+      <input id="email" type="email" required placeholder="you@mail.ru" />
+      <label>Пароль</label>
+      <input id="password" type="password" required minlength="6" placeholder="••••••" />
+      <button class="btn" id="submitBtn">Войти</button>
+    </form>
+    <p id="authMsg" class="msg"></p>
+  </section>
+
+  <!-- Кабинет -->
+  <section id="dash" style="display:none">
+    <div class="card balance">
+      <p class="muted" id="hello">Привет 👋</p>
+      <p class="bal"><span id="balance">0</span> бонусов</p>
+      <div class="row2">
+        <form id="orderForm" class="mini">
+          <input id="orderAmount" type="number" min="1" placeholder="Сумма заказа, ₽" />
+          <button class="btn btn--ghost">Сымитировать заказ</button>
+        </form>
+        <form id="redeemForm" class="mini">
+          <input id="redeemAmount" type="number" min="1" placeholder="Списать бонусов" />
+          <button class="btn">В промокод</button>
+        </form>
+      </div>
+      <p class="hint">«Сымитировать заказ» = как будто пришёл заказ с сайта → начисляются бонусы (5%). 1 бонус = 1 ₽.</p>
+      <p id="dashMsg" class="msg"></p>
+    </div>
+
+    <div class="card">
+      <h2>Мои промокоды</h2>
+      <ul id="promos" class="list"></ul>
+    </div>
+    <div class="card">
+      <h2>История бонусов</h2>
+      <ul id="txs" class="list"></ul>
+    </div>
+    <div class="card">
+      <h2>Заказы</h2>
+      <ul id="orders" class="list"></ul>
+    </div>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

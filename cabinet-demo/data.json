@@ -1,0 +1,58 @@
+{
+  "users": [
+    {
+      "id": "5e3744c17f9483f4",
+      "email": "test@farmati.ru",
+      "name": "����",
+      "phone": "",
+      "pass": "86f3d39e6d6f1150e488a3720277a070:337c7ce404013c37f59efb7d6815e799de209909b3c04e6cdcbb10520e732154257beaf2b5d8c8051b4843199ea1daca23ca57304158f04adb2270e6457547cd",
+      "balance": 150,
+      "created_at": "2026-06-22T06:52:29.963Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "3b718dc5473a46e7",
+      "user_id": "5e3744c17f9483f4",
+      "amount": 2000,
+      "bonus_earned": 100,
+      "created_at": "2026-06-22T06:52:30.439Z"
+    }
+  ],
+  "txs": [
+    {
+      "id": "69a807ec34b8821d",
+      "user_id": "5e3744c17f9483f4",
+      "delta": 100,
+      "type": "earn",
+      "note": "Приветственные бонусы",
+      "created_at": "2026-06-22T06:52:29.963Z"
+    },
+    {
+      "id": "4f5ad9c052d95464",
+      "user_id": "5e3744c17f9483f4",
+      "delta": 100,
+      "type": "earn",
+      "note": "Начисление за заказ 2000 ₽",
+      "created_at": "2026-06-22T06:52:30.439Z"
+    },
+    {
+      "id": "7e80ee4ade97fd5a",
+      "user_id": "5e3744c17f9483f4",
+      "delta": -50,
+      "type": "spend",
+      "note": "Списание в промокод FARM-444DFC60",
+      "created_at": "2026-06-22T06:52:30.486Z"
+    }
+  ],
+  "promos": [
+    {
+      "id": "b1497da941b15ff4",
+      "user_id": "5e3744c17f9483f4",
+      "code": "FARM-444DFC60",
+      "amount": 50,
+      "used": false,
+      "created_at": "2026-06-22T06:52:30.486Z"
+    }
+  ]
+}

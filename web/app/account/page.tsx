@@ -1,0 +1,90 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
+import { logout } from "@/lib/actions/auth";
+import { money } from "@/lib/money";
+import PasswordForm from "@/components/PasswordForm";
+
+export const metadata = { title: "Личный кабинет — Farmati.cosmetics" };
+
+function fmt(d: Date) {
+  return new Date(d).toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit", year: "2-digit" });
+}
+
+export default async function AccountPage() {
+  const session = await auth();
+  if (!session?.user?.id) redirect("/login");
+  const userId = session.user.id;
+
+  const [user, orders, txs] = await Promise.all([
+    prisma.user.findUnique({ where: { id: userId } }),
+    prisma.order.findMany({ where: { userId }, orderBy: { createdAt: "desc" }, take: 20, include: { items: true } }),
+    prisma.bonusTransaction.findMany({ where: { userId }, orderBy: { createdAt: "desc" }, take: 20 }),
+  ]);
+
+  return (
+    <main className="page">
+      <div className="container">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+          <h1 style={{ margin: 0 }}>Личный кабинет</h1>
+          <form action={logout}>
+            <button className="btn btn--ghost btn--sm">Выйти</button>
+          </form>
+        </div>
+
+        <div className="card">
+          <p className="muted">Привет, {user?.name || user?.email} 👋</p>
+          <p className="balance-value"><span>{user?.bonusBalance ?? 0}</span> бонусов</p>
+          <p className="muted" style={{ fontSize: ".85rem" }}>1 бонус = 1 ₽. Списываются прямо в корзине при оформлении заказа.</p>
+          <div className="inline-actions" style={{ marginTop: 12 }}>
+            <Link className="btn btn--primary btn--sm" href="/catalog">За покупками</Link>
+            {user?.email?.toLowerCase() === (process.env.ADMIN_EMAIL || "").toLowerCase() && (
+              <Link className="btn btn--ghost btn--sm" href="/admin">⚙️ Управление сайтом</Link>
+            )}
+          </div>
+        </div>
+
+        <div className="card">
+          <h2 style={{ marginBottom: 8 }}>История бонусов</h2>
+          {txs.length === 0 ? (
+            <p className="empty-note">Движений пока нет.</p>
+          ) : (
+            <ul className="list">
+              {txs.map((t) => (
+                <li key={t.id} className="row" style={{ gridTemplateColumns: "auto 1fr auto" }}>
+                  <span className="muted">{fmt(t.createdAt)}</span>
+                  <span>{t.note}</span>
+                  <span className={t.delta >= 0 ? "plus" : "minus"}>{t.delta >= 0 ? "+" : ""}{t.delta}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className="card">
+          <h2 style={{ marginBottom: 8 }}>Заказы</h2>
+          {orders.length === 0 ? (
+            <p className="empty-note">Заказов пока нет.</p>
+          ) : (
+            <ul className="list">
+              {orders.map((o) => (
+                <li key={o.id} className="row" style={{ gridTemplateColumns: "auto 1fr auto auto" }}>
+                  <span className="muted">{fmt(o.createdAt)}</span>
+                  <span>{o.items.map((i) => i.title).join(", ")}</span>
+                  <span className={o.status === "paid" ? "tag" : "muted"}>{o.status === "paid" ? "оплачен" : "ожидает"}</span>
+                  <span style={{ fontWeight: 700 }}>{money(o.amount)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className="card">
+          <h2 style={{ marginBottom: 8 }}>Смена пароля</h2>
+          <PasswordForm />
+        </div>
+      </div>
+    </main>
+  );
+}

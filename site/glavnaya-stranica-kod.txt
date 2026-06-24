@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BELLÉ — натуральная косметика и курсы по уходу за лицом</title>
+<meta name="description" content="Натуральная косметика без парабенов и сульфатов, авторские курсы по массажу лица, бонусная программа с кэшбэком до 15%." />
+<style>
+/* ============================ BELLÉ — template ============================ */
+:root {
+  --bg: #faf7f5;
+  --bg-soft: #f3ece6;
+  --card: #ffffff;
+  --ink: #2b2622;
+  --muted: #8c8178;
+  --accent: #c08552;
+  --accent-d: #a86f3f;
+  --line: #ece5df;
+  --dark: #2b2420;
+  --radius: 18px;
+  --shadow: 0 14px 40px rgba(43, 38, 34, 0.08);
+  --maxw: 1180px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+.container { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); }
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent-d);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.eyebrow--light { color: #e9d4bf; }
+.muted { color: var(--muted); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 13px 26px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn--primary { background: var(--accent); color: #fff; }
+.btn--primary:hover { background: var(--accent-d); }
+.btn--ghost { background: transparent; border-color: var(--ink); color: var(--ink); }
+.btn--light { background: #fff; color: var(--ink); }
+.btn--sm { padding: 9px 18px; font-size: 0.85rem; }
+
+.announce {
+  background: var(--dark);
+  color: #f4e9df;
+  text-align: center;
+  font-size: 0.83rem;
+  padding: 9px 16px;
+  letter-spacing: 0.01em;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(250, 247, 245, 0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.header__inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+.logo { font-weight: 800; font-size: 1.35rem; letter-spacing: 0.02em; }
+.logo span { font-size: 0.62rem; display: block; letter-spacing: 0.32em; color: var(--muted); text-transform: uppercase; font-weight: 600; }
+.logo--light { color: #fff; }
+.logo--light span { color: #b8a89c; }
+.nav { display: flex; gap: 28px; }
+.nav a { font-size: 0.95rem; font-weight: 500; color: var(--ink); transition: color 0.15s; }
+.nav a:hover { color: var(--accent); }
+.header__actions { display: flex; align-items: center; gap: 14px; }
+.icon-btn { position: relative; font-size: 1.2rem; }
+.badge {
+  position: absolute; top: -8px; right: -10px;
+  background: var(--accent); color: #fff; font-size: 0.65rem; font-weight: 700;
+  width: 17px; height: 17px; border-radius: 50%; display: grid; place-items: center;
+}
+.burger { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+
+.hero { padding: 56px 0 40px; }
+.hero__inner { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; align-items: center; }
+.hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); margin-bottom: 18px; }
+.hero p { font-size: 1.08rem; color: var(--muted); max-width: 480px; margin-bottom: 26px; }
+.hero__cta { display: flex; gap: 14px; flex-wrap: wrap; }
+.hero__stats { display: flex; gap: 34px; margin-top: 38px; }
+.hero__stats strong { display: block; font-size: 1.6rem; color: var(--accent-d); }
+.hero__stats span { font-size: 0.82rem; color: var(--muted); }
+.hero__media img { border-radius: 28px; box-shadow: var(--shadow); aspect-ratio: 4/4.4; object-fit: cover; width: 100%; }
+
+.section { padding: 64px 0; }
+.section__head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 30px; flex-wrap: wrap; }
+.section__link { color: var(--accent-d); font-weight: 600; font-size: 0.92rem; }
+.section__sub { color: var(--muted); margin: -16px 0 28px; max-width: 620px; }
+
+.cats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.cat {
+  position: relative; border-radius: var(--radius); overflow: hidden;
+  aspect-ratio: 3/4; display: flex; align-items: flex-end; padding: 16px;
+  background-image: linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0.05)), var(--img);
+  background-size: cover; background-position: center;
+  color: #fff; font-weight: 600; transition: transform 0.2s;
+}
+.cat:hover { transform: translateY(-4px); }
+.cat--accent { outline: 3px solid var(--accent); }
+
+.usp { background: var(--bg-soft); padding: 30px 0; }
+.usp__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.usp__item { text-align: center; }
+.usp__ico { font-size: 1.7rem; }
+.usp__item b { display: block; margin: 6px 0 3px; }
+.usp__item p { font-size: 0.85rem; color: var(--muted); }
+
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.tab { border: 1px solid var(--line); background: #fff; padding: 8px 16px; border-radius: 999px; font: inherit; font-size: 0.88rem; cursor: pointer; transition: all 0.15s; }
+.tab.is-active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.products { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.product { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.18s, box-shadow 0.18s; }
+.product:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.product__media { aspect-ratio: 1/1; background-size: cover; background-position: center; position: relative; }
+.product__badge { position: absolute; top: 10px; left: 10px; background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+.product__body { padding: 14px; display: flex; flex-direction: column; gap: 5px; flex: 1; }
+.product__cat { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.product__name { font-weight: 600; font-size: 0.96rem; }
+.product__bonus { font-size: 0.78rem; color: var(--accent-d); }
+.product__foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; padding-top: 10px; }
+.product__price { font-weight: 700; font-size: 1.05rem; }
+.product__btn { border: none; background: var(--bg-soft); color: var(--ink); width: 38px; height: 38px; border-radius: 50%; font-size: 1.1rem; cursor: pointer; transition: background 0.15s; }
+.product__btn:hover { background: var(--accent); color: #fff; }
+
+.courses { background: var(--bg-soft); }
+.course-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.course { background: var(--card); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; }
+.course__media { aspect-ratio: 16/10; background-size: cover; background-position: center; position: relative; }
+.course__tag { position: absolute; top: 12px; left: 12px; background: var(--accent); color: #fff; font-size: 0.72rem; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
+.course__tag--new { background: #2e8b57; }
+.course__body { padding: 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.course__body h3 { font-size: 1.12rem; }
+.course__body > p { color: var(--muted); font-size: 0.92rem; }
+.course__meta { list-style: none; display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.82rem; color: var(--muted); }
+.course__foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; padding-top: 8px; }
+.price b { font-size: 1.2rem; }
+.price s { color: var(--muted); font-size: 0.85rem; margin-left: 6px; }
+
+.about { padding: 70px 0; }
+.about__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.about__media img { border-radius: 24px; box-shadow: var(--shadow); aspect-ratio: 4/3.4; object-fit: cover; }
+.about__text p { color: var(--muted); margin-bottom: 14px; }
+.ticks { list-style: none; margin-top: 18px; display: grid; gap: 10px; }
+.ticks li { padding-left: 28px; position: relative; }
+.ticks li::before { content: "✓"; position: absolute; left: 0; color: #fff; background: var(--accent); width: 19px; height: 19px; border-radius: 50%; font-size: 0.72rem; display: grid; place-items: center; top: 3px; }
+
+.bonus { background: var(--dark); color: #f3e9df; padding: 64px 0; }
+.bonus__inner { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
+.bonus__text p { color: #c9b9aa; margin: 12px 0 24px; max-width: 420px; }
+.bonus__cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.tier { background: #38302a; border-radius: 16px; padding: 20px 14px; text-align: center; }
+.tier b { display: block; font-size: 1.05rem; }
+.tier span { display: block; color: var(--accent); font-weight: 700; margin: 6px 0 2px; }
+.tier small { color: #a8978a; }
+.tier--mid { background: #423831; }
+.tier--top { background: var(--accent); color: #fff; }
+.tier--top span, .tier--top small { color: #fff; }
+
+.reviews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.review { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+.stars { color: #e0a458; letter-spacing: 2px; margin-bottom: 10px; }
+.review blockquote { font-size: 0.98rem; margin-bottom: 14px; }
+.review figcaption { color: var(--muted); font-size: 0.88rem; }
+
+.faq__inner { max-width: 760px; margin: 0 auto; }
+.faq h2 { text-align: center; margin-bottom: 26px; }
+.faq details { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 20px; margin-bottom: 12px; }
+.faq summary { cursor: pointer; font-weight: 600; list-style: none; }
+.faq summary::after { content: "+"; float: right; color: var(--accent); font-size: 1.3rem; line-height: 1; }
+.faq details[open] summary::after { content: "−"; }
+.faq details p { color: var(--muted); margin-top: 10px; }
+
+.cta { padding: 56px 0; }
+.cta__inner { background: linear-gradient(120deg, var(--accent), var(--accent-d)); color: #fff; border-radius: 26px; padding: 40px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.cta__inner p { opacity: 0.9; margin-top: 6px; }
+.cta__form { display: flex; gap: 10px; }
+.cta__form input { border: none; border-radius: 999px; padding: 13px 18px; min-width: 240px; font: inherit; }
+
+.footer { background: var(--dark); color: #c9bcaf; padding: 56px 0 28px; }
+.footer__grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 30px; }
+.footer h4 { color: #fff; margin-bottom: 14px; font-size: 0.95rem; }
+.footer a { display: block; color: #b3a496; font-size: 0.9rem; margin-bottom: 8px; transition: color 0.15s; }
+.footer a:hover { color: var(--accent); }
+.footer .muted { margin-top: 10px; max-width: 240px; }
+.socials { display: flex; gap: 10px; margin-top: 6px; }
+.socials a { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid #4a3f37; border-radius: 50%; font-size: 0.75rem; font-weight: 700; margin: 0; }
+.footer__bottom { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 34px; padding-top: 20px; border-top: 1px solid #3a322c; font-size: 0.82rem; color: #8a7d70; }
+
+@media (max-width: 980px) {
+  .hero__inner, .about__inner, .bonus__inner { grid-template-columns: 1fr; }
+  .hero__media { order: -1; }
+  .cats { grid-template-columns: repeat(3, 1fr); }
+  .usp__grid { grid-template-columns: repeat(2, 1fr); }
+  .products { grid-template-columns: repeat(2, 1fr); }
+  .course-grid, .reviews, .bonus__cards { grid-template-columns: 1fr; }
+  .footer__grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 680px) {
+  .nav { display: none; position: absolute; top: 68px; left: 0; right: 0; flex-direction: column; background: var(--card); padding: 16px 20px; border-bottom: 1px solid var(--line); }
+  .nav.is-open { display: flex; }
+  .burger { display: block; }
+  .cats { grid-template-columns: repeat(2, 1fr); }
+  .cta__form { width: 100%; }
+  .cta__form input { min-width: 0; flex: 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- Верхняя строка-анонс -->
+<div class="announce">
+  Бесплатная доставка от 3 000 ₽ · Кэшбэк бонусами до 15% · Курсы по массажу лица со скидкой 20%
+</div>
+
+<!-- Шапка -->
+<header class="header" id="top">
+  <div class="container header__inner">
+    <a href="#top" class="logo">BELLÉ<span>cosmetics</span></a>
+    <nav class="nav" id="nav">
+      <a href="#catalog">Каталог</a>
+      <a href="#courses">Курсы</a>
+      <a href="#about">О бренде</a>
+      <a href="#bonus">Бонусы</a>
+      <a href="#faq">Вопросы</a>
+    </nav>
+    <div class="header__actions">
+      <a class="icon-btn" href="https://lk.belle.ru" title="Личный кабинет">👤</a>
+      <a class="icon-btn" href="#cart" title="Корзина">🛍️<span class="badge">2</span></a>
+      <button class="burger" id="burger" aria-label="Меню">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container hero__inner">
+    <div class="hero__text">
+      <span class="eyebrow">Натуральная косметика · Сделано в России</span>
+      <h1>Красота, которой<br />можно доверять</h1>
+      <p>Уходовые средства без парабенов, сульфатов и фталатов. Авторские курсы по массажу лица и самоуходу. Накапливайте бонусы с каждой покупки.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#catalog">В каталог</a>
+        <a class="btn btn--ghost" href="#courses">Курсы по лицу</a>
+      </div>
+      <div class="hero__stats">
+        <div><strong>120k+</strong><span>довольных клиентов</span></div>
+        <div><strong>4.9</strong><span>средняя оценка</span></div>
+        <div><strong>15%</strong><span>кэшбэк бонусами</span></div>
+      </div>
+    </div>
+    <div class="hero__media">
+      <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=900&q=80" alt="Косметика BELLÉ" />
+    </div>
+  </div>
+</section>
+
+<!-- Категории -->
+<section class="section" id="categories">
+  <div class="container">
+    <div class="section__head">
+      <h2>Категории</h2>
+      <a class="section__link" href="#catalog">Весь каталог →</a>
+    </div>
+    <div class="cats">
+      <a class="cat" href="#catalog" style="--img:url('https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500')"><span>Уход за лицом</span></a>
+      <a class="cat" href="#catalog" style="--img:url('https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=500')"><span>Уход за телом</span></a>
+      <a class="cat" href="#catalog" style="--img:url('https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500')"><span>Макияж</span></a>
+      <a class="cat" href="#catalog" style="--img:url('https://images.unsplash.com/photo-1541643600914-78b084683601?w=500')"><span>Ароматы</span></a>
+      <a class="cat cat--accent" href="#courses" style="--img:url('https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=500')"><span>Курсы по лицу</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- Преимущества -->
+<section class="usp">
+  <div class="container usp__grid">
+    <div class="usp__item"><span class="usp__ico">🌿</span><b>Чистый состав</b><p>Без парабенов, сульфатов и фталатов</p></div>
+    <div class="usp__item"><span class="usp__ico">🇷🇺</span><b>Сделано в России</b><p>Собственное производство и контроль качества</p></div>
+    <div class="usp__item"><span class="usp__ico">🎁</span><b>Бонусы до 15%</b><p>Кэшбэк баллами за каждый заказ</p></div>
+    <div class="usp__item"><span class="usp__ico">🚚</span><b>Быстрая доставка</b><p>По всей России, от 1 дня</p></div>
+  </div>
+</section>
+
+<!-- Каталог / хиты -->
+<section class="section" id="catalog">
+  <div class="container">
+    <div class="section__head">
+      <h2>Хиты продаж</h2>
+      <div class="tabs" id="tabs">
+        <button class="tab is-active" data-cat="Все">Все</button>
+        <button class="tab" data-cat="Уход">Уход</button>
+        <button class="tab" data-cat="Макияж">Макияж</button>
+        <button class="tab" data-cat="Ароматы">Ароматы</button>
+      </div>
+    </div>
+    <div class="products" id="products"></div>
+  </div>
+</section>
+
+<!-- Курсы по массажу лица -->
+<section class="section courses" id="courses">
+  <div class="container">
+    <div class="section__head">
+      <h2>Курсы по уходу и массажу лица</h2>
+      <a class="section__link" href="#">Все курсы →</a>
+    </div>
+    <p class="section__sub">Авторские программы от практикующих косметологов. Онлайн-доступ навсегда, сертификат по завершении.</p>
+    <div class="course-grid">
+      <article class="course">
+        <div class="course__media" style="background-image:url('https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=700')"><span class="course__tag">Хит</span></div>
+        <div class="course__body">
+          <h3>Скульптурный массаж лица дома</h3>
+          <p>10 уроков · 3 часа видео · техники лифтинга и снятия отёков своими руками.</p>
+          <ul class="course__meta"><li>📹 10 уроков</li><li>⏱ 3 часа</li><li>🎓 Сертификат</li></ul>
+          <div class="course__foot"><div class="price"><b>4 900 ₽</b><s>6 900 ₽</s></div><a class="btn btn--primary btn--sm" href="#">Записаться</a></div>
+        </div>
+      </article>
+      <article class="course">
+        <div class="course__media" style="background-image:url('https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=700')"><span class="course__tag course__tag--new">Новинка</span></div>
+        <div class="course__body">
+          <h3>Буккальный массаж: лицо изнутри</h3>
+          <p>Продвинутая техника работы со скуловой и щёчной зоной. Для глубокого лифтинга.</p>
+          <ul class="course__meta"><li>📹 8 уроков</li><li>⏱ 2.5 часа</li><li>🎓 Сертификат</li></ul>
+          <div class="course__foot"><div class="price"><b>5 900 ₽</b><s>7 500 ₽</s></div><a class="btn btn--primary btn--sm" href="#">Записаться</a></div>
+        </div>
+      </article>
+      <article class="course">
+        <div class="course__media" style="background-image:url('https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=700')"><span class="course__tag">Базовый</span></div>
+        <div class="course__body">
+          <h3>Домашний уход: ритуал на каждый день</h3>
+          <p>Как подобрать средства под свой тип кожи и выстроить рутину утром и вечером.</p>
+          <ul class="course__meta"><li>📹 6 уроков</li><li>⏱ 1.5 часа</li><li>🎓 Сертификат</li></ul>
+          <div class="course__foot"><div class="price"><b>2 900 ₽</b><s>3 900 ₽</s></div><a class="btn btn--primary btn--sm" href="#">Записаться</a></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- О бренде -->
+<section class="about" id="about">
+  <div class="container about__inner">
+    <div class="about__media"><img src="https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=800&q=80" alt="О бренде BELLÉ" /></div>
+    <div class="about__text">
+      <span class="eyebrow">Наша история</span>
+      <h2>Косметика, рождённая заботой о коже</h2>
+      <p>BELLÉ — это бренд натуральной косметики и образовательная платформа. Мы создаём средства на основе растительных компонентов и учим бережному уходу за собой.</p>
+      <p>Каждый продукт проходит дерматологический контроль. Мы не тестируем на животных и используем перерабатываемую упаковку.</p>
+      <ul class="ticks">
+        <li>Растительные активные компоненты</li>
+        <li>Дерматологически протестировано</li>
+        <li>Cruelty-free и экологичная упаковка</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Бонусная программа -->
+<section class="bonus" id="bonus">
+  <div class="container bonus__inner">
+    <div class="bonus__text">
+      <span class="eyebrow eyebrow--light">Программа лояльности</span>
+      <h2>Возвращаем до 15% бонусами</h2>
+      <p>Регистрируйтесь в личном кабинете, копите баллы с каждой покупки и курса, обменивайте их на скидку. 1 бонус = 1 ₽.</p>
+      <a class="btn btn--light" href="https://lk.belle.ru">Войти в кабинет</a>
+    </div>
+    <div class="bonus__cards">
+      <div class="tier"><b>Silver</b><span>5% бонусами</span><small>от 0 ₽</small></div>
+      <div class="tier tier--mid"><b>Gold</b><span>10% бонусами</span><small>от 15 000 ₽</small></div>
+      <div class="tier tier--top"><b>Platinum</b><span>15% бонусами</span><small>от 50 000 ₽</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- Отзывы -->
+<section class="section" id="reviews">
+  <div class="container">
+    <div class="section__head"><h2>Отзывы клиентов</h2></div>
+    <div class="reviews">
+      <figure class="review"><div class="stars">★★★★★</div><blockquote>«Сыворотка с витамином C — лучшее, что у меня было. Кожа сияет уже через неделю».</blockquote><figcaption>— Анна, Москва</figcaption></figure>
+      <figure class="review"><div class="stars">★★★★★</div><blockquote>«Прошла курс по массажу лица — овал реально подтянулся. Объясняют очень понятно».</blockquote><figcaption>— Мария, Казань</figcaption></figure>
+      <figure class="review"><div class="stars">★★★★★</div><blockquote>«Заказываю не первый раз, бонусы реально копятся и ими удобно платить. Спасибо!»</blockquote><figcaption>— Екатерина, СПб</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section faq" id="faq">
+  <div class="container faq__inner">
+    <h2>Частые вопросы</h2>
+    <details><summary>Как работает бонусная программа?</summary><p>За каждый заказ и курс начисляются баллы (до 15% от суммы). 1 балл = 1 ₽, оплатить ими можно до 100% следующего заказа через промокод в кабинете.</p></details>
+    <details><summary>Подходит ли косметика для чувствительной кожи?</summary><p>Да, составы гипоаллергенны и протестированы дерматологами. Состав каждого средства указан на странице товара.</p></details>
+    <details><summary>Как проходят курсы по массажу лица?</summary><p>Это видеоуроки с пожизненным доступом в личном кабинете. Можно смотреть с любого устройства в удобном темпе.</p></details>
+    <details><summary>Сколько идёт доставка?</summary><p>По России — от 1 до 5 дней. Бесплатно при заказе от 3 000 ₽.</p></details>
+  </div>
+</section>
+
+<!-- Подписка -->
+<section class="cta">
+  <div class="container cta__inner">
+    <div>
+      <h2>−10% на первый заказ</h2>
+      <p>Подпишитесь на рассылку — пришлём промокод и гайд по уходу за лицом.</p>
+    </div>
+    <form class="cta__form" onsubmit="return false">
+      <input type="email" placeholder="Ваш email" required />
+      <button class="btn btn--primary">Получить</button>
+    </form>
+  </div>
+</section>
+
+<!-- Подвал -->
+<footer class="footer">
+  <div class="container footer__grid">
+    <div>
+      <a href="#top" class="logo logo--light">BELLÉ<span>cosmetics</span></a>
+      <p class="muted">Натуральная косметика и курсы по уходу за собой.</p>
+    </div>
+    <div>
+      <h4>Каталог</h4>
+      <a href="#catalog">Уход за лицом</a><a href="#catalog">Макияж</a><a href="#catalog">Ароматы</a><a href="#courses">Курсы</a>
+    </div>
+    <div>
+      <h4>Компания</h4>
+      <a href="#about">О бренде</a><a href="#bonus">Бонусы</a><a href="#faq">Доставка и оплата</a><a href="#">Контакты</a>
+    </div>
+    <div>
+      <h4>Контакты</h4>
+      <a href="tel:+78000000000">8 800 000-00-00</a><a href="mailto:hello@belle.ru">hello@belle.ru</a>
+      <div class="socials"><a href="#">TG</a><a href="#">VK</a><a href="#">IG</a></div>
+    </div>
+  </div>
+  <div class="container footer__bottom">
+    <span>© 2026 BELLÉ. Все права защищены.</span>
+    <span>Политика конфиденциальности · Оферта</span>
+  </div>
+</footer>
+
+<script>
+// Товары витрины. Замените на свои или подгрузите из API/Supabase через fetch().
+var PRODUCTS = [
+  { name: "Сыворотка с витамином C", cat: "Уход",    price: 1890, img: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600", badge: "Хит" },
+  { name: "Увлажняющий крем",        cat: "Уход",    price: 1490, img: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=600" },
+  { name: "Тоник с гиалуроном",      cat: "Уход",    price: 1190, img: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=600" },
+  { name: "Матовая помада",          cat: "Макияж",  price: 990,  img: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=600", badge: "New" },
+  { name: "Тушь для ресниц",         cat: "Макияж",  price: 1190, img: "https://images.unsplash.com/photo-1631214540553-ff044a3ff1d4?w=600" },
+  { name: "Палетка теней",           cat: "Макияж",  price: 2290, img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=600" },
+  { name: "Парфюмерная вода Rose",   cat: "Ароматы", price: 3490, img: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=600", badge: "Хит" },
+  { name: "Аромадиффузор",           cat: "Ароматы", price: 1990, img: "https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6?w=600" }
+];
+var BONUS_RATE = 0.1;
+var productsEl = document.getElementById("products");
+var tabsEl = document.getElementById("tabs");
+
+function money(n) { return n.toLocaleString("ru-RU") + " ₽"; }
+
+function renderProducts(cat) {
+  cat = cat || "Все";
+  var items = PRODUCTS.filter(function (p) { return cat === "Все" || p.cat === cat; });
+  productsEl.innerHTML = items.map(function (p) {
+    return '<article class="product">' +
+      '<div class="product__media" style="background-image:url(\'' + p.img + '\')">' +
+      (p.badge ? '<span class="product__badge">' + p.badge + '</span>' : '') + '</div>' +
+      '<div class="product__body">' +
+      '<span class="product__cat">' + p.cat + '</span>' +
+      '<span class="product__name">' + p.name + '</span>' +
+      '<span class="product__bonus">+' + Math.round(p.price * BONUS_RATE) + ' бонусов</span>' +
+      '<div class="product__foot"><span class="product__price">' + money(p.price) + '</span>' +
+      '<button class="product__btn" title="В корзину" aria-label="В корзину">+</button></div>' +
+      '</div></article>';
+  }).join("");
+}
+
+tabsEl && tabsEl.addEventListener("click", function (e) {
+  var btn = e.target.closest(".tab");
+  if (!btn) return;
+  tabsEl.querySelectorAll(".tab").forEach(function (t) { t.classList.remove("is-active"); });
+  btn.classList.add("is-active");
+  renderProducts(btn.dataset.cat);
+});
+
+var burger = document.getElementById("burger");
+var nav = document.getElementById("nav");
+burger && burger.addEventListener("click", function () { nav.classList.toggle("is-open"); });
+nav && nav.addEventListener("click", function (e) { if (e.target.tagName === "A") nav.classList.remove("is-open"); });
+
+renderProducts();
+</script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Farmati.cosmetics — сыворотки, кремы и курсы по уходу за лицом</title>
+<meta name="description" content="Farmati.cosmetics — сыворотки, кремы и уходовая косметика без парабенов и сульфатов, авторские курсы по массажу лица, бонусная программа с кэшбэком до 15%." />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ───────────────────────── Верхняя строка-анонс ───────────────────────── -->
+<div class="announce">
+  Бесплатная доставка от 3 000 ₽ · Кэшбэк бонусами до 15% · Курсы по массажу лица со скидкой 20%
+</div>
+
+<!-- ───────────────────────────── Шапка ───────────────────────────── -->
+<header class="header" id="top">
+  <div class="container header__inner">
+    <a href="#top" class="logo">Farmati<span>.cosmetics</span></a>
+
+    <nav class="nav" id="nav">
+      <a href="#catalog">Каталог</a>
+      <a href="#courses">Курсы</a>
+      <a href="#about">О бренде</a>
+      <a href="#bonus">Бонусы</a>
+      <a href="#faq">Вопросы</a>
+    </nav>
+
+    <div class="header__actions">
+      <a class="icon-btn" href="https://lk.farmati.ru" title="Личный кабинет">👤</a>
+      <a class="icon-btn" href="#cart" title="Корзина">🛍️<span class="badge">2</span></a>
+      <button class="burger" id="burger" aria-label="Меню">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- ───────────────────────────── Hero ───────────────────────────── -->
+<section class="hero">
+  <div class="container hero__inner">
+    <div class="hero__text">
+      <span class="eyebrow">Farmati.cosmetics · Уход за кожей</span>
+      <h1>Сыворотки и кремы<br />для сияющей кожи</h1>
+      <p>Активные сыворотки, увлажняющие кремы и тоники без парабенов, сульфатов и фталатов. Авторские курсы по массажу лица. Накапливайте бонусы с каждой покупки.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#catalog">В каталог</a>
+        <a class="btn btn--ghost" href="#courses">Курсы по лицу</a>
+      </div>
+      <div class="hero__stats">
+        <div><strong>120k+</strong><span>довольных клиентов</span></div>
+        <div><strong>4.9</strong><span>средняя оценка</span></div>
+        <div><strong>15%</strong><span>кэшбэк бонусами</span></div>
+      </div>
+    </div>
+    <div class="hero__media">
+      <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=900&q=80" alt="Косметика Farmati" />
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────── Категории ───────────────────────── -->
+<section class="section" id="categories">
+  <div class="container">
+    <div class="section__head">
+      <h2>Категории</h2>
+      <a class="section__link" href="#catalog">Весь каталог →</a>
+    </div>
+    <div class="cats">
+      <a class="cat" href="#catalog" style="--img:url('https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500')">
+        <span>Сыворотки</span>
+      </a>
+      <a class="cat" href="#catalog" style="--img:url('https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=500')">
+        <span>Кремы</span>
+      </a>
+      <a class="cat" href="#catalog" style="--img:url('https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=500')">
+        <span>Тоники</span>
+      </a>
+      <a class="cat" href="#catalog" style="--img:url('https://images.unsplash.com/photo-1556228841-a3c527ebefe5?w=500')">
+        <span>Маски</span>
+      </a>
+      <a class="cat cat--accent" href="#courses" style="--img:url('https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=500')">
+        <span>Курсы по лицу</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────── Преимущества ───────────────────────── -->
+<section class="usp">
+  <div class="container usp__grid">
+    <div class="usp__item"><span class="usp__ico">🌿</span><b>Чистый состав</b><p>Без парабенов, сульфатов и фталатов</p></div>
+    <div class="usp__item"><span class="usp__ico">🇷🇺</span><b>Сделано в России</b><p>Собственное производство и контроль качества</p></div>
+    <div class="usp__item"><span class="usp__ico">🎁</span><b>Бонусы до 15%</b><p>Кэшбэк баллами за каждый заказ</p></div>
+    <div class="usp__item"><span class="usp__ico">🚚</span><b>Быстрая доставка</b><p>По всей России, от 1 дня</p></div>
+  </div>
+</section>
+
+<!-- ───────────────────────── Каталог / хиты ───────────────────────── -->
+<section class="section" id="catalog">
+  <div class="container">
+    <div class="section__head">
+      <h2>Хиты продаж</h2>
+      <div class="tabs" id="tabs">
+        <button class="tab is-active" data-cat="Все">Все</button>
+        <button class="tab" data-cat="Сыворотки">Сыворотки</button>
+        <button class="tab" data-cat="Кремы">Кремы</button>
+        <button class="tab" data-cat="Тоники">Тоники</button>
+        <button class="tab" data-cat="Маски">Маски</button>
+      </div>
+    </div>
+    <div class="products" id="products"><!-- наполняется скриптом --></div>
+  </div>
+</section>
+
+<!-- ───────────────────────── Курсы по массажу лица ───────────────────────── -->
+<section class="section courses" id="courses">
+  <div class="container">
+    <div class="section__head">
+      <h2>Курсы по уходу и массажу лица</h2>
+      <a class="section__link" href="#">Все курсы →</a>
+    </div>
+    <p class="section__sub">Авторские программы от практикующих косметологов. Онлайн-доступ навсегда, сертификат по завершении.</p>
+
+    <div class="course-grid">
+      <article class="course">
+        <div class="course__media" style="background-image:url('https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=700')">
+          <span class="course__tag">Хит</span>
+        </div>
+        <div class="course__body">
+          <h3>Скульптурный массаж лица дома</h3>
+          <p>10 уроков · 3 часа видео · техники лифтинга и снятия отёков своими руками.</p>
+          <ul class="course__meta">
+            <li>📹 10 уроков</li><li>⏱ 3 часа</li><li>🎓 Сертификат</li>
+          </ul>
+          <div class="course__foot">
+            <div class="price"><b>4 900 ₽</b><s>6 900 ₽</s></div>
+            <a class="btn btn--primary btn--sm" href="#">Записаться</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="course">
+        <div class="course__media" style="background-image:url('https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=700')">
+          <span class="course__tag course__tag--new">Новинка</span>
+        </div>
+        <div class="course__body">
+          <h3>Буккальный массаж: лицо изнутри</h3>
+          <p>Продвинутая техника работы со скуловой и щёчной зоной. Для глубокого лифтинга.</p>
+          <ul class="course__meta">
+            <li>📹 8 уроков</li><li>⏱ 2.5 часа</li><li>🎓 Сертификат</li>
+          </ul>
+          <div class="course__foot">
+            <div class="price"><b>5 900 ₽</b><s>7 500 ₽</s></div>
+            <a class="btn btn--primary btn--sm" href="#">Записаться</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="course">
+        <div class="course__media" style="background-image:url('https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=700')">
+          <span class="course__tag">Базовый</span>
+        </div>
+        <div class="course__body">
+          <h3>Домашний уход: ритуал на каждый день</h3>
+          <p>Как подобрать средства под свой тип кожи и выстроить рутину утром и вечером.</p>
+          <ul class="course__meta">
+            <li>📹 6 уроков</li><li>⏱ 1.5 часа</li><li>🎓 Сертификат</li>
+          </ul>
+          <div class="course__foot">
+            <div class="price"><b>2 900 ₽</b><s>3 900 ₽</s></div>
+            <a class="btn btn--primary btn--sm" href="#">Записаться</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────── О бренде ───────────────────────── -->
+<section class="about" id="about">
+  <div class="container about__inner">
+    <div class="about__media">
+      <img src="https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=800&q=80" alt="О бренде Farmati" />
+    </div>
+    <div class="about__text">
+      <span class="eyebrow">Наша история</span>
+      <h2>Косметика, рождённая заботой о коже</h2>
+      <p>Farmati.cosmetics — это бренд уходовой косметики и образовательная платформа. Мы создаём сыворотки и кремы на основе активных растительных компонентов и учим бережному уходу за собой.</p>
+      <p>Каждый продукт проходит дерматологический контроль. Мы не тестируем на животных и используем перерабатываемую упаковку.</p>
+      <ul class="ticks">
+        <li>Растительные активные компоненты</li>
+        <li>Дерматологически протестировано</li>
+        <li>Cruelty-free и экологичная упаковка</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────── Бонусная программа ───────────────────────── -->
+<section class="bonus" id="bonus">
+  <div class="container bonus__inner">
+    <div class="bonus__text">
+      <span class="eyebrow eyebrow--light">Программа лояльности</span>
+      <h2>Возвращаем до 15% бонусами</h2>
+      <p>Регистрируйтесь в личном кабинете, копите баллы с каждой покупки и курса, обменивайте их на скидку. 1 бонус = 1 ₽.</p>
+      <a class="btn btn--light" href="https://lk.farmati.ru">Войти в кабинет</a>
+    </div>
+    <div class="bonus__cards">
+      <div class="tier"><b>Silver</b><span>5% бонусами</span><small>от 0 ₽</small></div>
+      <div class="tier tier--mid"><b>Gold</b><span>10% бонусами</span><small>от 15 000 ₽</small></div>
+      <div class="tier tier--top"><b>Platinum</b><span>15% бонусами</span><small>от 50 000 ₽</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────── Отзывы ───────────────────────── -->
+<section class="section" id="reviews">
+  <div class="container">
+    <div class="section__head"><h2>Отзывы клиентов</h2></div>
+    <div class="reviews">
+      <figure class="review">
+        <div class="stars">★★★★★</div>
+        <blockquote>«Сыворотка с витамином C — лучшее, что у меня было. Кожа сияет уже через неделю».</blockquote>
+        <figcaption>— Анна, Москва</figcaption>
+      </figure>
+      <figure class="review">
+        <div class="stars">★★★★★</div>
+        <blockquote>«Прошла курс по массажу лица — овал реально подтянулся. Объясняют очень понятно».</blockquote>
+        <figcaption>— Мария, Казань</figcaption>
+      </figure>
+      <figure class="review">
+        <div class="stars">★★★★★</div>
+        <blockquote>«Заказываю не первый раз, бонусы реально копятся и ими удобно платить. Спасибо!»</blockquote>
+        <figcaption>— Екатерина, СПб</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────── FAQ ───────────────────────── -->
+<section class="section faq" id="faq">
+  <div class="container faq__inner">
+    <h2>Частые вопросы</h2>
+    <details><summary>Как работает бонусная программа?</summary><p>За каждый заказ и курс начисляются баллы (до 15% от суммы). 1 балл = 1 ₽, оплатить ими можно до 100% следующего заказа через промокод в кабинете.</p></details>
+    <details><summary>Подходит ли косметика для чувствительной кожи?</summary><p>Да, составы гипоаллергенны и протестированы дерматологами. Состав каждого средства указан на странице товара.</p></details>
+    <details><summary>Как проходят курсы по массажу лица?</summary><p>Это видеоуроки с пожизненным доступом в личном кабинете. Можно смотреть с любого устройства в удобном темпе.</p></details>
+    <details><summary>Сколько идёт доставка?</summary><p>По России — от 1 до 5 дней. Бесплатно при заказе от 3 000 ₽.</p></details>
+  </div>
+</section>
+
+<!-- ───────────────────────── Подписка ───────────────────────── -->
+<section class="cta">
+  <div class="container cta__inner">
+    <div>
+      <h2>−10% на первый заказ</h2>
+      <p>Подпишитесь на рассылку — пришлём промокод и гайд по уходу за лицом.</p>
+    </div>
+    <form class="cta__form" onsubmit="return false">
+      <input type="email" placeholder="Ваш email" required />
+      <button class="btn btn--primary">Получить</button>
+    </form>
+  </div>
+</section>
+
+<!-- ───────────────────────── Подвал ───────────────────────── -->
+<footer class="footer">
+  <div class="container footer__grid">
+    <div>
+      <a href="#top" class="logo logo--light">Farmati<span>.cosmetics</span></a>
+      <p class="muted">Натуральная косметика и курсы по уходу за собой.</p>
+    </div>
+    <div>
+      <h4>Каталог</h4>
+      <a href="#catalog">Уход за лицом</a>
+      <a href="#catalog">Макияж</a>
+      <a href="#catalog">Ароматы</a>
+      <a href="#courses">Курсы</a>
+    </div>
+    <div>
+      <h4>Компания</h4>
+      <a href="#about">О бренде</a>
+      <a href="#bonus">Бонусы</a>
+      <a href="#faq">Доставка и оплата</a>
+      <a href="#">Контакты</a>
+    </div>
+    <div>
+      <h4>Контакты</h4>
+      <a href="tel:+78000000000">8 800 000-00-00</a>
+      <a href="mailto:hello@farmati.ru">hello@farmati.ru</a>
+      <div class="socials"><a href="#">TG</a><a href="#">VK</a><a href="#">IG</a></div>
+    </div>
+  </div>
+  <div class="container footer__bottom">
+    <span>© 2026 Farmati.cosmetics. Все права защищены.</span>
+    <span>Политика конфиденциальности · Оферта</span>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
