@@ -38,7 +38,7 @@ export default function LoginPage() {
             </button>
           </form>
           {state?.error && <p className="msg err">{state.error}</p>}
-          {mode === "signup" && <p className="muted" style={{ fontSize: ".8rem", marginTop: 10 }}>При регистрации начислим 100 приветственных бонусов 🎁</p>}
+          {mode === "signup" && <p className="muted" style={{ fontSize: ".72rem", marginTop: 10, whiteSpace: "nowrap" }}>При регистрации начислим 100 приветственных бонусов 🎁</p>}
         </div>
       </div>
     </main>
