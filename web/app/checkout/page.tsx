@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useCart } from "@/lib/cart";
 import { money } from "@/lib/money";
 import { earnedFor, EARN_RATE } from "@/lib/bonus";
+import { isValidEmail, isValidPhone } from "@/lib/validate";
 import { createOrder } from "@/lib/actions/order";
 
 const FREE_FROM = 3500;
@@ -22,6 +23,7 @@ export default function CheckoutPage() {
   // данные покупателя / доставка
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [method, setMethod] = useState<"courier" | "pickup" | "cdek" | "post">("courier");
   const [address, setAddress] = useState("");
   const [comment, setComment] = useState("");
@@ -35,6 +37,7 @@ export default function CheckoutPage() {
         setBalance(d.balance ?? 0);
         if (d.name) setName(d.name);
         if (d.phone) setPhone(d.phone);
+        if (d.email) setEmail(d.email);
       })
       .catch(() => setAuthed(false));
   }, []);
@@ -55,12 +58,16 @@ export default function CheckoutPage() {
         : money(delivery);
 
   async function pay() {
+    if (!name.trim()) { setError("Укажите имя"); return; }
+    if (!isValidPhone(phone)) { setError("Укажите корректный номер телефона"); return; }
+    if (!isValidEmail(email)) { setError("Укажите корректный email"); return; }
     setBusy(true);
     setError(null);
     const payload = items.map((i) => ({ kind: i.kind, slug: i.slug, qty: i.qty }));
     const res = await createOrder(payload, spendClamped, {
       name,
       phone,
+      email,
       method: hasPhysical ? method : "pickup",
       address,
       comment,
@@ -110,8 +117,9 @@ export default function CheckoutPage() {
               <div className="card">
                 <h2 style={{ marginBottom: 14 }}>Получатель и доставка</h2>
                 <div className="form-grid">
-                  <div><label>Имя</label><input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ваше имя" /></div>
-                  <div><label>Телефон</label><input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+7 999 000-00-00" /></div>
+                  <div><label>Имя</label><input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ваше имя" autoComplete="name" /></div>
+                  <div><label>Телефон</label><input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+7 999 000-00-00" autoComplete="tel" /></div>
+                  <div className="full"><label>Email (для чека и связи)</label><input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@mail.ru" autoComplete="email" required /></div>
                 </div>
                 {hasPhysical && (
                   <>

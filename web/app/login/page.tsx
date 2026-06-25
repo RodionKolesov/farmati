@@ -24,9 +24,9 @@ export default function LoginPage() {
           {mode === "signin" ? (
             <form action={loginAction}>
               <label>Email</label>
-              <input name="email" type="email" required placeholder="you@mail.ru" />
+              <input name="email" type="email" required placeholder="you@mail.ru" autoComplete="email" />
               <label>Пароль</label>
-              <input name="password" type="password" required minLength={6} placeholder="••••••" />
+              <input name="password" type="password" required minLength={6} placeholder="••••••" autoComplete="current-password" />
               <button className="btn btn--primary btn--block" style={{ marginTop: 16 }} disabled={loginPending}>
                 {loginPending ? "…" : "Войти"}
               </button>
@@ -35,13 +35,13 @@ export default function LoginPage() {
           ) : (
             <form action={signupAction}>
               <label>Имя</label>
-              <input name="name" required placeholder="Анна" />
+              <input name="name" required placeholder="Анна" autoComplete="name" />
               <label>Телефон</label>
-              <input name="phone" type="tel" required placeholder="+7 999 000-00-00" />
+              <input name="phone" type="tel" required placeholder="+7 999 000-00-00" autoComplete="tel" />
               <label>Email</label>
-              <input name="email" type="email" required placeholder="you@mail.ru" />
+              <input name="email" type="email" required placeholder="you@mail.ru" autoComplete="email" />
               <label>Пароль</label>
-              <input name="password" type="password" required minLength={6} placeholder="••••••" />
+              <input name="password" type="password" required minLength={6} placeholder="••••••" autoComplete="new-password" />
               <button className="btn btn--primary btn--block" style={{ marginTop: 16 }} disabled={signupPending}>
                 {signupPending ? "…" : "Зарегистрироваться"}
               </button>

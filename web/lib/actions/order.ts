@@ -5,10 +5,11 @@ import { prisma } from "@/lib/prisma";
 import { createPayment } from "@/lib/yookassa";
 import { finalizeOrder } from "@/lib/orderFinalize";
 import { expireBonuses, spendBonusFIFO } from "@/lib/bonusLedger";
+import { isValidEmail, isValidPhone } from "@/lib/validate";
 
 type DeliveryMethod = "courier" | "pickup" | "cdek" | "post";
 type ClientItem = { kind: "product" | "course"; slug: string; qty: number };
-type CheckoutData = { name: string; phone: string; method: DeliveryMethod; address: string; comment: string };
+type CheckoutData = { name: string; phone: string; email: string; method: DeliveryMethod; address: string; comment: string };
 
 const DELIVERY_FREE_FROM = 3500; // бесплатная доставка курьером от этой суммы
 const DELIVERY_FLAT = 350;        // иначе фикс. стоимость курьера по городу
@@ -38,8 +39,9 @@ export async function createOrder(
   if (!items?.length) return { ok: false, error: "Корзина пуста" };
 
   const method: DeliveryMethod = METHODS.includes(checkout?.method) ? checkout.method : "courier";
-  if (!checkout?.name?.trim() || !checkout?.phone?.trim())
-    return { ok: false, error: "Укажите имя и телефон" };
+  if (!checkout?.name?.trim()) return { ok: false, error: "Укажите имя" };
+  if (!isValidPhone(checkout?.phone)) return { ok: false, error: "Укажите корректный номер телефона" };
+  if (!isValidEmail(checkout?.email)) return { ok: false, error: "Укажите корректный email" };
   if (method !== "pickup" && !checkout?.address?.trim())
     return { ok: false, error: "Укажите адрес или город доставки" };
 
@@ -82,6 +84,7 @@ export async function createOrder(
         deliveryCost: delivery,
         customerName: checkout.name.trim(),
         customerPhone: checkout.phone.trim(),
+        customerEmail: checkout.email.trim(),
         address: checkout.address?.trim() ?? "",
         comment: checkout.comment?.trim() ?? "",
         items: { create: orderItems },

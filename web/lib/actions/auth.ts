@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { hashPassword, verifyPassword } from "@/lib/password";
 import { WELCOME_BONUS, bonusExpiryFrom } from "@/lib/bonus";
+import { isValidEmail, isValidPhone } from "@/lib/validate";
 import { signIn, signOut, auth } from "@/auth";
 
 export type PwState = { ok?: boolean; error?: string } | undefined;
@@ -27,11 +28,9 @@ export async function registerUser(_prev: AuthState, formData: FormData): Promis
   const name = String(formData.get("name") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim();
 
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const phoneDigits = phone.replace(/\D/g, "");
   if (!name) return { error: "Укажите имя" };
-  if (!emailOk) return { error: "Некорректный email" };
-  if (phoneDigits.length < 10) return { error: "Некорректный номер телефона (минимум 10 цифр)" };
+  if (!isValidEmail(email)) return { error: "Некорректный email" };
+  if (!isValidPhone(phone)) return { error: "Некорректный номер телефона (10–15 цифр)" };
   if (!password || password.length < 6) return { error: "Пароль не короче 6 символов" };
 
   const exists = await prisma.user.findUnique({ where: { email } });

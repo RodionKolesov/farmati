@@ -5,5 +5,5 @@ export async function GET() {
   const session = await auth();
   if (!session?.user?.id) return Response.json({ authed: false });
   const user = await prisma.user.findUnique({ where: { id: session.user.id } });
-  return Response.json({ authed: true, balance: user?.bonusBalance ?? 0, name: user?.name ?? "", phone: user?.phone ?? "" });
+  return Response.json({ authed: true, balance: user?.bonusBalance ?? 0, name: user?.name ?? "", phone: user?.phone ?? "", email: user?.email ?? "" });
 }

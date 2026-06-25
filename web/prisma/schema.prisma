@@ -73,6 +73,7 @@ model Order {
   deliveryCost   Int                @default(0)
   customerName   String             @default("")
   customerPhone  String             @default("")
+  customerEmail  String             @default("")
   address        String             @default("")
   comment        String             @default("")
   paymentId      String?            @unique
