@@ -3,12 +3,15 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { money } from "@/lib/money";
 import { earnedFor } from "@/lib/bonus";
+import { productImages } from "@/lib/images";
 import AddToCart from "@/components/AddToCart";
+import ProductGallery from "@/components/ProductGallery";
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const p = await prisma.product.findUnique({ where: { slug } });
   if (!p || p.stock <= 0) notFound();
+  const imgs = productImages(p);
 
   return (
     <main className="page product-page">
@@ -20,20 +23,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           Назад в каталог
         </Link>
         <div className="grid2 product-detail">
-        {p.image ? (
-          <img
-            src={p.image}
-            alt={p.name}
-            style={{ borderRadius: 20, aspectRatio: "3/4", objectFit: "cover" }}
-          />
-        ) : (
-          <div
-            style={{ borderRadius: 20, aspectRatio: "3/4", background: "#f4e6eb",
-              display: "flex", alignItems: "center", justifyContent: "center", color: "#b489a8", fontWeight: 600 }}
-          >
-            Фото скоро
-          </div>
-        )}
+        <ProductGallery images={imgs} name={p.name} />
         <div>
           <span className="product__cat">{p.category}</span>
           <h1 style={{ margin: "8px 0 12px" }}>{p.name}</h1>

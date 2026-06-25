@@ -37,6 +37,25 @@ function refresh() {
   revalidatePath("/courses");
 }
 
+// Сохраняет несколько загруженных фото в public/products, возвращает массив путей.
+async function saveManyImages(files: FormDataEntryValue[], slug: string): Promise<string[]> {
+  const out: string[] = [];
+  const dir = path.join(process.cwd(), "public", "products");
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    if (!file || typeof file === "string") continue;
+    const f = file as File;
+    if (!f.size) continue;
+    const ext = (f.name.split(".").pop() || "jpg").toLowerCase();
+    const safe = ["jpg", "jpeg", "png", "webp", "avif"].includes(ext) ? ext : "jpg";
+    const fname = `${slug}-${Date.now().toString(36)}-${i}.${safe}`;
+    await mkdir(dir, { recursive: true });
+    await writeFile(path.join(dir, fname), Buffer.from(await f.arrayBuffer()));
+    out.push(`/products/${fname}`);
+  }
+  return out;
+}
+
 // Сохраняет загруженное фото в public/products и возвращает путь вида /products/...,
 // либо null, если файл не приложен.
 async function saveImage(file: FormDataEntryValue | null, slug: string): Promise<string | null> {
@@ -58,14 +77,15 @@ export async function createProduct(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   if (!name) return;
   const slug = slugify(name);
-  const uploaded = await saveImage(formData.get("imageFile"), slug);
+  const uploaded = await saveManyImages(formData.getAll("imageFile"), slug);
   await prisma.product.create({
     data: {
       name,
       slug,
       category: String(formData.get("category") ?? "Уход").trim() || "Уход",
       price: parseInt(String(formData.get("price") ?? "0"), 10) || 0,
-      image: uploaded ?? String(formData.get("image") ?? "").trim(),
+      image: uploaded[0] ?? "",
+      images: uploaded.length ? JSON.stringify(uploaded) : "",
       description: String(formData.get("description") ?? "").trim(),
       stock: Math.max(0, parseInt(String(formData.get("stock") ?? "0"), 10) || 0),
     },
@@ -78,16 +98,17 @@ export async function updateProduct(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("id"));
   const pname = String(formData.get("name") ?? "").trim();
-  const uploaded = await saveImage(formData.get("imageFile"), slugify(pname || id));
+  const uploaded = await saveManyImages(formData.getAll("imageFile"), slugify(pname || id));
   await prisma.product.update({
     where: { id },
     data: {
       name: pname,
       category: String(formData.get("category") ?? "").trim(),
       price: parseInt(String(formData.get("price") ?? "0"), 10) || 0,
-      image: uploaded ?? String(formData.get("image") ?? "").trim(),
       description: String(formData.get("description") ?? "").trim(),
       stock: Math.max(0, parseInt(String(formData.get("stock") ?? "0"), 10) || 0),
+      // Новые фото заменяют галерею целиком; если ничего не загрузили — оставляем старые.
+      ...(uploaded.length ? { image: uploaded[0], images: JSON.stringify(uploaded) } : {}),
     },
   });
   refresh();

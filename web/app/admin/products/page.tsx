@@ -16,13 +16,12 @@ export default async function AdminProducts() {
           <div><label>Категория</label><input name="category" placeholder="Сыворотки" /></div>
           <div><label>Цена, ₽</label><input name="price" type="number" min="0" placeholder="1700" /></div>
           <div><label>Остаток, шт.</label><input name="stock" type="number" min="0" placeholder="10" /></div>
-          <div><label>Фото (загрузить файл)</label><input name="imageFile" type="file" accept="image/*" /></div>
-          <div><label>…или ссылка на фото</label><input name="image" placeholder="https://… (необязательно)" /></div>
+          <div className="full"><label>Фото товара (можно выбрать несколько)</label><input name="imageFile" type="file" accept="image/*" multiple /></div>
           <div className="full"><label>Описание</label><textarea name="description" rows={2} placeholder="Краткое описание товара" /></div>
           <div className="full"><button className="btn btn--primary">Добавить товар</button></div>
         </form>
         <p className="muted" style={{ fontSize: "0.8rem", marginTop: 8 }}>
-          Просто выберите фото с компьютера — оно загрузится автоматически. Можно вместо этого вставить ссылку. Если ничего нет — будет «Фото скоро».
+          Выберите одно или несколько фото с компьютера (с зажатым Ctrl можно отметить сразу несколько) — они загрузятся автоматически и будут показаны галереей. Первое фото — главное. Если фото нет — будет «Фото скоро».
         </p>
       </div>
 
