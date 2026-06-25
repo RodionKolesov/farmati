@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { logout } from "@/lib/actions/auth";
 import { money } from "@/lib/money";
 import { expireBonuses, nextExpiry } from "@/lib/bonusLedger";
+import { getAdmin } from "@/lib/admin";
 import PasswordForm from "@/components/PasswordForm";
 
 export const metadata = { title: "Личный кабинет — Farmati.cosmetics" };
@@ -17,6 +18,10 @@ export default async function AccountPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const userId = session.user.id;
+
+  // Админ — это управляющий, а не покупатель: у него нет личного кабинета с бонусами.
+  // Отправляем его сразу в панель управления сайтом.
+  if (await getAdmin()) redirect("/admin");
 
   // Сжигаем просроченные бонусы при заходе в кабинет — баланс всегда актуальный.
   await expireBonuses(userId);
@@ -49,9 +54,6 @@ export default async function AccountPage() {
           )}
           <div className="inline-actions" style={{ marginTop: 12 }}>
             <Link className="btn btn--primary btn--sm" href="/catalog">За покупками</Link>
-            {user?.email?.toLowerCase() === (process.env.ADMIN_EMAIL || "").toLowerCase() && (
-              <Link className="btn btn--ghost btn--sm" href="/admin">⚙️ Управление сайтом</Link>
-            )}
           </div>
         </div>
 

@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { expireBonusesNow } from "@/lib/actions/admin";
+import { getServerStats } from "@/lib/actions/maintenance";
+import AdminServerPanel from "@/components/AdminServerPanel";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminHome() {
-  const [products, courses, orders, paid, leads, users, checklists, reviews] = await Promise.all([
+  const [products, courses, orders, paid, leads, users, checklists, reviews, stats] = await Promise.all([
     prisma.product.count(),
     prisma.course.count(),
     prisma.order.count(),
@@ -14,9 +16,11 @@ export default async function AdminHome() {
     prisma.user.count(),
     prisma.checklist.count(),
     prisma.review.count(),
+    getServerStats(),
   ]);
   return (
     <>
+      <AdminServerPanel stats={stats} />
       <div className="admin-grid">
         <Link href="/admin/products" className="admin-stat"><b>{products}</b>товаров</Link>
         <Link href="/admin/courses" className="admin-stat"><b>{courses}</b>курсов</Link>

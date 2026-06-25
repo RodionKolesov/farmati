@@ -210,6 +210,24 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .admin-table th, .admin-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); font-size: 0.9rem; vertical-align: top; }
 .admin-table th { background: var(--bg-soft); font-weight: 600; }
 .admin-table tr:last-child td { border-bottom: none; }
+.admin-nav form { display: inline-flex; }
+.admin-nav button { padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: 0.9rem; font-family: inherit; color: inherit; cursor: pointer; }
+.admin-nav button:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Панель состояния сервера в админке */
+.srv-panel { margin-bottom: 18px; }
+.srv-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.srv-metric { margin: 10px 0; }
+.srv-metric__top { display: flex; justify-content: space-between; gap: 10px; font-size: 0.88rem; margin-bottom: 5px; flex-wrap: wrap; }
+.srv-metric__top b { font-family: var(--serif); }
+.srv-bar { height: 10px; border-radius: 999px; background: var(--bg-soft); overflow: hidden; }
+.srv-bar > span { display: block; height: 100%; border-radius: 999px; transition: width 0.3s ease; }
+.srv-done { margin-top: 12px; padding: 12px 14px; border-radius: 12px; background: #eef7f0; border: 1px solid #cfe6d6; font-size: 0.9rem; }
+.srv-note { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 10px; }
+.srv-note summary { cursor: pointer; font-weight: 600; font-size: 0.92rem; }
+.srv-note ul { margin: 4px 0 10px; padding-left: 20px; font-size: 0.88rem; }
+.srv-note li { margin: 3px 0; }
+.srv-note code { background: var(--bg-soft); padding: 1px 5px; border-radius: 5px; font-size: 0.85em; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .form-grid .full { grid-column: 1 / -1; }
 .inline-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }

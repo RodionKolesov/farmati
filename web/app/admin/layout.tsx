@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin";
+import { logout } from "@/lib/actions/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <Link href="/admin/orders">Заказы</Link>
           <Link href="/admin/leads">Заявки</Link>
           <Link href="/" style={{ marginLeft: "auto" }}>← На сайт</Link>
+          <form action={logout}>
+            <button type="submit">Выйти</button>
+          </form>
         </nav>
         {children}
       </div>
