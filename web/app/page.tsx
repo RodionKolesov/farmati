@@ -66,6 +66,7 @@ export default async function Home() {
           <div className="products">
             {products.map((p) => <ProductCard key={p.id} p={p} />)}
           </div>
+          <Link className="btn btn--ghost section__more" href="/catalog">Весь каталог</Link>
         </div>
       </section>
 
@@ -82,6 +83,7 @@ export default async function Home() {
           <div className="course-grid">
             {courses.map((c) => <CourseCard key={c.id} c={c} />)}
           </div>
+          <Link className="btn btn--ghost section__more" href="/courses">Все курсы</Link>
         </div>
       </section>
 

@@ -78,7 +78,7 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .hero__rule { display: block; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, #000, transparent); margin: 16px 0; }
 .hero h1 { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3rem); font-weight: 500; letter-spacing: 0.01em; color: #000; line-height: 1.1; margin-top: 40px; margin-bottom: 16px; }
 .hero p { font-family: var(--serif); font-weight: 700; font-size: clamp(1.15rem, 2.4vw, 1.5rem); color: #000; text-transform: uppercase; letter-spacing: 0.08em; line-height: 1.5; margin-top: 40px; margin-bottom: 0; text-align: center; }
-.hero p.hero__tagline { position: absolute; bottom: 0; left: 0; right: 0; z-index: 1; margin: 0; padding: 18px 16px; background: rgba(255,255,255,.5); backdrop-filter: blur(5px); font-family: var(--serif); font-weight: 500; font-size: clamp(1.6rem, 4vw, 2.4rem); letter-spacing: 0.12em; text-transform: uppercase; color: #000; line-height: 1.2; text-align: center; }
+.hero p.hero__tagline { position: absolute; bottom: clamp(14px, 3vw, 26px); left: clamp(14px, 4vw, 30px); right: clamp(14px, 4vw, 30px); z-index: 1; margin: 0; padding: clamp(16px, 2.4vw, 22px) clamp(18px, 3vw, 30px); background: rgba(255,255,255,.5); backdrop-filter: blur(5px); border-radius: 22px; font-family: var(--serif); font-weight: 500; font-size: clamp(1.6rem, 4vw, 2.4rem); letter-spacing: 0.12em; text-transform: uppercase; color: #000; line-height: 1.2; text-align: center; }
 .hero__cta { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 480px; margin: 0 auto; }
 .hero__cta .btn { width: 100%; font-size: 1.1rem; height: 56px; }
 .hero__cta-wide { grid-column: 1 / -1; }
@@ -103,6 +103,7 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .section__head { text-align: center; margin-bottom: 30px; }
 .section__head--row { display: flex; align-items: center; justify-content: space-between; text-align: left; gap: 16px; flex-wrap: wrap; }
 .section__link { color: var(--accent); font-weight: 600; font-size: 0.92rem; }
+.section__more { display: none; }
 .section__sub { color: var(--muted); margin-top: 10px; max-width: 600px; margin-left: auto; margin-right: auto; }
 
 /* About (Татьяна) */
@@ -295,4 +296,9 @@ a.club-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); bord
   .nav { display: none; }
   .products { grid-template-columns: repeat(2, 1fr); }
   .lead-form .row { grid-template-columns: 1fr; }
+  /* На телефоне показываем превью: 4 товара и 2 курса, остальное — по кнопке */
+  #catalog .products > :nth-child(n + 5) { display: none; }
+  #courses .course-grid > :nth-child(n + 3) { display: none; }
+  #catalog .section__link, #courses .section__link { display: none; }
+  .section__more { display: inline-flex; width: 100%; margin-top: 22px; }
 }
