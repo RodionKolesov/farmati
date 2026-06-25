@@ -36,8 +36,8 @@ export default function OfferPage() {
           <li>ОГРНИП: 325246800017003</li>
           <li>ИНН: 246513192772</li>
           <li>Система налогообложения: УСН</li>
-          <li>Email: [укажите email]</li>
-          <li>Телефон: [укажите телефон]</li>
+          <li>Email: Playpoy@list.ru</li>
+          <li>Телефон: +7 902 927-52-08</li>
         </ul>
       </div>
     </main>

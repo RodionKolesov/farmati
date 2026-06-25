@@ -27,8 +27,8 @@ export default function Footer() {
         </div>
         <div>
           <h4>Контакты</h4>
-          <a href="tel:+78000000000">8 800 000-00-00</a>
-          <a href="mailto:hello@farmati.ru">hello@farmati.ru</a>
+          <a href="tel:+79029275208">+7 902 927-52-08</a>
+          <a href="mailto:Playpoy@list.ru">Playpoy@list.ru</a>
         </div>
       </div>
       <div className="container footer__bottom">
