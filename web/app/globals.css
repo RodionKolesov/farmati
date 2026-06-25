@@ -52,8 +52,8 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .topbar { position: sticky; top: 0; z-index: 50; }
 .header { background: rgba(253,247,248,.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
 .header__inner { display: flex; align-items: center; justify-content: space-between; height: 70px; }
-.logo { font-family: var(--serif); font-weight: 700; font-size: 2rem; color: var(--ink); }
-.logo span { font-family: "Inter", sans-serif; font-size: 0.58rem; display: block; letter-spacing: 0.3em; color: var(--muted); text-transform: uppercase; font-weight: 600; margin-top: -2px; }
+.logo { font-family: var(--serif); font-weight: 700; font-size: 2rem; color: #000; }
+.logo span { font-family: "Inter", sans-serif; font-size: 0.82rem; display: block; letter-spacing: 0.26em; color: #000; text-transform: uppercase; font-weight: 600; margin-top: -1px; }
 .logo--light { color: #fff; }
 .logo--light span { color: #b69cc0; }
 .nav { display: flex; gap: 26px; }
