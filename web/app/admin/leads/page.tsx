@@ -10,7 +10,10 @@ export default async function AdminLeads() {
   const leads = await prisma.lead.findMany({ orderBy: { createdAt: "desc" }, take: 200 });
   return (
     <div className="card">
-      <h2 style={{ marginBottom: 12 }}>Заявки на консультацию ({leads.length})</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
+        <h2 style={{ margin: 0 }}>Заявки на консультацию ({leads.length})</h2>
+        <a className="btn btn--ghost btn--sm" href="/admin/leads/export">⬇ Выгрузить в Excel</a>
+      </div>
       <table className="admin-table">
         <thead><tr><th>Дата</th><th>Имя</th><th>Телефон</th><th>Вопрос</th></tr></thead>
         <tbody>

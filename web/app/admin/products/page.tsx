@@ -26,7 +26,10 @@ export default async function AdminProducts() {
       </div>
 
       <div className="card">
-        <h2 style={{ marginBottom: 12 }}>Товары ({products.length})</h2>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
+          <h2 style={{ margin: 0 }}>Товары ({products.length})</h2>
+          <a className="btn btn--ghost btn--sm" href="/admin/products/export">⬇ Выгрузить в Excel</a>
+        </div>
         <table className="admin-table">
           <thead><tr><th>Название</th><th>Категория</th><th>Цена</th><th>Остаток</th><th>Фото</th><th></th></tr></thead>
           <tbody>
