@@ -5,8 +5,8 @@ import { loginUser, registerUser, type AuthState } from "@/lib/actions/auth";
 
 export default function LoginPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const action = mode === "signin" ? loginUser : registerUser;
-  const [state, formAction, pending] = useActionState<AuthState, FormData>(action, undefined);
+  const [loginState, loginAction, loginPending] = useActionState<AuthState, FormData>(loginUser, undefined);
+  const [signupState, signupAction, signupPending] = useActionState<AuthState, FormData>(registerUser, undefined);
 
   return (
     <main className="page">
@@ -20,25 +20,35 @@ export default function LoginPage() {
               Регистрация
             </button>
           </div>
-          <form action={formAction}>
-            {mode === "signup" && (
-              <>
-                <label>Имя</label>
-                <input name="name" required placeholder="Анна" />
-                <label>Телефон</label>
-                <input name="phone" type="tel" required placeholder="+7 999 000-00-00" />
-              </>
-            )}
-            <label>Email</label>
-            <input name="email" type="email" required placeholder="you@mail.ru" />
-            <label>Пароль</label>
-            <input name="password" type="password" required minLength={6} placeholder="••••••" />
-            <button className="btn btn--primary btn--block" style={{ marginTop: 16 }} disabled={pending}>
-              {pending ? "…" : mode === "signin" ? "Войти" : "Зарегистрироваться"}
-            </button>
-          </form>
-          {state?.error && <p className="msg err">{state.error}</p>}
-          {mode === "signup" && <p className="muted" style={{ fontSize: ".72rem", marginTop: 10, whiteSpace: "nowrap" }}>При регистрации начислим 100 приветственных бонусов 🎁</p>}
+
+          {mode === "signin" ? (
+            <form action={loginAction}>
+              <label>Email</label>
+              <input name="email" type="email" required placeholder="you@mail.ru" />
+              <label>Пароль</label>
+              <input name="password" type="password" required minLength={6} placeholder="••••••" />
+              <button className="btn btn--primary btn--block" style={{ marginTop: 16 }} disabled={loginPending}>
+                {loginPending ? "…" : "Войти"}
+              </button>
+              {loginState?.error && <p className="msg err">{loginState.error}</p>}
+            </form>
+          ) : (
+            <form action={signupAction}>
+              <label>Имя</label>
+              <input name="name" required placeholder="Анна" />
+              <label>Телефон</label>
+              <input name="phone" type="tel" required placeholder="+7 999 000-00-00" />
+              <label>Email</label>
+              <input name="email" type="email" required placeholder="you@mail.ru" />
+              <label>Пароль</label>
+              <input name="password" type="password" required minLength={6} placeholder="••••••" />
+              <button className="btn btn--primary btn--block" style={{ marginTop: 16 }} disabled={signupPending}>
+                {signupPending ? "…" : "Зарегистрироваться"}
+              </button>
+              {signupState?.error && <p className="msg err">{signupState.error}</p>}
+              <p className="muted" style={{ fontSize: ".72rem", marginTop: 10, whiteSpace: "nowrap" }}>При регистрации начислим 100 приветственных бонусов 🎁</p>
+            </form>
+          )}
         </div>
       </div>
     </main>
