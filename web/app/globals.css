@@ -222,6 +222,27 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .lead-form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
 /* Footer */
+/* Сертификаты — бегущая лента + лайтбокс */
+.certs { margin-top: 44px; }
+.certs__head { margin-bottom: 18px; }
+.certs__title { font-size: 1.9rem; }
+.certs__viewport { overflow: hidden; width: 100%; -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); }
+.certs__track { display: flex; gap: 18px; width: max-content; animation: certsMove 45s linear infinite; }
+.certs__viewport:hover .certs__track { animation-play-state: paused; }
+@keyframes certsMove { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.cert { flex: 0 0 auto; height: 230px; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); transition: transform .2s; }
+.cert:hover { transform: translateY(-4px); }
+.cert img { height: 230px; width: auto; display: block; border-radius: 12px; }
+@media (prefers-reduced-motion: reduce) {
+  .certs__viewport { -webkit-mask-image: none; mask-image: none; overflow-x: auto; }
+  .certs__track { animation: none; }
+}
+@media (max-width: 640px) { .cert, .cert img { height: 165px; } .certs__title { font-size: 1.4rem; } }
+.lb-overlay { position: fixed; inset: 0; z-index: 300; background: rgba(20,12,24,.85); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 24px; animation: qvfade .15s ease; }
+.lb-img { max-width: 92vw; max-height: 90vh; object-fit: contain; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,.5); cursor: default; }
+.lb-close { position: fixed; top: 16px; right: 20px; z-index: 2; width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(255,255,255,.9); font-size: 1.8rem; line-height: 1; cursor: pointer; color: #333; }
+.lb-close:hover { background: #fff; }
+
 .footer { background: var(--dark); color: #c9bcd0; padding: 56px 0 28px; }
 .footer__grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 30px; }
 .footer h4 { font-family: "Inter", sans-serif; color: #fff; margin-bottom: 14px; font-size: 0.95rem; }

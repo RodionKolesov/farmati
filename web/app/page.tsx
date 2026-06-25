@@ -4,6 +4,7 @@ import ProductCard from "@/components/ProductCard";
 import CourseCard from "@/components/CourseCard";
 import ConsultForm from "@/components/ConsultForm";
 import HeroParallax from "@/components/HeroParallax";
+import Certificates from "@/components/Certificates";
 
 export default async function Home() {
   const [products, courses, reviews] = await Promise.all([
@@ -53,6 +54,7 @@ export default async function Home() {
             <p className="quote">Ты важна. Ты красива. Ты заслуживаешь лучшего.</p>
           </div>
         </div>
+        <Certificates />
       </section>
 
       {/* Каталог */}
