@@ -25,8 +25,9 @@ export default function Certificates() {
     return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = prev; };
   }, [active]);
 
-  // Дублируем список для бесшовной бегущей ленты.
-  const loop = [...CERTS, ...CERTS];
+  // Размножаем список, чтобы лента всегда заполняла экран (без пустоты справа)
+  // и крутилась бесшовно. 6 копий → даже на широких мониторах нет пробелов.
+  const loop = Array.from({ length: 6 }, () => CERTS).flat();
 
   return (
     <div className="certs">
