@@ -52,7 +52,7 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .topbar { position: sticky; top: 0; z-index: 50; }
 .header { background: rgba(253,247,248,.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
 .header__inner { display: flex; align-items: center; justify-content: space-between; height: 70px; }
-.logo { font-family: var(--serif); font-weight: 700; font-size: 1.5rem; color: var(--ink); }
+.logo { font-family: var(--serif); font-weight: 700; font-size: 2rem; color: var(--ink); }
 .logo span { font-family: "Inter", sans-serif; font-size: 0.58rem; display: block; letter-spacing: 0.3em; color: var(--muted); text-transform: uppercase; font-weight: 600; margin-top: -2px; }
 .logo--light { color: #fff; }
 .logo--light span { color: #b69cc0; }
@@ -66,24 +66,30 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .badge { background: var(--accent); color: #fff; font-size: 0.65rem; font-weight: 700; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; display: inline-grid; place-items: center; }
 
 /* Hero */
-.hero { position: relative; overflow: hidden; min-height: calc(100vh - 122px); display: flex; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; }
+.hero { position: relative; overflow: hidden; min-height: calc(100vh - 122px); display: flex; align-items: center; justify-content: center; text-align: center; padding: 40px 20px 140px; }
 .hero::before { content: ""; position: absolute; inset: -20px; z-index: 0; background: url('/main-lineup.jpg') center/cover no-repeat; filter: blur(2px); transform: scale(1.03); }
 .hero::after { content: ""; position: absolute; inset: 0; z-index: 0; background: radial-gradient(130% 90% at 50% 42%, rgba(253,247,248,.55) 0%, rgba(253,247,248,.78) 55%, rgba(253,247,248,.92) 100%); }
-.hero__inner { position: relative; z-index: 1; max-width: 780px; animation: heroIn .85s cubic-bezier(.2,.65,.3,1) both; }
+.hero__inner { position: relative; z-index: 1; width: fit-content; max-width: min(780px, 92vw); padding: 36px clamp(28px, 5vw, 56px); background: rgba(255,255,255,.72); backdrop-filter: blur(5px); border-radius: 22px; box-shadow: 0 12px 44px rgba(0,0,0,.1); animation: heroIn .85s cubic-bezier(.2,.65,.3,1) both; }
 @keyframes heroIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .hero__inner { animation: none; } }
 .hero__brandbox { display: inline-block; margin-bottom: 24px; }
 .hero__club { display: block; font-family: var(--serif); font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 500; letter-spacing: 0.26em; text-transform: uppercase; color: #000; line-height: 1; margin-bottom: 8px; }
-.hero__brand { display: block; font-family: var(--serif); font-size: clamp(4.08rem, 9.5vw, 6.8rem); font-weight: 600; letter-spacing: 0.12em; text-transform: lowercase; color: #000; line-height: 1; }
-.hero__rule { display: block; width: 100%; height: 1.5px; background: linear-gradient(90deg, transparent, #000, transparent); margin: 16px 0; }
+.hero__brand { display: block; font-family: var(--serif); font-size: clamp(4.08rem, 9.5vw, 6.8rem); font-weight: 600; letter-spacing: 0.06em; text-transform: lowercase; color: #000; line-height: 1; }
+.hero__rule { display: block; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, #000, transparent); margin: 16px 0; }
 .hero h1 { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3rem); font-weight: 500; letter-spacing: 0.01em; color: #000; line-height: 1.1; margin-top: 40px; margin-bottom: 16px; }
 .hero p { font-family: var(--serif); font-weight: 700; font-size: clamp(1.15rem, 2.4vw, 1.5rem); color: #000; text-transform: uppercase; letter-spacing: 0.08em; line-height: 1.5; margin-top: 40px; margin-bottom: 0; text-align: center; }
-.hero p.hero__tagline { position: absolute; bottom: 26px; left: 0; right: 0; z-index: 1; margin: 0; padding: 0 16px; white-space: nowrap; }
+.hero p.hero__tagline { position: absolute; bottom: 0; left: 0; right: 0; z-index: 1; margin: 0; padding: 18px 16px; background: rgba(255,255,255,.5); backdrop-filter: blur(5px); font-family: var(--serif); font-weight: 500; font-size: clamp(1.6rem, 4vw, 2.4rem); letter-spacing: 0.12em; text-transform: uppercase; color: #000; line-height: 1.2; text-align: center; }
 .hero__cta { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 480px; margin: 0 auto; }
 .hero__cta .btn { width: 100%; font-size: 1.1rem; height: 56px; }
 .hero__cta-wide { grid-column: 1 / -1; }
-.ticker { position: relative; width: 100%; margin: 0; padding: 13px 0; border: none; border-bottom: 1px solid rgba(0,0,0,.12); border-radius: 0; background: rgba(255,255,255,.85); backdrop-filter: blur(8px); overflow: hidden; }
-.ticker__track { display: flex; width: max-content; animation: ticker-marquee 45s linear infinite; }
+/* «Вступить в клуб» — чёрная */
+.hero__cta .btn--primary { background: #000; color: #fff; border-color: #000; }
+.hero__cta .btn--primary:hover { background: #fff; color: #000; border-color: #000; }
+/* «Подобрать уход» / «Консультация косметолога» — обводка толще на 1px, при наведении чёрные */
+.hero__cta .btn--ghost { border-width: 2px; }
+.hero__cta .btn--ghost:hover { background: #000; color: #fff; border-color: #000; }
+.ticker { position: relative; width: 100%; margin: 0; padding: 13px 0; border: none; border-bottom: 1px solid rgba(0,0,0,.12); border-radius: 0; background: rgba(255,255,255,.5); backdrop-filter: blur(5px); overflow: hidden; }
+.ticker__track { display: flex; width: max-content; animation: ticker-marquee 70s linear infinite; }
 .ticker__seq { display: flex; }
 .ticker__item { display: inline-flex; align-items: center; gap: 12px; padding: 0 38px; white-space: nowrap; color: var(--ink); font-size: clamp(0.85rem, 2.5vw, 0.98rem); font-weight: 600; }
 .ticker__item::before { content: "•"; color: #000; font-size: 1.4em; line-height: 0; }
@@ -100,11 +106,14 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .section__sub { color: var(--muted); margin-top: 10px; max-width: 600px; margin-left: auto; margin-right: auto; }
 
 /* About (Татьяна) */
-.about__inner { display: grid; grid-template-columns: .85fr 1.15fr; gap: 48px; align-items: center; }
+.about__inner { display: grid; grid-template-columns: .85fr 1.15fr; gap: 48px; align-items: stretch; }
+.about__text { display: flex; flex-direction: column; justify-content: space-between; }
+.about__text h2 { margin: 4px 0 22px; }
 .about__media img { width: 100%; border-radius: 24px; aspect-ratio: 3/3.8; object-fit: cover; box-shadow: var(--shadow); }
-.about__text p { color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
-.ticks { list-style: none; margin: 18px 0; display: grid; gap: 9px; }
-.quote { font-family: var(--serif); font-style: italic; color: var(--accent); font-size: 1.35rem; font-weight: 600; }
+.about__text p { color: var(--ink); font-size: 1.06rem; font-weight: 500; margin-bottom: 14px; line-height: 1.65; }
+.ticks { list-style: none; margin: 18px 0; display: grid; gap: 10px; }
+.ticks li { color: var(--ink); font-weight: 600; font-size: 1.02rem; }
+.quote { font-family: var(--serif); color: var(--accent); font-size: 1.7rem; font-weight: 600; }
 
 /* Products */
 .tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 30px; }
@@ -169,6 +178,11 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .stars { color: var(--gold); letter-spacing: 2px; margin-bottom: 10px; }
 .review blockquote { font-size: 0.98rem; margin-bottom: 14px; }
 .review figcaption { color: var(--muted); font-size: 0.88rem; }
+.review__ba { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.review__ba-item { position: relative; }
+.review__ba-item img, .review__ba-empty { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 12px; display: block; }
+.review__ba-empty { background: var(--bg-soft); }
+.review__ba-item span { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,.55); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: .04em; }
 
 /* Consultation form */
 .lead-form { display: grid; gap: 12px; max-width: 520px; }
@@ -240,9 +254,21 @@ input:focus, textarea:focus { outline: 2px solid var(--accent); border-color: tr
 .msg.ok { color: var(--plus); }
 .empty-note { color: var(--muted); padding: 16px 0; }
 
+/* Клуб: сетка карточек-ссылок */
+.club-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 20px; }
+.club-card { display: flex; flex-direction: column; gap: 6px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; transition: transform .18s, box-shadow .18s, border-color .18s; }
+.club-card b { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); }
+.club-card span { color: var(--muted); font-size: 0.92rem; }
+a.club-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--accent); }
+.lessons__group { font-family: var(--serif); font-size: 1.2rem; margin: 24px 0 10px; }
+.stock-low { display: inline-block; color: var(--minus); font-weight: 700; font-size: 0.82rem; }
+.stock-edit { display: inline-flex; gap: 6px; align-items: center; }
+.stock-edit input { width: 62px; padding: 4px 6px; font-size: 0.85rem; }
+
 @media (max-width: 980px) {
   .about__inner, .bonus__inner, .grid2, .product-detail { grid-template-columns: 1fr; }
   .product-detail > :first-child { max-width: 320px; margin: 0 auto; }
+  .club-grid { grid-template-columns: repeat(2, 1fr); }
   .products { grid-template-columns: repeat(2, 1fr); }
   .course-grid, .reviews, .bonus__cards { grid-template-columns: 1fr; }
   .footer__grid { grid-template-columns: 1fr 1fr; }

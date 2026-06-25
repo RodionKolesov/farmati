@@ -15,11 +15,12 @@ export default function Header() {
       <header className="header">
         <div className="container header__inner">
           <Link href="/" className="logo">
-            FARMATI<span>.cosmetics</span>
+            farmati.<span>cosmetics</span>
           </Link>
           <nav className="nav">
             <Link href="/#catalog">Каталог</Link>
             <Link href="/#courses">Курсы</Link>
+            <Link href="/club">Клуб</Link>
             <Link href="/#about">О бренде</Link>
             <Link href="/#consult">Консультация</Link>
           </nav>

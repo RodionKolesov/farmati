@@ -5,8 +5,31 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
 import { slugify } from "@/lib/slug";
+import { expireBonuses } from "@/lib/bonusLedger";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
+
+const IMG_EXTS = ["jpg", "jpeg", "png", "webp", "avif"];
+
+// Универсальная загрузка файла в public/<subdir>, возвращает /<subdir>/<file> или null.
+async function saveTo(
+  file: FormDataEntryValue | null,
+  slug: string,
+  subdir: string,
+  exts: string[],
+  fallback: string,
+): Promise<string | null> {
+  if (!file || typeof file === "string") return null;
+  const f = file as File;
+  if (!f.size) return null;
+  const ext = (f.name.split(".").pop() || fallback).toLowerCase();
+  const safe = exts.includes(ext) ? ext : fallback;
+  const fname = `${slug}-${Date.now().toString(36)}.${safe}`;
+  const dir = path.join(process.cwd(), "public", subdir);
+  await mkdir(dir, { recursive: true });
+  await writeFile(path.join(dir, fname), Buffer.from(await f.arrayBuffer()));
+  return `/${subdir}/${fname}`;
+}
 
 function refresh() {
   revalidatePath("/");
@@ -44,6 +67,7 @@ export async function createProduct(formData: FormData) {
       price: parseInt(String(formData.get("price") ?? "0"), 10) || 0,
       image: uploaded ?? String(formData.get("image") ?? "").trim(),
       description: String(formData.get("description") ?? "").trim(),
+      stock: Math.max(0, parseInt(String(formData.get("stock") ?? "0"), 10) || 0),
     },
   });
   refresh();
@@ -63,8 +87,19 @@ export async function updateProduct(formData: FormData) {
       price: parseInt(String(formData.get("price") ?? "0"), 10) || 0,
       image: uploaded ?? String(formData.get("image") ?? "").trim(),
       description: String(formData.get("description") ?? "").trim(),
+      stock: Math.max(0, parseInt(String(formData.get("stock") ?? "0"), 10) || 0),
     },
   });
+  refresh();
+  redirect("/admin/products");
+}
+
+// Быстрое изменение остатка из списка товаров.
+export async function updateStock(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const stock = Math.max(0, parseInt(String(formData.get("stock") ?? "0"), 10) || 0);
+  await prisma.product.update({ where: { id }, data: { stock } });
   refresh();
   redirect("/admin/products");
 }
@@ -166,4 +201,69 @@ export async function deleteLesson(formData: FormData) {
   const courseId = String(formData.get("courseId"));
   await prisma.lesson.delete({ where: { id: String(formData.get("id")) } });
   redirect("/admin/courses/" + courseId);
+}
+
+// ───────────── Чек-листы / рекомендации ─────────────
+export async function createChecklist(formData: FormData) {
+  await requireAdmin();
+  const title = String(formData.get("title") ?? "").trim();
+  if (!title) return;
+  const slug = slugify(title) || "checklist";
+  const fileUrl = await saveTo(formData.get("file"), slug, "checklists", ["pdf"], "pdf");
+  const image = await saveTo(formData.get("imageFile"), slug, "checklists", IMG_EXTS, "jpg");
+  await prisma.checklist.create({
+    data: {
+      title,
+      description: String(formData.get("description") ?? "").trim(),
+      fileUrl: fileUrl ?? String(formData.get("fileUrl") ?? "").trim(),
+      image: image ?? "",
+      order: parseInt(String(formData.get("order") ?? "0"), 10) || 0,
+    },
+  });
+  revalidatePath("/club");
+  redirect("/admin/checklists");
+}
+
+export async function deleteChecklist(formData: FormData) {
+  await requireAdmin();
+  await prisma.checklist.delete({ where: { id: String(formData.get("id")) } });
+  revalidatePath("/club");
+  redirect("/admin/checklists");
+}
+
+// ───────────── Отзывы «до/после» ─────────────
+export async function createReview(formData: FormData) {
+  await requireAdmin();
+  const author = String(formData.get("author") ?? "").trim();
+  if (!author) return;
+  const slug = slugify(author) || "review";
+  const before = await saveTo(formData.get("beforeImage"), slug + "-before", "reviews", IMG_EXTS, "jpg");
+  const after = await saveTo(formData.get("afterImage"), slug + "-after", "reviews", IMG_EXTS, "jpg");
+  await prisma.review.create({
+    data: {
+      author,
+      text: String(formData.get("text") ?? "").trim(),
+      rating: Math.min(5, Math.max(1, parseInt(String(formData.get("rating") ?? "5"), 10) || 5)),
+      beforeImage: before ?? "",
+      afterImage: after ?? "",
+      order: parseInt(String(formData.get("order") ?? "0"), 10) || 0,
+    },
+  });
+  revalidatePath("/");
+  redirect("/admin/reviews");
+}
+
+export async function deleteReview(formData: FormData) {
+  await requireAdmin();
+  await prisma.review.delete({ where: { id: String(formData.get("id")) } });
+  revalidatePath("/");
+  redirect("/admin/reviews");
+}
+
+// ───────────── Бонусы: ручное сгорание просроченных ─────────────
+export async function expireBonusesNow() {
+  await requireAdmin();
+  await expireBonuses();
+  revalidatePath("/admin");
+  redirect("/admin");
 }

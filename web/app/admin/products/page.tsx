@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { money } from "@/lib/money";
-import { createProduct, deleteProduct } from "@/lib/actions/admin";
+import { createProduct, deleteProduct, updateStock } from "@/lib/actions/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +15,7 @@ export default async function AdminProducts() {
           <div><label>Название</label><input name="name" required placeholder="Сыворотка с витамином С" /></div>
           <div><label>Категория</label><input name="category" placeholder="Сыворотки" /></div>
           <div><label>Цена, ₽</label><input name="price" type="number" min="0" placeholder="1700" /></div>
+          <div><label>Остаток, шт.</label><input name="stock" type="number" min="0" placeholder="10" /></div>
           <div><label>Фото (загрузить файл)</label><input name="imageFile" type="file" accept="image/*" /></div>
           <div><label>…или ссылка на фото</label><input name="image" placeholder="https://… (необязательно)" /></div>
           <div className="full"><label>Описание</label><textarea name="description" rows={2} placeholder="Краткое описание товара" /></div>
@@ -28,13 +29,20 @@ export default async function AdminProducts() {
       <div className="card">
         <h2 style={{ marginBottom: 12 }}>Товары ({products.length})</h2>
         <table className="admin-table">
-          <thead><tr><th>Название</th><th>Категория</th><th>Цена</th><th>Фото</th><th></th></tr></thead>
+          <thead><tr><th>Название</th><th>Категория</th><th>Цена</th><th>Остаток</th><th>Фото</th><th></th></tr></thead>
           <tbody>
             {products.map((p) => (
-              <tr key={p.id}>
-                <td>{p.name}</td>
+              <tr key={p.id} style={p.stock <= 0 ? { opacity: 0.55 } : undefined}>
+                <td>{p.name}{p.stock <= 0 && <span className="muted"> · скрыт</span>}</td>
                 <td>{p.category}</td>
                 <td>{money(p.price)}</td>
+                <td>
+                  <form action={updateStock} className="stock-edit">
+                    <input type="hidden" name="id" value={p.id} />
+                    <input name="stock" type="number" min="0" defaultValue={p.stock} />
+                    <button className="link">OK</button>
+                  </form>
+                </td>
                 <td>{p.image ? "✅" : "— нет"}</td>
                 <td>
                   <div className="inline-actions">

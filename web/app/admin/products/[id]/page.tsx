@@ -17,6 +17,7 @@ export default async function EditProduct({ params }: { params: Promise<{ id: st
         <div><label>Название</label><input name="name" defaultValue={p.name} required /></div>
         <div><label>Категория</label><input name="category" defaultValue={p.category} /></div>
         <div><label>Цена, ₽</label><input name="price" type="number" defaultValue={p.price} /></div>
+        <div><label>Остаток, шт. (0 = скрыт)</label><input name="stock" type="number" min="0" defaultValue={p.stock} /></div>
         <div><label>Загрузить новое фото</label><input name="imageFile" type="file" accept="image/*" /></div>
         <div><label>…или ссылка на фото</label><input name="image" defaultValue={p.image} placeholder="https://…" /></div>
         {p.image && (

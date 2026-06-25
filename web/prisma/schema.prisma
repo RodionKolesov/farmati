@@ -31,6 +31,7 @@ model Product {
   image       String
   description String      @default("")
   badge       String?
+  stock       Int         @default(0) // остаток на складе; 0 = скрыт из каталога
   items       OrderItem[]
 }
 
@@ -108,7 +109,32 @@ model BonusTransaction {
   orderId   String?
   order     Order?   @relation(fields: [orderId], references: [id])
   delta     Int
-  type      String   // earn | spend
+  type      String   // earn | spend | expire
   note      String   @default("")
+  expiresAt DateTime? // для earn: когда сгорит (createdAt + 4 мес)
+  remaining Int      @default(0) // для earn: непотраченный/несгоревший остаток партии
   createdAt DateTime @default(now())
+}
+
+// Чек-листы / рекомендации (раздел «Клуб»). Контент добавляется через админку.
+model Checklist {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @default("")
+  fileUrl     String   @default("") // ссылка на PDF в /public/checklists
+  image       String   @default("")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+// Отзывы «до/после». Контент добавляется через админку.
+model Review {
+  id          String   @id @default(cuid())
+  author      String
+  text        String   @default("")
+  rating      Int      @default(5)
+  beforeImage String   @default("")
+  afterImage  String   @default("")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
 }

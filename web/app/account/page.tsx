@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { logout } from "@/lib/actions/auth";
 import { money } from "@/lib/money";
+import { expireBonuses, nextExpiry } from "@/lib/bonusLedger";
 import PasswordForm from "@/components/PasswordForm";
 
 export const metadata = { title: "Личный кабинет — Farmati.cosmetics" };
@@ -17,10 +18,14 @@ export default async function AccountPage() {
   if (!session?.user?.id) redirect("/login");
   const userId = session.user.id;
 
-  const [user, orders, txs] = await Promise.all([
+  // Сжигаем просроченные бонусы при заходе в кабинет — баланс всегда актуальный.
+  await expireBonuses(userId);
+
+  const [user, orders, txs, expiry] = await Promise.all([
     prisma.user.findUnique({ where: { id: userId } }),
     prisma.order.findMany({ where: { userId }, orderBy: { createdAt: "desc" }, take: 20, include: { items: true } }),
     prisma.bonusTransaction.findMany({ where: { userId }, orderBy: { createdAt: "desc" }, take: 20 }),
+    nextExpiry(userId),
   ]);
 
   return (
@@ -37,6 +42,11 @@ export default async function AccountPage() {
           <p className="muted">Привет, {user?.name || user?.email} 👋</p>
           <p className="balance-value"><span>{user?.bonusBalance ?? 0}</span> бонусов</p>
           <p className="muted" style={{ fontSize: ".85rem" }}>1 бонус = 1 ₽. Списываются прямо в корзине при оформлении заказа.</p>
+          {expiry && (
+            <p className="muted" style={{ fontSize: ".85rem", color: "var(--minus)" }}>
+              ⏳ {expiry.amount} бонусов сгорят {fmt(expiry.date)} (срок — 4 месяца с начисления).
+            </p>
+          )}
           <div className="inline-actions" style={{ marginTop: 12 }}>
             <Link className="btn btn--primary btn--sm" href="/catalog">За покупками</Link>
             {user?.email?.toLowerCase() === (process.env.ADMIN_EMAIL || "").toLowerCase() && (

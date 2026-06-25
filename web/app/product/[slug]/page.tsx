@@ -8,7 +8,7 @@ import AddToCart from "@/components/AddToCart";
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const p = await prisma.product.findUnique({ where: { slug } });
-  if (!p) notFound();
+  if (!p || p.stock <= 0) notFound();
 
   return (
     <main className="page product-page">
@@ -39,6 +39,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <h1 style={{ margin: "8px 0 12px" }}>{p.name}</h1>
           <p className="muted" style={{ marginBottom: 18 }}>{p.description}</p>
           <div style={{ fontSize: "1.6rem", fontWeight: 800, marginBottom: 6 }}>{money(p.price)}</div>
+          {p.stock < 3 && <p className="stock-low" style={{ marginBottom: 6 }}>🔥 Осталось {p.stock} шт.</p>}
           <p className="product__bonus" style={{ marginBottom: 18 }}>+{earnedFor(p.price)} бонусов за покупку</p>
           <AddToCart
             item={{ kind: "product", slug: p.slug, title: p.name, price: p.price, image: p.image }}

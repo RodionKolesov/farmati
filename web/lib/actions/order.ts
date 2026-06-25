@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { createPayment } from "@/lib/yookassa";
 import { finalizeOrder } from "@/lib/orderFinalize";
+import { expireBonuses, spendBonusFIFO } from "@/lib/bonusLedger";
 
 type DeliveryMethod = "courier" | "pickup" | "cdek" | "post";
 type ClientItem = { kind: "product" | "course"; slug: string; qty: number };
@@ -58,6 +59,9 @@ export async function createOrder(
 
   const subtotal = orderItems.reduce((s, i) => s + i.price * i.qty, 0);
 
+  // Сначала сжигаем просроченные бонусы этого пользователя (чтобы нельзя было потратить сгоревшее).
+  await expireBonuses(userId);
+
   // Списание бонусов: не больше баланса и не больше суммы заказа.
   const user = await prisma.user.findUnique({ where: { id: userId } });
   const balance = user?.bonusBalance ?? 0;
@@ -84,10 +88,7 @@ export async function createOrder(
       },
     });
     if (spend > 0) {
-      await tx.bonusTransaction.create({
-        data: { userId, orderId: o.id, delta: -spend, type: "spend", note: "Списание при оплате заказа" },
-      });
-      await tx.user.update({ where: { id: userId }, data: { bonusBalance: { decrement: spend } } });
+      await spendBonusFIFO(tx, userId, spend, "Списание при оплате заказа", o.id);
     }
     return o;
   });

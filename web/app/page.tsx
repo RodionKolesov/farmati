@@ -5,9 +5,10 @@ import CourseCard from "@/components/CourseCard";
 import ConsultForm from "@/components/ConsultForm";
 
 export default async function Home() {
-  const [products, courses] = await Promise.all([
-    prisma.product.findMany({ take: 8 }),
+  const [products, courses, reviews] = await Promise.all([
+    prisma.product.findMany({ where: { stock: { gt: 0 } }, take: 8 }),
     prisma.course.findMany({ take: 3 }),
+    prisma.review.findMany({ orderBy: [{ order: "asc" }, { createdAt: "desc" }], take: 9 }),
   ]);
 
   return (
@@ -16,10 +17,11 @@ export default async function Home() {
       <section className="hero">
         <div className="hero__inner">
           <div className="hero__brandbox">
-            <span className="hero__rule" aria-hidden="true"></span>
             <span className="hero__club">Женский клуб</span>
+            <span className="hero__rule" aria-hidden="true"></span>
             <span className="hero__brand">FARMATI.</span>
             <span className="hero__rule" aria-hidden="true"></span>
+            <span className="hero__club">Формула красоты</span>
           </div>
           <div className="hero__cta">
             <Link className="btn btn--primary" href="/login">Вступить в клуб</Link>
@@ -120,9 +122,25 @@ export default async function Home() {
         <div className="container">
           <div className="section__head"><span className="eyebrow">Результаты</span><h2>Отзывы участниц</h2></div>
           <div className="reviews">
-            <figure className="review"><div className="stars">★★★★★</div><blockquote>«Кожа стала заметно свежее, а главное — появилась привычка заботиться о себе каждый день».</blockquote><figcaption>— Анна</figcaption></figure>
-            <figure className="review"><div className="stars">★★★★★</div><blockquote>«Энзимная пудра — любовь. Кожа гладкая уже после первого применения».</blockquote><figcaption>— Мария</figcaption></figure>
-            <figure className="review"><div className="stars">★★★★★</div><blockquote>«Лучшее в клубе — атмосфера и поддержка. Возвращаюсь сюда как к себе».</blockquote><figcaption>— Екатерина</figcaption></figure>
+            {reviews.map((r) => (
+              <figure className="review" key={r.id}>
+                {(r.beforeImage || r.afterImage) && (
+                  <div className="review__ba">
+                    <div className="review__ba-item">
+                      {r.beforeImage ? <img src={r.beforeImage} alt="До" /> : <div className="review__ba-empty" />}
+                      <span>До</span>
+                    </div>
+                    <div className="review__ba-item">
+                      {r.afterImage ? <img src={r.afterImage} alt="После" /> : <div className="review__ba-empty" />}
+                      <span>После</span>
+                    </div>
+                  </div>
+                )}
+                <div className="stars">{"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}</div>
+                {r.text && <blockquote>«{r.text}»</blockquote>}
+                <figcaption>— {r.author}</figcaption>
+              </figure>
+            ))}
           </div>
         </div>
       </section>

@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { hashPassword, verifyPassword } from "@/lib/password";
-import { WELCOME_BONUS } from "@/lib/bonus";
+import { WELCOME_BONUS, bonusExpiryFrom } from "@/lib/bonus";
 import { signIn, signOut, auth } from "@/auth";
 
 export type PwState = { ok?: boolean; error?: string } | undefined;
@@ -41,7 +41,14 @@ export async function registerUser(_prev: AuthState, formData: FormData): Promis
     data: { email, name, phone, passwordHash: hashPassword(password), bonusBalance: WELCOME_BONUS },
   });
   await prisma.bonusTransaction.create({
-    data: { userId: user.id, delta: WELCOME_BONUS, type: "earn", note: "Приветственные бонусы" },
+    data: {
+      userId: user.id,
+      delta: WELCOME_BONUS,
+      type: "earn",
+      note: "Приветственные бонусы",
+      remaining: WELCOME_BONUS,
+      expiresAt: bonusExpiryFrom(new Date()),
+    },
   });
 
   await signIn("credentials", { email, password, redirectTo: "/account" });

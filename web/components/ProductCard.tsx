@@ -24,6 +24,7 @@ export default function ProductCard({ p }: { p: Product }) {
           {p.name}
         </Link>
         <span className="product__bonus">+{earnedFor(p.price)} бонусов</span>
+        {p.stock < 3 && <span className="stock-low">🔥 Осталось {p.stock} шт.</span>}
         <div className="product__foot">
           <span className="product__price">{money(p.price)}</span>
           <AddToCart

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useCart } from "@/lib/cart";
 import { money } from "@/lib/money";
+import { earnedFor, EARN_RATE } from "@/lib/bonus";
 import { createOrder } from "@/lib/actions/order";
 
 const FREE_FROM = 3500;
@@ -177,7 +178,7 @@ export default function CheckoutPage() {
                 </button>
                 {error && <p className="msg err">{error}</p>}
                 <p className="muted" style={{ fontSize: ".78rem", marginTop: 10 }}>
-                  После оплаты начислим {Math.floor((total - delivery) * 0.05)} бонусов (5% от товаров).
+                  После оплаты начислим {earnedFor(total - delivery)} бонусов ({Math.round(EARN_RATE * 100)}% от товаров).
                   {hasPhysical && sub < FREE_FROM && method === "courier" && ` Доставка бесплатно от ${money(FREE_FROM)}.`}
                 </p>
               </>

@@ -18,6 +18,48 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
   const loggedIn = !!session?.user?.id;
   const purchased = await hasPurchasedCourse(session?.user?.id, c.id);
 
+  const freeLessons = c.lessonItems.filter((l) => l.free);
+  const paidLessons = c.lessonItems.filter((l) => !l.free);
+
+  const renderLesson = (l: (typeof c.lessonItems)[number]) => {
+    const canWatch = l.free ? loggedIn : purchased;
+    return (
+      <li key={l.id} className="lesson">
+        <div className="lesson__head">
+          <span className="lesson__title">{l.title}</span>
+          <span className={`lesson__badge ${l.free ? "free" : "lock"}`}>
+            {l.free ? "бесплатно" : "по покупке"}
+          </span>
+        </div>
+        {canWatch && l.videoUrl ? (
+          <div className="video">
+            <iframe src={l.videoUrl} title={l.title} allowFullScreen allow="encrypted-media" />
+          </div>
+        ) : (
+          <div className="lesson__locked">
+            {l.free ? (
+              <>
+                <span>🔒 Войдите, чтобы смотреть бесплатные уроки</span>
+                <Link className="btn btn--primary btn--sm" href="/login">Вступить в клуб</Link>
+              </>
+            ) : (
+              <>
+                <span>🔒 Урок откроется после покупки курса</span>
+                {!purchased && (
+                  <AddToCart
+                    item={{ kind: "course", slug: c.slug, title: c.title, price: c.price, image: c.image }}
+                    variant="button"
+                    label="Купить курс"
+                  />
+                )}
+              </>
+            )}
+          </div>
+        )}
+      </li>
+    );
+  };
+
   return (
     <main className="page">
       <div className="container">
@@ -55,46 +97,18 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
           Бесплатные уроки доступны после регистрации, остальные — после покупки курса.
         </p>
 
-        <ul className="lessons">
-          {c.lessonItems.map((l) => {
-            const canWatch = l.free ? loggedIn : purchased;
-            return (
-              <li key={l.id} className="lesson">
-                <div className="lesson__head">
-                  <span className="lesson__title">{l.title}</span>
-                  <span className={`lesson__badge ${l.free ? "free" : "lock"}`}>
-                    {l.free ? "бесплатно" : "по покупке"}
-                  </span>
-                </div>
-                {canWatch && l.videoUrl ? (
-                  <div className="video">
-                    <iframe src={l.videoUrl} title={l.title} allowFullScreen allow="encrypted-media" />
-                  </div>
-                ) : (
-                  <div className="lesson__locked">
-                    {l.free ? (
-                      <>
-                        <span>🔒 Войдите, чтобы смотреть бесплатные уроки</span>
-                        <Link className="btn btn--primary btn--sm" href="/login">Вступить в клуб</Link>
-                      </>
-                    ) : (
-                      <>
-                        <span>🔒 Урок откроется после покупки курса</span>
-                        {!purchased && (
-                          <AddToCart
-                            item={{ kind: "course", slug: c.slug, title: c.title, price: c.price, image: c.image }}
-                            variant="button"
-                            label="Купить курс"
-                          />
-                        )}
-                      </>
-                    )}
-                  </div>
-                )}
-              </li>
-            );
-          })}
-        </ul>
+        {freeLessons.length > 0 && (
+          <>
+            <h3 className="lessons__group">Бесплатные уроки ({freeLessons.length})</h3>
+            <ul className="lessons">{freeLessons.map(renderLesson)}</ul>
+          </>
+        )}
+        {paidLessons.length > 0 && (
+          <>
+            <h3 className="lessons__group">Платные уроки</h3>
+            <ul className="lessons">{paidLessons.map(renderLesson)}</ul>
+          </>
+        )}
       </div>
     </main>
   );

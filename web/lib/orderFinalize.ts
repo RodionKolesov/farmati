@@ -1,6 +1,7 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
 import { earnedFor } from "@/lib/bonus";
+import { grantBonus } from "@/lib/bonusLedger";
 
 // Перевод заказа в статус "оплачен": начисление 5% бонусами. Идемпотентно —
 // повторный вызов (например, дубль вебхука) ничего не меняет.
@@ -17,10 +18,16 @@ export async function finalizeOrder(orderId: string, paymentId?: string): Promis
       data: { status: "paid", bonusEarned: earned, paymentId: paymentId ?? order.paymentId },
     });
     if (earned > 0) {
-      await tx.bonusTransaction.create({
-        data: { userId: order.userId, orderId, delta: earned, type: "earn", note: "Начисление за заказ" },
-      });
-      await tx.user.update({ where: { id: order.userId }, data: { bonusBalance: { increment: earned } } });
+      await grantBonus(tx, order.userId, earned, "Начисление за заказ", orderId);
+    }
+    // Списываем остатки купленных товаров (курсы без остатка пропускаем). Не уходим в минус.
+    const items = await tx.orderItem.findMany({ where: { orderId, productId: { not: null } } });
+    for (const it of items) {
+      if (!it.productId) continue;
+      const prod = await tx.product.findUnique({ where: { id: it.productId } });
+      if (prod) {
+        await tx.product.update({ where: { id: it.productId }, data: { stock: Math.max(0, prod.stock - it.qty) } });
+      }
     }
   });
 }

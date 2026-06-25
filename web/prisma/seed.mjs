@@ -50,10 +50,26 @@ const lessonsByCourse = {
   ],
 };
 
+// Отзывы участниц. Фото «до/после» добавляются позже через админку.
+const reviews = [
+  { author: "Анна", rating: 5, text: "Кожа стала заметно свежее, а главное — появилась привычка заботиться о себе каждый день.", order: 0 },
+  { author: "Мария", rating: 5, text: "Энзимная пудра — любовь. Кожа гладкая уже после первого применения.", order: 1 },
+  { author: "Екатерина", rating: 5, text: "Лучшее в клубе — атмосфера и поддержка. Возвращаюсь сюда как к себе.", order: 2 },
+];
+
 async function main() {
   // чистим старые товары, чтобы не осталось демо-позиций
   await prisma.product.deleteMany({});
-  for (const p of products) await prisma.product.upsert({ where: { slug: p.slug }, update: p, create: p });
+  for (let i = 0; i < products.length; i++) {
+    // первый товар — 2 шт. (демонстрация метки «осталось N шт.»), остальные — 10
+    const data = { ...products[i], stock: i === 0 ? 2 : 10 };
+    await prisma.product.upsert({ where: { slug: data.slug }, update: data, create: data });
+  }
+
+  // отзывы: пересоздаём базовый набор, если их ещё нет
+  if ((await prisma.review.count()) === 0) {
+    for (const r of reviews) await prisma.review.create({ data: r });
+  }
 
   for (const c of courses) {
     const course = await prisma.course.upsert({ where: { slug: c.slug }, update: c, create: c });

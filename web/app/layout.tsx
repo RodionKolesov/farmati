@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SmoothConsult from "@/components/SmoothConsult";
 
 export const metadata: Metadata = {
   title: "Farmati.cosmetics — сыворотки, кремы и курсы по уходу за лицом",
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="ru" data-scroll-behavior="smooth">
       <body>
+        <SmoothConsult />
         <Header />
         {children}
         <Footer />
