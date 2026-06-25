@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import AddToCart from "./AddToCart";
 import ProductGallery from "./ProductGallery";
 import { money } from "@/lib/money";
@@ -10,8 +11,11 @@ import type { Product } from "@prisma/client";
 
 export default function ProductCard({ p }: { p: Product }) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const imgs = productImages(p);
   const cartItem = { kind: "product" as const, slug: p.slug, title: p.name, price: p.price, image: imgs[0] ?? "" };
+
+  useEffect(() => setMounted(true), []);
 
   // Блокируем прокрутку фона и закрываем по Esc, пока окно открыто.
   useEffect(() => {
@@ -25,6 +29,27 @@ export default function ProductCard({ p }: { p: Product }) {
       document.body.style.overflow = prev;
     };
   }, [open]);
+
+  // Окно рендерим порталом в body — иначе overflow карточки его обрезает.
+  const modal = (
+    <div className="qv-overlay" onClick={() => setOpen(false)} role="dialog" aria-modal="true">
+      <div className="qv" onClick={(e) => e.stopPropagation()}>
+        <button className="qv__close" onClick={() => setOpen(false)} aria-label="Закрыть">×</button>
+        <div className="qv__media">
+          <ProductGallery images={imgs} name={p.name} />
+        </div>
+        <div className="qv__info">
+          <span className="product__cat">{p.category}</span>
+          <h2 className="qv__name">{p.name}</h2>
+          <div className="qv__price">{money(p.price)}</div>
+          {p.stock < 3 && <p className="stock-low" style={{ marginBottom: 6 }}>🔥 Осталось {p.stock} шт.</p>}
+          <p className="product__bonus" style={{ marginBottom: 14 }}>+{earnedFor(p.price)} бонусов за покупку</p>
+          {p.description && <p className="muted qv__desc">{p.description}</p>}
+          <AddToCart item={cartItem} variant="button" label="В корзину" />
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <article className="product">
@@ -58,25 +83,7 @@ export default function ProductCard({ p }: { p: Product }) {
         </button>
       </div>
 
-      {open && (
-        <div className="qv-overlay" onClick={() => setOpen(false)} role="dialog" aria-modal="true">
-          <div className="qv" onClick={(e) => e.stopPropagation()}>
-            <button className="qv__close" onClick={() => setOpen(false)} aria-label="Закрыть">×</button>
-            <div className="qv__media">
-              <ProductGallery images={imgs} name={p.name} />
-            </div>
-            <div className="qv__info">
-              <span className="product__cat">{p.category}</span>
-              <h2 className="qv__name">{p.name}</h2>
-              <div className="qv__price">{money(p.price)}</div>
-              {p.stock < 3 && <p className="stock-low" style={{ marginBottom: 6 }}>🔥 Осталось {p.stock} шт.</p>}
-              <p className="product__bonus" style={{ marginBottom: 14 }}>+{earnedFor(p.price)} бонусов за покупку</p>
-              {p.description && <p className="muted qv__desc">{p.description}</p>}
-              <AddToCart item={cartItem} variant="button" label="В корзину" />
-            </div>
-          </div>
-        </div>
-      )}
+      {open && mounted && createPortal(modal, document.body)}
     </article>
   );
 }
