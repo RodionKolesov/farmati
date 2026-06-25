@@ -42,6 +42,8 @@ export default function LoginPage() {
               <input name="email" type="email" required placeholder="you@mail.ru" autoComplete="email" />
               <label>Пароль</label>
               <input name="password" type="password" required minLength={6} placeholder="••••••" autoComplete="new-password" />
+              <label>Повторите пароль</label>
+              <input name="password2" type="password" required minLength={6} placeholder="••••••" autoComplete="new-password" />
               <button className="btn btn--primary btn--block" style={{ marginTop: 16 }} disabled={signupPending}>
                 {signupPending ? "…" : "Зарегистрироваться"}
               </button>

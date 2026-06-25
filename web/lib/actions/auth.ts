@@ -25,6 +25,7 @@ export type AuthState = { error?: string } | undefined;
 export async function registerUser(_prev: AuthState, formData: FormData): Promise<AuthState> {
   const email = String(formData.get("email") ?? "").toLowerCase().trim();
   const password = String(formData.get("password") ?? "");
+  const password2 = String(formData.get("password2") ?? "");
   const name = String(formData.get("name") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim();
 
@@ -32,6 +33,7 @@ export async function registerUser(_prev: AuthState, formData: FormData): Promis
   if (!isValidEmail(email)) return { error: "Некорректный email" };
   if (!isValidPhone(phone)) return { error: "Некорректный номер телефона (10–15 цифр)" };
   if (!password || password.length < 6) return { error: "Пароль не короче 6 символов" };
+  if (password !== password2) return { error: "Пароли не совпадают" };
 
   const exists = await prisma.user.findUnique({ where: { email } });
   if (exists) return { error: "Пользователь с таким email уже есть" };
