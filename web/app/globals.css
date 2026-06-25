@@ -326,6 +326,9 @@ a.club-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); bord
 }
 @media (max-width: 640px) {
   .nav { display: none; }
+  /* На телефоне убираем плашку-слоган — она занимает слишком много места */
+  .hero p.hero__tagline { display: none; }
+  .hero { padding-bottom: 48px; }
   .products { grid-template-columns: repeat(2, 1fr); }
   .lead-form .row { grid-template-columns: 1fr; }
   /* На телефоне показываем превью: 4 товара и 2 курса, остальное — по кнопке */
