@@ -31,7 +31,6 @@ export default function Certificates() {
   return (
     <div className="certs">
       <div className="container certs__head">
-        <span className="eyebrow">Образование</span>
         <h3 className="certs__title">Дипломы и сертификаты</h3>
       </div>
       <div className="certs__viewport">
