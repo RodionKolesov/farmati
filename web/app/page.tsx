@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
 import CourseCard from "@/components/CourseCard";
 import ConsultForm from "@/components/ConsultForm";
+import HeroParallax from "@/components/HeroParallax";
 
 export default async function Home() {
   const [products, courses, reviews] = await Promise.all([
@@ -15,6 +16,7 @@ export default async function Home() {
     <main>
       {/* Hero */}
       <section className="hero">
+        <HeroParallax />
         <div className="hero__inner">
           <div className="hero__brandbox">
             <span className="hero__club">Женский клуб</span>
