@@ -33,9 +33,9 @@ export default function Footer() {
       </div>
       <div className="container footer__bottom">
         <span>© 2026 FARMATI.cosmetics. Все права защищены.</span>
-        <span style={{ display: "flex", gap: 10 }}>
+        <span style={{ display: "flex", gap: 12, alignItems: "center" }}>
           <Link href="/privacy">Политика конфиденциальности</Link>
-          <Link href="/offer">Оферта</Link>
+          <Link className="btn btn--light btn--sm" href="/offer">Публичная оферта</Link>
         </span>
       </div>
     </footer>
