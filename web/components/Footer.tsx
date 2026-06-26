@@ -11,9 +11,6 @@ export default function Footer() {
           <p className="muted" style={{ marginTop: 14, color: "#b3a3bb", whiteSpace: "nowrap" }}>
             Женский клуб «Формула красоты».
           </p>
-          <p className="muted" style={{ marginTop: 6, color: "#b3a3bb", maxWidth: 320 }}>
-            Уходовая косметика с душой<br />и курсы по уходу за собой.
-          </p>
         </div>
         <div>
           <h4>Каталог</h4>
