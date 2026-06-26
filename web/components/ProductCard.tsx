@@ -50,6 +50,7 @@ export default function ProductCard({ p }: { p: Product }) {
         <button className="qv__close" onClick={() => setOpen(false)} aria-label="Закрыть">×</button>
         <div className="qv__media">
           <ProductGallery images={imgs} name={p.name} />
+          <AddToCart item={cartItem} variant="button" label="В корзину" />
         </div>
         <div className="qv__info">
           <span className="product__cat">{p.category}</span>
@@ -58,7 +59,6 @@ export default function ProductCard({ p }: { p: Product }) {
           {p.stock < 3 && <p className="stock-low" style={{ marginBottom: 6 }}>🔥 Осталось {p.stock} шт.</p>}
           <p className="product__bonus" style={{ marginBottom: 14 }}>+{earnedFor(p.price)} бонусов за покупку</p>
           {p.description && <p className="muted qv__desc">{p.description}</p>}
-          <AddToCart item={cartItem} variant="button" label="В корзину" />
         </div>
       </div>
     </div>
