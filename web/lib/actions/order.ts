@@ -23,6 +23,16 @@ function deliveryCostFor(method: DeliveryMethod, subtotal: number): number {
   return 0;
 }
 
+// Телефон для чека ЮKassa — только цифры (E.164), напр. 79135679912. Иначе ЮKassa отклоняет чек.
+function normalizePhoneForReceipt(raw: string): string | undefined {
+  let d = (raw || "").replace(/\D/g, "");
+  if (!d) return undefined;
+  if (d.length === 11 && d.startsWith("8")) d = "7" + d.slice(1);
+  if (d.length === 10) d = "7" + d;
+  if (d.length < 11 || d.length > 15) return undefined;
+  return d;
+}
+
 // Строки чека 54-ФЗ. Каждую позицию разворачиваем по 1 шт, распределяем скидку
 // бонусами по копейкам (остаток — на последнюю строку), добавляем доставку.
 // Сумма строк всегда = сумме к оплате (товары − бонусы + доставка). vat_code 1 = без НДС (УСН).
@@ -162,7 +172,7 @@ export async function createOrder(
           receipt: {
             customer: {
               email: checkout.email.trim() || undefined,
-              phone: checkout.phone.trim() || undefined,
+              phone: normalizePhoneForReceipt(checkout.phone),
             },
             items: buildReceiptItems(orderItems, spend, delivery),
           },
