@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { createPayment } from "@/lib/yookassa";
+import { createPayment, type ReceiptItem } from "@/lib/yookassa";
 import { finalizeOrder } from "@/lib/orderFinalize";
 import { expireBonuses, spendBonusFIFO } from "@/lib/bonusLedger";
 import { isValidEmail, isValidPhone } from "@/lib/validate";
@@ -21,6 +21,56 @@ const METHODS: DeliveryMethod[] = ["courier", "pickup", "cdek", "post"];
 function deliveryCostFor(method: DeliveryMethod, subtotal: number): number {
   if (method === "courier") return subtotal >= DELIVERY_FREE_FROM ? 0 : DELIVERY_FLAT;
   return 0;
+}
+
+// Строки чека 54-ФЗ. Каждую позицию разворачиваем по 1 шт, распределяем скидку
+// бонусами по копейкам (остаток — на последнюю строку), добавляем доставку.
+// Сумма строк всегда = сумме к оплате (товары − бонусы + доставка). vat_code 1 = без НДС (УСН).
+function buildReceiptItems(
+  items: { title: string; price: number; qty: number; courseId?: string }[],
+  spend: number,
+  delivery: number,
+): ReceiptItem[] {
+  const units: { description: string; kop: number; subject: string }[] = [];
+  for (const it of items) {
+    for (let n = 0; n < it.qty; n++) {
+      units.push({
+        description: (it.title || "Товар").slice(0, 128),
+        kop: Math.round(it.price * 100),
+        subject: it.courseId ? "service" : "commodity",
+      });
+    }
+  }
+  const totalKop = units.reduce((s, u) => s + u.kop, 0);
+  const discountKop = Math.min(Math.max(0, Math.round(spend * 100)), totalKop);
+  const netTarget = totalKop - discountKop;
+  let allocated = 0;
+  for (let i = 0; i < units.length; i++) {
+    let net: number;
+    if (i === units.length - 1) net = netTarget - allocated;
+    else if (totalKop > 0) { net = Math.round((units[i].kop * netTarget) / totalKop); allocated += net; }
+    else net = 0;
+    units[i].kop = Math.max(0, net);
+  }
+  const result: ReceiptItem[] = units.map((u) => ({
+    description: u.description,
+    quantity: "1.00",
+    amount: { value: (u.kop / 100).toFixed(2), currency: "RUB" },
+    vat_code: 1,
+    payment_subject: u.subject,
+    payment_mode: "full_payment",
+  }));
+  if (delivery > 0) {
+    result.push({
+      description: "Доставка",
+      quantity: "1.00",
+      amount: { value: delivery.toFixed(2), currency: "RUB" },
+      vat_code: 1,
+      payment_subject: "service",
+      payment_mode: "full_payment",
+    });
+  }
+  return result;
 }
 
 export type CheckoutResult =
@@ -109,6 +159,13 @@ export async function createOrder(
           amount,
           description: `Заказ Farmati #${order.id.slice(-6)}`,
           returnUrl: successUrl,
+          receipt: {
+            customer: {
+              email: checkout.email.trim() || undefined,
+              phone: checkout.phone.trim() || undefined,
+            },
+            items: buildReceiptItems(orderItems, spend, delivery),
+          },
         });
 
   if (payment.mode === "live" && payment.confirmationUrl) {
@@ -116,8 +173,12 @@ export async function createOrder(
     return { ok: true, url: payment.confirmationUrl, orderId: order.id };
   }
 
-  // dev-режим: считаем заказ оплаченным и начисляем бонусы немедленно.
-  // Возвращаем относительный путь — остаёмся на текущем домене (в т.ч. ngrok).
+  // Ошибка создания платежа — НЕ считаем заказ оплаченным.
+  if (payment.mode === "error") {
+    return { ok: false, error: "Не удалось создать платёж. Попробуйте ещё раз." };
+  }
+
+  // dev-режим (ключи не заданы / сумма 0): считаем заказ оплаченным и начисляем бонусы.
   await finalizeOrder(order.id);
   return { ok: true, url: successPath, orderId: order.id };
 }
