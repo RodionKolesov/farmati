@@ -55,6 +55,11 @@ export default async function Home() {
         <Certificates />
       </section>
 
+      {/* Брендовый баннер на всю ширину */}
+      <section className="brand-banner" aria-label="FARMATI.cosmetics">
+        <img src="/brand-banner.jpg" alt="farmati. cosmetics" />
+      </section>
+
       {/* Каталог */}
       <section className="section section--soft" id="catalog">
         <div className="container">
