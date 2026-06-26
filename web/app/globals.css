@@ -381,6 +381,8 @@ a.club-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); bord
 .stock-low { display: inline-block; color: var(--minus); font-weight: 700; font-size: 0.82rem; }
 .stock-edit { display: inline-flex; gap: 6px; align-items: center; }
 .stock-edit input { width: 62px; padding: 4px 6px; font-size: 0.85rem; }
+.stock-edit select { padding: 5px 6px; font-size: 0.82rem; border: 1px solid var(--line); border-radius: 8px; background: #fff; font-family: inherit; max-width: 160px; }
+.dstatus { display: inline-block; margin-top: 5px; font-size: 0.72rem; font-weight: 600; padding: 2px 9px; border: 1px solid; border-radius: 999px; line-height: 1.5; }
 
 @media (max-width: 980px) {
   .about__inner, .bonus__inner, .grid2, .product-detail { grid-template-columns: 1fr; }

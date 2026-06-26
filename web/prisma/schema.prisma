@@ -66,6 +66,7 @@ model Order {
   userId         String
   user           User               @relation(fields: [userId], references: [id])
   status         String             @default("pending") // pending | paid
+  deliveryStatus String             @default("processing") // processing | assembling | shipped | delivered | canceled
   amount         Int                // итог к оплате (товары - бонусы + доставка)
   subtotal       Int                // сумма позиций до бонусов
   bonusEarned    Int                @default(0)

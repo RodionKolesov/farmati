@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
 import { slugify } from "@/lib/slug";
 import { expireBonuses } from "@/lib/bonusLedger";
+import { DELIVERY_STATUSES } from "@/lib/orderStatus";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
@@ -130,6 +131,17 @@ export async function deleteProduct(formData: FormData) {
   await prisma.product.delete({ where: { id: String(formData.get("id")) } });
   refresh();
   redirect("/admin/products");
+}
+
+// Смена статуса доставки заказа администратором.
+export async function updateDeliveryStatus(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const status = String(formData.get("status") ?? "processing");
+  const valid = DELIVERY_STATUSES.some((s) => s.code === status) ? status : "processing";
+  await prisma.order.update({ where: { id }, data: { deliveryStatus: valid } });
+  revalidatePath("/admin/orders");
+  redirect("/admin/orders");
 }
 
 // ───────────── Курсы ─────────────

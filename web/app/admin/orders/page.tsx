@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { money } from "@/lib/money";
+import { DELIVERY_STATUSES } from "@/lib/orderStatus";
+import { updateDeliveryStatus } from "@/lib/actions/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +22,7 @@ export default async function AdminOrders() {
         <a className="btn btn--ghost btn--sm" href="/admin/orders/export">⬇ Выгрузить в Excel</a>
       </div>
       <table className="admin-table">
-        <thead><tr><th>Дата</th><th>Клиент</th><th>Состав</th><th>Доставка</th><th>Сумма</th><th>Бонусы</th><th>Статус</th></tr></thead>
+        <thead><tr><th>Дата</th><th>Клиент</th><th>Состав</th><th>Доставка</th><th>Сумма</th><th>Бонусы</th><th>Оплата</th><th>Статус доставки</th></tr></thead>
         <tbody>
           {orders.map((o) => (
             <tr key={o.id}>
@@ -39,6 +41,17 @@ export default async function AdminOrders() {
               <td>{money(o.amount)}</td>
               <td className="muted">+{o.bonusEarned} / −{o.bonusSpent}</td>
               <td><span className={o.status === "paid" ? "tag" : "muted"}>{o.status === "paid" ? "оплачен" : "ожидает"}</span></td>
+              <td>
+                <form action={updateDeliveryStatus} className="stock-edit">
+                  <input type="hidden" name="id" value={o.id} />
+                  <select name="status" defaultValue={o.deliveryStatus}>
+                    {DELIVERY_STATUSES.map((s) => (
+                      <option key={s.code} value={s.code}>{s.label}</option>
+                    ))}
+                  </select>
+                  <button className="link">OK</button>
+                </form>
+              </td>
             </tr>
           ))}
         </tbody>

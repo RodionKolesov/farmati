@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { logout } from "@/lib/actions/auth";
 import { money } from "@/lib/money";
 import { expireBonuses, nextExpiry } from "@/lib/bonusLedger";
+import { deliveryStatusInfo } from "@/lib/orderStatus";
 import { getAdmin } from "@/lib/admin";
 import PasswordForm from "@/components/PasswordForm";
 
@@ -80,14 +81,20 @@ export default async function AccountPage() {
             <p className="empty-note">Заказов пока нет.</p>
           ) : (
             <ul className="list">
-              {orders.map((o) => (
-                <li key={o.id} className="row" style={{ gridTemplateColumns: "auto 1fr auto auto" }}>
-                  <span className="muted">{fmt(o.createdAt)}</span>
-                  <span>{o.items.map((i) => i.title).join(", ")}</span>
-                  <span className={o.status === "paid" ? "tag" : "muted"}>{o.status === "paid" ? "оплачен" : "ожидает"}</span>
-                  <span style={{ fontWeight: 700 }}>{money(o.amount)}</span>
-                </li>
-              ))}
+              {orders.map((o) => {
+                const ds = deliveryStatusInfo(o.deliveryStatus);
+                return (
+                  <li key={o.id} className="row" style={{ gridTemplateColumns: "auto 1fr auto auto" }}>
+                    <span className="muted">{fmt(o.createdAt)}</span>
+                    <span>
+                      {o.items.map((i) => i.title).join(", ")}
+                      <span className="dstatus" style={{ color: ds.color, borderColor: ds.color }}>{ds.label}</span>
+                    </span>
+                    <span className={o.status === "paid" ? "tag" : "muted"}>{o.status === "paid" ? "оплачен" : "ожидает"}</span>
+                    <span style={{ fontWeight: 700 }}>{money(o.amount)}</span>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>
