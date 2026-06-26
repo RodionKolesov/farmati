@@ -14,6 +14,7 @@ const CERTS = [
 export default function Certificates() {
   const [active, setActive] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [showAll, setShowAll] = useState(false);
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
@@ -34,6 +35,7 @@ export default function Certificates() {
       <div className="container certs__head">
         <h3 className="certs__title">Дипломы и сертификаты</h3>
       </div>
+      {/* Десктоп: бегущая лента */}
       <div className="certs__viewport">
         <div className="certs__track">
           {loop.map((c, i) => (
@@ -48,6 +50,28 @@ export default function Certificates() {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Телефон: статичная сетка из 5 — видно 3, остальные по кнопке */}
+      <div className="certs__mobile">
+        <div className="certs__mgrid">
+          {CERTS.map((c, i) => (
+            <button
+              key={i}
+              type="button"
+              className={"cert" + (!showAll && i >= 3 ? " is-hidden" : "")}
+              onClick={() => setActive(c.src)}
+              aria-label={`Открыть: ${c.alt}`}
+            >
+              <img src={c.src} alt={c.alt} />
+            </button>
+          ))}
+        </div>
+        {!showAll && (
+          <button type="button" className="certs__more" onClick={() => setShowAll(true)}>
+            Посмотреть все сертификаты
+          </button>
+        )}
       </div>
 
       {active && mounted && createPortal(

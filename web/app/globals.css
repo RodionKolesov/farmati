@@ -257,6 +257,8 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .certs { margin-top: 44px; }
 .certs__head { margin-bottom: 18px; }
 .certs__title { font-size: 1.9rem; }
+.certs__mobile { display: none; }
+.certs__more { display: block; margin: 16px auto 0; background: none; border: none; color: var(--accent); font-weight: 600; font-size: 0.95rem; text-decoration: underline; cursor: pointer; font-family: inherit; }
 .certs__viewport { overflow: hidden; width: 100%; -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); }
 .certs__track { display: flex; gap: 18px; width: max-content; animation: certsMove 45s linear infinite; }
 .certs__viewport:hover .certs__track { animation-play-state: paused; }
@@ -269,11 +271,14 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
   .certs__track { animation: none; }
 }
 @media (max-width: 640px) {
-  .cert, .cert img { height: 165px; }
   .certs__title { font-size: 1.4rem; }
-  /* На телефоне — простая листаемая лента (надёжнее анимации с маской) */
-  .certs__viewport { -webkit-mask-image: none; mask-image: none; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .certs__track { animation: none; gap: 12px; padding: 0 16px; }
+  /* Телефон: статичная сетка вместо бегущей ленты */
+  .certs__viewport { display: none; }
+  .certs__mobile { display: block; }
+  .certs__mgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 16px; }
+  .certs__mgrid .cert { height: auto; width: 100%; aspect-ratio: 3 / 4; background: #faf6f8; }
+  .certs__mgrid .cert img { width: 100%; height: 100%; object-fit: contain; }
+  .cert.is-hidden { display: none; }
 }
 .lb-overlay { position: fixed; inset: 0; z-index: 300; background: rgba(20,12,24,.85); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 24px; animation: qvfade .15s ease; }
 .lb-img { max-width: 92vw; max-height: 90vh; object-fit: contain; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,.5); cursor: default; }
