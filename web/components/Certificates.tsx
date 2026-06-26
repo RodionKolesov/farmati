@@ -44,7 +44,7 @@ export default function Certificates() {
               onClick={() => setActive(c.src)}
               aria-label={`Открыть: ${c.alt}`}
             >
-              <img src={c.src} alt={c.alt} loading="lazy" />
+              <img src={c.src} alt={c.alt} />
             </button>
           ))}
         </div>

@@ -27,7 +27,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <div>
           <span className="product__cat">{p.category}</span>
           <h1 style={{ margin: "8px 0 12px" }}>{p.name}</h1>
-          <p className="muted" style={{ marginBottom: 18 }}>{p.description}</p>
+          <p className="muted" style={{ marginBottom: 18, whiteSpace: "pre-wrap" }}>{p.description}</p>
           <div style={{ fontSize: "1.6rem", fontWeight: 800, marginBottom: 6 }}>{money(p.price)}</div>
           {p.stock < 3 && <p className="stock-low" style={{ marginBottom: 6 }}>🔥 Осталось {p.stock} шт.</p>}
           <p className="product__bonus" style={{ marginBottom: 18 }}>+{earnedFor(p.price)} бонусов за покупку</p>
