@@ -6,10 +6,13 @@ export default function Footer() {
       <div className="container footer__grid">
         <div>
           <Link href="/" className="logo logo--light">
-            FARMATI<span>.cosmetics</span>
+            farmati.<span>cosmetics</span>
           </Link>
-          <p className="muted" style={{ marginTop: 10, maxWidth: 250, color: "#b3a3bb" }}>
-            Женский клуб «Формула красоты». Уходовая косметика с душой и курсы по уходу за собой.
+          <p className="muted" style={{ marginTop: 14, color: "#b3a3bb", whiteSpace: "nowrap" }}>
+            Женский клуб «Формула красоты».
+          </p>
+          <p className="muted" style={{ marginTop: 6, color: "#b3a3bb", maxWidth: 320 }}>
+            Уходовая косметика с душой<br />и курсы по уходу за собой.
           </p>
         </div>
         <div>
