@@ -65,3 +65,20 @@ export async function createPayment(args: CreateArgs): Promise<PaymentResult> {
     return { mode: "error", error: e instanceof Error ? e.message : "network error" };
   }
 }
+
+// Запрос статуса платежа у YooKassa (для проверки вебхука — не доверяем телу запроса).
+export async function fetchPayment(paymentId: string): Promise<{ status?: string; orderId?: string } | null> {
+  const shopId = process.env.YOOKASSA_SHOP_ID;
+  const secret = process.env.YOOKASSA_SECRET_KEY;
+  if (!shopId || !secret) return null;
+  try {
+    const res = await fetch(`https://api.yookassa.ru/v3/payments/${encodeURIComponent(paymentId)}`, {
+      headers: { Authorization: "Basic " + Buffer.from(`${shopId}:${secret}`).toString("base64") },
+    });
+    if (!res.ok) return null;
+    const d = await res.json().catch(() => null);
+    return { status: d?.status, orderId: d?.metadata?.orderId };
+  } catch {
+    return null;
+  }
+}
