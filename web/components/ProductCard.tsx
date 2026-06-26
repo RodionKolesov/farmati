@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import AddToCart from "./AddToCart";
 import ProductGallery from "./ProductGallery";
@@ -12,10 +12,23 @@ import type { Product } from "@prisma/client";
 export default function ProductCard({ p }: { p: Product }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [frame, setFrame] = useState(0);
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
   const imgs = productImages(p);
   const cartItem = { kind: "product" as const, slug: p.slug, title: p.name, price: p.price, image: imgs[0] ?? "" };
 
   useEffect(() => setMounted(true), []);
+
+  // Автолистание фото при наведении на карточку.
+  function startCycle() {
+    if (imgs.length < 2 || timer.current) return;
+    timer.current = setInterval(() => setFrame((f) => (f + 1) % imgs.length), 900);
+  }
+  function stopCycle() {
+    if (timer.current) { clearInterval(timer.current); timer.current = null; }
+    setFrame(0);
+  }
+  useEffect(() => () => { if (timer.current) clearInterval(timer.current); }, []);
 
   // Блокируем прокрутку фона и закрываем по Esc, пока окно открыто.
   useEffect(() => {
@@ -52,16 +65,20 @@ export default function ProductCard({ p }: { p: Product }) {
   );
 
   return (
-    <article className="product">
+    <article className="product" onMouseEnter={startCycle} onMouseLeave={stopCycle}>
       <button
         type="button"
         className={"product__media" + (imgs.length ? "" : " product__media--empty")}
-        style={imgs.length ? { backgroundImage: `url('${imgs[0]}')` } : undefined}
+        style={imgs.length ? { backgroundImage: `url('${imgs[frame] ?? imgs[0]}')` } : undefined}
         onClick={() => setOpen(true)}
         aria-label={`Открыть ${p.name}`}
       >
         {imgs.length === 0 && <span>Фото скоро</span>}
-        {imgs.length > 1 && <span className="product__count">{imgs.length} фото</span>}
+        {imgs.length > 1 && (
+          <span className="product__dots">
+            {imgs.map((_, i) => <i key={i} className={i === frame ? "is-active" : ""} />)}
+          </span>
+        )}
       </button>
       <div className="product__body">
         <button type="button" className="product__name product__name--btn" onClick={() => setOpen(true)}>
