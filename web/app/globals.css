@@ -53,6 +53,17 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .btn--block { width: 100%; }
 .btn:disabled { opacity: .5; cursor: default; transform: none; }
 .link { background: none; border: none; color: var(--accent); cursor: pointer; font: inherit; text-decoration: underline; }
+/* На сенсорных устройствах (телефон) — без анимаций и «залипающего» hover у кнопок */
+@media (hover: none) {
+  .btn { transition: none; }
+  .btn:hover { transform: none; }
+  .btn:hover::before { width: 0; }
+  .btn--primary:hover { color: #fff; border-color: transparent; }
+  .btn--ghost:hover { color: var(--ink); border-color: var(--line); }
+  .btn--light:hover { color: var(--ink); }
+  .hero__cta .btn--primary:hover { color: #fff; border-color: #000; }
+  .hero__cta .btn--ghost:hover { color: var(--ink); border-color: var(--line); }
+}
 
 /* Announce + header */
 .announce { background: var(--dark); color: #e7d8ea; text-align: center; font-size: 0.83rem; padding: 9px 16px; }
