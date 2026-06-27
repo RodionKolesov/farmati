@@ -40,6 +40,7 @@ export default function LoginPage() {
               <input name="phone" type="tel" required placeholder="+7 999 000-00-00" autoComplete="tel" />
               <label>Email</label>
               <input name="email" type="email" required placeholder="you@mail.ru" autoComplete="email" />
+              <span className="muted" style={{ fontSize: ".72rem", marginTop: -4 }}>Только российская почта: @mail.ru, @yandex.ru и т.п.</span>
               <label>Пароль</label>
               <input name="password" type="password" required minLength={6} placeholder="••••••" autoComplete="new-password" />
               <label>Повторите пароль</label>
