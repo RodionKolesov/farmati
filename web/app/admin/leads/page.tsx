@@ -19,10 +19,10 @@ export default async function AdminLeads() {
         <tbody>
           {leads.map((l) => (
             <tr key={l.id}>
-              <td>{fmt(l.createdAt)}</td>
-              <td>{l.name}</td>
-              <td><a href={`tel:${l.phone}`}>{l.phone}</a></td>
-              <td>{l.message || "—"}</td>
+              <td data-label="Дата">{fmt(l.createdAt)}</td>
+              <td data-label="Имя">{l.name}</td>
+              <td data-label="Телефон"><a href={`tel:${l.phone}`}>{l.phone}</a></td>
+              <td data-label="Вопрос">{l.message || "—"}</td>
             </tr>
           ))}
         </tbody>

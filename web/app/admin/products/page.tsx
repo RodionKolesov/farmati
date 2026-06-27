@@ -35,18 +35,18 @@ export default async function AdminProducts() {
           <tbody>
             {products.map((p) => (
               <tr key={p.id} style={p.stock <= 0 ? { opacity: 0.55 } : undefined}>
-                <td>{p.name}{p.stock <= 0 && <span className="muted"> · скрыт</span>}</td>
-                <td>{p.category}</td>
-                <td>{money(p.price)}</td>
-                <td>
+                <td data-label="Название">{p.name}{p.stock <= 0 && <span className="muted"> · скрыт</span>}</td>
+                <td data-label="Категория">{p.category}</td>
+                <td data-label="Цена">{money(p.price)}</td>
+                <td data-label="Остаток">
                   <form action={updateStock} className="stock-edit">
                     <input type="hidden" name="id" value={p.id} />
                     <input name="stock" type="number" min="0" defaultValue={p.stock} />
                     <button className="link">OK</button>
                   </form>
                 </td>
-                <td>{p.image ? "✅" : "— нет"}</td>
-                <td>
+                <td data-label="Фото">{p.image ? "✅" : "— нет"}</td>
+                <td data-label="Действия">
                   <div className="inline-actions">
                     <Link className="link" href={`/admin/products/${p.id}`}>Изменить</Link>
                     <form action={deleteProduct}>

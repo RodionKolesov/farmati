@@ -26,22 +26,22 @@ export default async function AdminOrders() {
         <tbody>
           {orders.map((o) => (
             <tr key={o.id}>
-              <td>{fmt(o.createdAt)}</td>
-              <td>
+              <td data-label="Дата">{fmt(o.createdAt)}</td>
+              <td data-label="Клиент">
                 {o.customerName || o.user?.name || o.user?.email || "—"}
                 {o.customerPhone && <div className="muted" style={{ fontSize: "0.82rem" }}>{o.customerPhone}</div>}
               </td>
-              <td>{o.items.map((i) => i.title).join(", ")}</td>
-              <td style={{ fontSize: "0.85rem" }}>
+              <td data-label="Состав">{o.items.map((i) => i.title).join(", ")}</td>
+              <td data-label="Доставка" style={{ fontSize: "0.85rem" }}>
                 {({ courier: "Курьер", pickup: "Самовывоз", cdek: "СДЭК до ПВЗ", post: "Почта России" } as Record<string, string>)[o.deliveryMethod] ?? o.deliveryMethod}
                 {o.address && <div className="muted">{o.address}</div>}
                 {o.deliveryCost > 0 && <div className="muted">{money(o.deliveryCost)}</div>}
                 {o.comment && <div className="muted">💬 {o.comment}</div>}
               </td>
-              <td>{money(o.amount)}</td>
-              <td className="muted">+{o.bonusEarned} / −{o.bonusSpent}</td>
-              <td><span className={o.status === "paid" ? "tag" : "muted"}>{o.status === "paid" ? "оплачен" : "ожидает"}</span></td>
-              <td>
+              <td data-label="Сумма">{money(o.amount)}</td>
+              <td data-label="Бонусы" className="muted">+{o.bonusEarned} / −{o.bonusSpent}</td>
+              <td data-label="Оплата"><span className={o.status === "paid" ? "tag" : "muted"}>{o.status === "paid" ? "оплачен" : "ожидает"}</span></td>
+              <td data-label="Статус">
                 <form action={updateDeliveryStatus} className="stock-edit">
                   <input type="hidden" name="id" value={o.id} />
                   <select name="status" defaultValue={o.deliveryStatus}>

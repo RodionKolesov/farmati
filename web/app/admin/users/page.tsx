@@ -46,12 +46,12 @@ export default async function AdminUsers({ searchParams }: { searchParams: Promi
         <tbody>
           {users.map((u) => (
             <tr key={u.id}>
-              <td>{fmt(u.createdAt)}</td>
-              <td>{u.name || "—"}</td>
-              <td>{u.email}</td>
-              <td>{u.phone ? <a href={`tel:${u.phone}`}>{u.phone}</a> : "—"}</td>
-              <td className="plus">{u.bonusBalance}</td>
-              <td>{u._count.orders}</td>
+              <td data-label="Дата">{fmt(u.createdAt)}</td>
+              <td data-label="Имя">{u.name || "—"}</td>
+              <td data-label="Email">{u.email}</td>
+              <td data-label="Телефон">{u.phone ? <a href={`tel:${u.phone}`}>{u.phone}</a> : "—"}</td>
+              <td data-label="Бонусы" className="plus">{u.bonusBalance}</td>
+              <td data-label="Заказов">{u._count.orders}</td>
             </tr>
           ))}
         </tbody>

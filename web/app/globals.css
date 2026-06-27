@@ -81,6 +81,14 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .icon-btn { display: inline-flex; align-items: center; gap: 7px; font-size: 0.95rem; font-weight: 500; color: inherit; transition: color .15s; }
 .icon-btn:hover { color: var(--accent); }
 .icon-btn svg { width: 19px; height: 19px; flex-shrink: 0; }
+.icon-btn--tg { color: #229ED9; }
+.icon-btn--tg:hover { color: #1b87ba; }
+.footer__tg-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; background: #229ED9; color: #fff; padding: 9px 16px; border-radius: 999px; font-size: 0.9rem; font-weight: 600; transition: background .15s; }
+.footer__tg-btn:hover { background: #1b87ba; color: #fff; }
+@media (max-width: 560px) {
+  .header__actions { gap: 14px; }
+  .icon-btn span { display: none; } /* на телефоне в шапке только иконки */
+}
 .badge { background: var(--accent); color: #fff; font-size: 0.65rem; font-weight: 700; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; display: inline-grid; place-items: center; }
 
 /* Hero */
@@ -309,6 +317,17 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .admin-table th, .admin-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); font-size: 0.9rem; vertical-align: top; }
 .admin-table th { background: var(--bg-soft); font-weight: 600; }
 .admin-table tr:last-child td { border-bottom: none; }
+/* На телефоне таблицы админки — вертикальные карточки (без бокового скролла) */
+@media (max-width: 640px) {
+  .admin-table { border: none; background: none; }
+  .admin-table thead { display: none; }
+  .admin-table, .admin-table tbody, .admin-table tr, .admin-table td { display: block; width: 100%; }
+  .admin-table tr { border: 1px solid var(--line); border-radius: 12px; margin-bottom: 12px; padding: 10px 14px; background: #fff; }
+  .admin-table td { border: none; padding: 5px 0; text-align: left; font-size: 0.9rem; }
+  .admin-table td::before { content: attr(data-label) ": "; font-weight: 600; color: var(--muted); }
+  .admin-table td[data-label=""]::before { content: ""; }
+  .admin-table td:empty { display: none; }
+}
 .admin-nav form { display: inline-flex; }
 .admin-nav button { padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: 0.9rem; font-family: inherit; color: inherit; cursor: pointer; }
 .admin-nav button:hover { border-color: var(--accent); color: var(--accent); }
