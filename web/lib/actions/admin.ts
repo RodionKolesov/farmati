@@ -5,7 +5,6 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
 import { slugify } from "@/lib/slug";
-import { expireBonuses } from "@/lib/bonusLedger";
 import { DELIVERY_STATUSES } from "@/lib/orderStatus";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
@@ -264,6 +263,26 @@ export async function deleteChecklist(formData: FormData) {
   redirect("/admin/checklists");
 }
 
+// ───────────── Дипломы и сертификаты ─────────────
+export async function createCertificate(formData: FormData) {
+  await requireAdmin();
+  const title = String(formData.get("title") ?? "").trim();
+  const image = await saveTo(formData.get("image"), slugify(title) || "cert", "certs", IMG_EXTS, "jpg");
+  if (!image) return; // фото обязательно
+  await prisma.certificate.create({
+    data: { image, title, order: parseInt(String(formData.get("order") ?? "0"), 10) || 0 },
+  });
+  revalidatePath("/");
+  redirect("/admin/certificates");
+}
+
+export async function deleteCertificate(formData: FormData) {
+  await requireAdmin();
+  await prisma.certificate.delete({ where: { id: String(formData.get("id")) } });
+  revalidatePath("/");
+  redirect("/admin/certificates");
+}
+
 // ───────────── Отзывы «до/после» ─────────────
 export async function createReview(formData: FormData) {
   await requireAdmin();
@@ -293,10 +312,3 @@ export async function deleteReview(formData: FormData) {
   redirect("/admin/reviews");
 }
 
-// ───────────── Бонусы: ручное сгорание просроченных ─────────────
-export async function expireBonusesNow() {
-  await requireAdmin();
-  await expireBonuses();
-  revalidatePath("/admin");
-  redirect("/admin");
-}

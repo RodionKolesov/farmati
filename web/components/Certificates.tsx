@@ -3,15 +3,9 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-const CERTS = [
-  { src: "/certs/cert1.jpg", alt: "Facialist Level 1 — Natural Biolifting, Milano" },
-  { src: "/certs/cert2.jpg", alt: "Facialist Level 1 — Natural Biolifting" },
-  { src: "/certs/cert3.jpg", alt: "Beauty Trainer Level 1 — Natural Biolifting" },
-  { src: "/certs/cert4.jpg", alt: "Beauty Trainer Level 1 — Natural Biolifting, Milano" },
-  { src: "/certs/cert5.jpg", alt: "Удостоверение — нутрициология и диетотерапия" },
-];
+type Cert = { src: string; alt: string };
 
-export default function Certificates() {
+export default function Certificates({ certs }: { certs: Cert[] }) {
   const [active, setActive] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const [showAll, setShowAll] = useState(false);
@@ -26,36 +20,32 @@ export default function Certificates() {
     return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = prev; };
   }, [active]);
 
-  // Размножаем список, чтобы лента всегда заполняла экран (без пустоты справа)
-  // и крутилась бесшовно. 6 копий → даже на широких мониторах нет пробелов.
-  const loop = Array.from({ length: 6 }, () => CERTS).flat();
+  if (!certs.length) return null;
+
+  // Размножаем список, чтобы лента всегда заполняла экран и крутилась бесшовно.
+  const loop = Array.from({ length: 6 }, () => certs).flat();
 
   return (
     <div className="certs">
       <div className="container certs__head">
         <h3 className="certs__title">Дипломы и сертификаты</h3>
       </div>
+
       {/* Десктоп: бегущая лента */}
       <div className="certs__viewport">
         <div className="certs__track">
           {loop.map((c, i) => (
-            <button
-              key={i}
-              type="button"
-              className="cert"
-              onClick={() => setActive(c.src)}
-              aria-label={`Открыть: ${c.alt}`}
-            >
+            <button key={i} type="button" className="cert" onClick={() => setActive(c.src)} aria-label={`Открыть: ${c.alt}`}>
               <img src={c.src} alt={c.alt} />
             </button>
           ))}
         </div>
       </div>
 
-      {/* Телефон: статичная сетка из 5 — видно 3, остальные по кнопке */}
+      {/* Телефон: статичная сетка — видно 3, остальные по кнопке */}
       <div className="certs__mobile">
         <div className="certs__mgrid">
-          {CERTS.map((c, i) => (
+          {certs.map((c, i) => (
             <button
               key={i}
               type="button"
@@ -67,7 +57,7 @@ export default function Certificates() {
             </button>
           ))}
         </div>
-        {!showAll && (
+        {!showAll && certs.length > 3 && (
           <button type="button" className="certs__more" onClick={() => setShowAll(true)}>
             Посмотреть все сертификаты
           </button>

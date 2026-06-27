@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { expireBonusesNow } from "@/lib/actions/admin";
 import { getServerStats } from "@/lib/actions/maintenance";
 import AdminServerPanel from "@/components/AdminServerPanel";
 
@@ -31,16 +30,9 @@ export default async function AdminHome() {
         <Link href="/admin/leads" className="admin-stat"><b>{leads}</b>заявок на консультацию</Link>
         <Link href="/admin/users" className="admin-stat"><b>{users}</b>участников клуба</Link>
       </div>
-      <div className="card" style={{ marginTop: 16 }}>
-        <h2 style={{ marginBottom: 8 }}>Бонусы</h2>
-        <p className="muted" style={{ fontSize: "0.9rem", marginBottom: 10 }}>
-          Бонусы сгорают через 4 месяца с начисления автоматически (при заходе участника в кабинет).
-          Кнопка ниже принудительно списывает все просроченные сейчас.
-        </p>
-        <form action={expireBonusesNow}>
-          <button className="btn btn--ghost btn--sm">Списать просроченные бонусы</button>
-        </form>
-      </div>
+      <p className="muted" style={{ fontSize: "0.85rem", marginTop: 14 }}>
+        Бонусы сгорают автоматически через 4 месяца с начисления — вручную ничего делать не нужно.
+      </p>
     </>
   );
 }

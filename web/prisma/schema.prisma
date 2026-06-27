@@ -132,6 +132,15 @@ model Checklist {
   createdAt   DateTime @default(now())
 }
 
+// Дипломы и сертификаты (лента на главной). Контент добавляется через админку.
+model Certificate {
+  id        String   @id @default(cuid())
+  image     String
+  title     String   @default("")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
 // Отзывы «до/после». Контент добавляется через админку.
 model Review {
   id          String   @id @default(cuid())

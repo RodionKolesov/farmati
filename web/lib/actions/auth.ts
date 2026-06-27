@@ -35,6 +35,7 @@ export async function registerUser(_prev: AuthState, formData: FormData): Promis
   if (!isValidPhone(phone)) return { error: "Некорректный номер телефона (10–15 цифр)", field: "phone" };
   if (!password || password.length < 6) return { error: "Пароль не короче 6 символов", field: "password" };
   if (password !== password2) return { error: "Пароли не совпадают", field: "password2" };
+  if (formData.get("agree") !== "on") return { error: "Подтвердите согласие с офертой и политикой", field: "agree" };
 
   const exists = await prisma.user.findUnique({ where: { email } });
   if (exists) return { error: "Пользователь с таким email уже есть", field: "email" };

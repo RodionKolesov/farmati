@@ -48,6 +48,10 @@ export default function LoginPage() {
               <input name="password" type="password" required minLength={6} placeholder="••••••" autoComplete="new-password" className={errCls("password")} value={su.password} onChange={(e) => setSu({ ...su, password: e.target.value })} />
               <label>Повторите пароль</label>
               <input name="password2" type="password" required minLength={6} placeholder="••••••" autoComplete="new-password" className={errCls("password2")} value={su.password2} onChange={(e) => setSu({ ...su, password2: e.target.value })} />
+              <label className="agree-check">
+                <input type="checkbox" name="agree" required />
+                <span>Я принимаю <a href="/offer" target="_blank" rel="noopener noreferrer">публичную оферту</a> и <a href="/privacy" target="_blank" rel="noopener noreferrer">политику конфиденциальности</a></span>
+              </label>
               <button className="btn btn--primary btn--block" style={{ marginTop: 16 }} disabled={signupPending}>
                 {signupPending ? "…" : "Зарегистрироваться"}
               </button>
