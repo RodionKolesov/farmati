@@ -9,11 +9,14 @@ import { deliveryStatusInfo } from "@/lib/orderStatus";
 import { getAdmin } from "@/lib/admin";
 import PasswordForm from "@/components/PasswordForm";
 import TelegramLinkButton from "@/components/TelegramLinkButton";
+import { claimTelegramBonus } from "@/lib/actions/telegram";
 
 const TG_MESSAGES: Record<string, { text: string; ok: boolean }> = {
   ok: { text: "✅ 100 бонусов за подписку начислены!", ok: true },
+  linked: { text: "✓ Telegram привязан. Теперь нажмите «Проверить подписку».", ok: true },
   already: { text: "Бонус за подписку уже был получен раньше.", ok: false },
-  notsub: { text: "Похоже, вы не подписаны на канал. Подпишитесь и попробуйте снова.", ok: false },
+  notsub: { text: "Вы пока не подписаны на канал. Подпишитесь и снова нажмите «Проверить подписку».", ok: false },
+  nolink: { text: "Сначала нажмите «Войти через Telegram».", ok: false },
   checkfail: { text: "Не удалось проверить подписку. Попробуйте позже.", ok: false },
   used: { text: "Этот Telegram уже привязан к другому аккаунту.", ok: false },
   login: { text: "Сначала войдите в аккаунт.", ok: false },
@@ -79,13 +82,25 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
           {user?.tgBonusGranted ? (
             <p className="muted" style={{ fontSize: ".9rem" }}>✅ Бонус за подписку уже получен. Спасибо, что вы с нами!</p>
           ) : (
-            <>
-              <p className="muted" style={{ fontSize: ".9rem", marginBottom: 10 }}>
-                1. Подпишитесь на канал <a href="https://t.me/BeautEnergyBusiness" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>@BeautEnergyBusiness</a>.<br />
-                2. Нажмите кнопку ниже — мы проверим подписку и начислим <b>100 бонусов</b>.
-              </p>
-              <TelegramLinkButton />
-            </>
+            <ol className="tg-steps">
+              <li>
+                <b>Подпишитесь</b> на канал <a href="https://t.me/BeautEnergyBusiness" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>@BeautEnergyBusiness</a>.
+              </li>
+              <li>
+                <b>Войдите через Telegram</b> (один раз — чтобы мы знали ваш Telegram):
+                {user?.telegramId ? (
+                  <span className="muted"> ✓ привязан</span>
+                ) : (
+                  <div style={{ marginTop: 8 }}><TelegramLinkButton /></div>
+                )}
+              </li>
+              <li>
+                Нажмите <b>«Проверить подписку»</b> — начислим <b>100 бонусов</b>:
+                <form action={claimTelegramBonus} style={{ marginTop: 8 }}>
+                  <button className="btn btn--primary btn--sm" disabled={!user?.telegramId}>Проверить подписку</button>
+                </form>
+              </li>
+            </ol>
           )}
         </div>
 
