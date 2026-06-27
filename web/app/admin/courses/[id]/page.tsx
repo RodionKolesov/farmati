@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { updateCourse, createLesson, updateLesson, deleteLesson } from "@/lib/actions/admin";
+import ConfirmSubmit from "@/components/ConfirmSubmit";
 
 export const dynamic = "force-dynamic";
 
@@ -72,7 +73,7 @@ export default async function EditCourse({ params }: { params: Promise<{ id: str
               </div>
               <div className="full inline-actions">
                 <button className="btn btn--primary btn--sm">Сохранить</button>
-                <button className="link" style={{ color: "var(--minus)" }} formAction={deleteLesson}>Удалить</button>
+                <ConfirmSubmit className="link" style={{ color: "var(--minus)" }} formAction={deleteLesson} message="Удалить урок?">Удалить</ConfirmSubmit>
               </div>
             </form>
           ))

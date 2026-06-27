@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { money } from "@/lib/money";
 import { createCourse, deleteCourse } from "@/lib/actions/admin";
+import ConfirmSubmit from "@/components/ConfirmSubmit";
 
 export const dynamic = "force-dynamic";
 
@@ -42,7 +43,7 @@ export default async function AdminCourses() {
                     <Link className="link" href={`/admin/courses/${c.id}`}>Уроки и правка</Link>
                     <form action={deleteCourse}>
                       <input type="hidden" name="id" value={c.id} />
-                      <button className="link" style={{ color: "var(--minus)" }}>Удалить</button>
+                      <ConfirmSubmit className="link" style={{ color: "var(--minus)" }} message="Удалить курс со всеми уроками? Это действие нельзя отменить.">Удалить</ConfirmSubmit>
                     </form>
                   </div>
                 </td>

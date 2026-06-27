@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { createChecklist, deleteChecklist } from "@/lib/actions/admin";
+import ConfirmSubmit from "@/components/ConfirmSubmit";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +36,7 @@ export default async function AdminChecklists() {
                   <td>
                     <form action={deleteChecklist}>
                       <input type="hidden" name="id" value={c.id} />
-                      <button className="link" style={{ color: "var(--minus)" }}>Удалить</button>
+                      <ConfirmSubmit className="link" style={{ color: "var(--minus)" }} message="Удалить чек-лист? Это действие нельзя отменить.">Удалить</ConfirmSubmit>
                     </form>
                   </td>
                 </tr>

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { createCertificate, deleteCertificate } from "@/lib/actions/admin";
+import ConfirmSubmit from "@/components/ConfirmSubmit";
 
 export const dynamic = "force-dynamic";
 
@@ -36,7 +37,7 @@ export default async function AdminCertificates() {
                   <td data-label="Действия">
                     <form action={deleteCertificate}>
                       <input type="hidden" name="id" value={c.id} />
-                      <button className="link" style={{ color: "var(--minus)" }}>Удалить</button>
+                      <ConfirmSubmit className="link" style={{ color: "var(--minus)" }} message="Удалить сертификат? Это действие нельзя отменить.">Удалить</ConfirmSubmit>
                     </form>
                   </td>
                 </tr>

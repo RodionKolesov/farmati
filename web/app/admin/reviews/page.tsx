@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { createReview, deleteReview } from "@/lib/actions/admin";
+import ConfirmSubmit from "@/components/ConfirmSubmit";
 
 export const dynamic = "force-dynamic";
 
@@ -36,7 +37,7 @@ export default async function AdminReviews() {
                   <td>
                     <form action={deleteReview}>
                       <input type="hidden" name="id" value={r.id} />
-                      <button className="link" style={{ color: "var(--minus)" }}>Удалить</button>
+                      <ConfirmSubmit className="link" style={{ color: "var(--minus)" }} message="Удалить отзыв? Это действие нельзя отменить.">Удалить</ConfirmSubmit>
                     </form>
                   </td>
                 </tr>

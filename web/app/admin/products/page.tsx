@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { money } from "@/lib/money";
 import { createProduct, deleteProduct, updateStock } from "@/lib/actions/admin";
+import ConfirmSubmit from "@/components/ConfirmSubmit";
 
 export const dynamic = "force-dynamic";
 
@@ -42,7 +43,7 @@ export default async function AdminProducts() {
                   <form action={updateStock} className="stock-edit">
                     <input type="hidden" name="id" value={p.id} />
                     <input name="stock" type="number" min="0" defaultValue={p.stock} />
-                    <button className="link">OK</button>
+                    <button className="btn-ok" title="Сохранить остаток">ОК</button>
                   </form>
                 </td>
                 <td data-label="Фото">{p.image ? "✅" : "— нет"}</td>
@@ -51,7 +52,7 @@ export default async function AdminProducts() {
                     <Link className="link" href={`/admin/products/${p.id}`}>Изменить</Link>
                     <form action={deleteProduct}>
                       <input type="hidden" name="id" value={p.id} />
-                      <button className="link" style={{ color: "var(--minus)" }}>Удалить</button>
+                      <ConfirmSubmit className="link" style={{ color: "var(--minus)" }} message={`Удалить товар «${p.name}»? Это действие нельзя отменить.`}>Удалить</ConfirmSubmit>
                     </form>
                   </div>
                 </td>
