@@ -6,7 +6,8 @@ import ConfirmSubmit from "@/components/ConfirmSubmit";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminProducts() {
+export default async function AdminProducts({ searchParams }: { searchParams: Promise<{ saved?: string }> }) {
+  const { saved } = await searchParams;
   const products = await prisma.product.findMany({ orderBy: { category: "asc" } });
   return (
     <>
@@ -43,7 +44,7 @@ export default async function AdminProducts() {
                   <form action={updateStock} className="stock-edit">
                     <input type="hidden" name="id" value={p.id} />
                     <input name="stock" type="number" min="0" defaultValue={p.stock} />
-                    <button className="btn-ok" title="Сохранить остаток">ОК</button>
+                    <button className={"btn-ok" + (saved === p.id ? " btn-ok--saved" : "")} title="Сохранить остаток">{saved === p.id ? "✓ Сохранено" : "ОК"}</button>
                   </form>
                 </td>
                 <td data-label="Фото">{p.image ? "✅" : "— нет"}</td>

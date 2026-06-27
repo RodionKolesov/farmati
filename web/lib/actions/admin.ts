@@ -123,7 +123,7 @@ export async function updateStock(formData: FormData) {
   const stock = Math.max(0, parseInt(String(formData.get("stock") ?? "0"), 10) || 0);
   await prisma.product.update({ where: { id }, data: { stock } });
   refresh();
-  redirect("/admin/products");
+  redirect("/admin/products?saved=" + id);
 }
 
 export async function deleteProduct(formData: FormData) {
