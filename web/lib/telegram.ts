@@ -1,4 +1,21 @@
 import "server-only";
+import crypto from "crypto";
+
+const CODE_SECRET = process.env.AUTH_SECRET || "farmati-tg";
+
+// Код для deep-link бота: userId + подпись (чтобы нельзя было подставить чужой id).
+export function makeStartCode(userId: string): string {
+  const sig = crypto.createHmac("sha256", CODE_SECRET).update(userId).digest("hex").slice(0, 10);
+  return `${userId}-${sig}`;
+}
+export function parseStartCode(code: string): string | null {
+  const i = code.lastIndexOf("-");
+  if (i < 0) return null;
+  const userId = code.slice(0, i);
+  const sig = code.slice(i + 1);
+  const expect = crypto.createHmac("sha256", CODE_SECRET).update(userId).digest("hex").slice(0, 10);
+  return userId && sig === expect ? userId : null;
+}
 
 // Отправка сообщения в Telegram через бота. Ошибки гасим — уведомления не должны ломать заказ.
 export async function sendTelegram(chatId: string, text: string): Promise<boolean> {
