@@ -9,11 +9,12 @@ export default function Header() {
   const count = useCart((s) => s.count());
   const [mounted, setMounted] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [authed, setAuthed] = useState(false);
   useEffect(() => {
     setMounted(true);
     fetch("/api/me")
       .then((r) => r.json())
-      .then((d) => setIsAdmin(!!d.admin))
+      .then((d) => { setIsAdmin(!!d.admin); setAuthed(!!d.authed); })
       .catch(() => {});
   }, []);
 
@@ -47,12 +48,12 @@ export default function Header() {
                 <span>Управление</span>
               </Link>
             ) : (
-              <Link className="icon-btn" href="/account">
+              <Link className="icon-btn" href={authed ? "/account" : "/login"}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <circle cx="12" cy="8" r="4" />
                   <path d="M4 20c0-3.6 3.6-6 8-6s8 2.4 8 6" />
                 </svg>
-                <span>Кабинет</span>
+                <span>{authed ? "Личный кабинет" : "Войти"}</span>
               </Link>
             )}
             <Link className="icon-btn" href="/cart">
