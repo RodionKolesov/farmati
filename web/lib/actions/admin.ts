@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
 import { slugify } from "@/lib/slug";
+import { productImages } from "@/lib/images";
 import { DELIVERY_STATUSES } from "@/lib/orderStatus";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
@@ -130,6 +131,50 @@ export async function deleteProduct(formData: FormData) {
   await prisma.product.delete({ where: { id: String(formData.get("id")) } });
   refresh();
   redirect("/admin/products");
+}
+
+// ── Управление фото товара (добавить / удалить / порядок) ──
+async function saveProductImages(id: string, list: string[]) {
+  await prisma.product.update({
+    where: { id },
+    data: { image: list[0] ?? "", images: list.length ? JSON.stringify(list) : "" },
+  });
+  refresh();
+  redirect("/admin/products/" + id);
+}
+
+export async function addProductPhotos(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const product = await prisma.product.findUnique({ where: { id } });
+  if (!product) redirect("/admin/products");
+  const uploaded = await saveManyImages(formData.getAll("imageFile"), slugify(product!.name || id));
+  if (!uploaded.length) redirect("/admin/products/" + id);
+  await saveProductImages(id, [...productImages(product!), ...uploaded]);
+}
+
+export async function deleteProductPhoto(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const url = String(formData.get("url"));
+  const product = await prisma.product.findUnique({ where: { id } });
+  if (!product) redirect("/admin/products");
+  await saveProductImages(id, productImages(product!).filter((u) => u !== url));
+}
+
+export async function moveProductPhoto(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const url = String(formData.get("url"));
+  const dir = String(formData.get("dir"));
+  const product = await prisma.product.findUnique({ where: { id } });
+  if (!product) redirect("/admin/products");
+  const list = productImages(product!);
+  const i = list.indexOf(url);
+  const j = dir === "up" ? i - 1 : i + 1;
+  if (i < 0 || j < 0 || j >= list.length) redirect("/admin/products/" + id);
+  [list[i], list[j]] = [list[j], list[i]];
+  await saveProductImages(id, list);
 }
 
 // Смена статуса доставки заказа администратором.

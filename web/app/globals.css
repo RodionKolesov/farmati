@@ -409,6 +409,18 @@ a.club-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); bord
 .stock-edit input { width: 62px; padding: 4px 6px; font-size: 0.85rem; }
 .btn-ok { padding: 6px 14px; border-radius: 8px; border: 1px solid var(--accent); background: var(--accent); color: #fff; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; }
 .btn-ok:hover { background: var(--accent-d); }
+/* Управление фото товара в админке */
+.photo-manage { display: flex; flex-wrap: wrap; gap: 12px; }
+.photo-item { position: relative; width: 110px; }
+.photo-item img { width: 110px; height: 145px; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); display: block; }
+.photo-badge { position: absolute; top: 6px; left: 6px; background: var(--accent); color: #fff; font-size: 0.66rem; padding: 2px 7px; border-radius: 999px; }
+.photo-ctrl { display: flex; justify-content: center; gap: 6px; margin-top: 6px; }
+.photo-ctrl form { display: inline-flex; }
+.photo-ctrl button { width: 30px; height: 28px; border: 1px solid var(--line); background: #fff; border-radius: 7px; cursor: pointer; font-size: 0.9rem; line-height: 1; font-family: inherit; }
+.photo-ctrl button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.photo-ctrl button:disabled { opacity: 0.35; cursor: default; }
+.photo-ctrl .photo-del { color: var(--minus); }
+.photo-ctrl .photo-del:hover { border-color: var(--minus); color: var(--minus); }
 .stock-edit select { padding: 5px 6px; font-size: 0.82rem; border: 1px solid var(--line); border-radius: 8px; background: #fff; font-family: inherit; max-width: 160px; }
 .dstatus { display: inline-block; margin-top: 5px; font-size: 0.72rem; font-weight: 600; padding: 2px 9px; border: 1px solid; border-radius: 999px; line-height: 1.5; }
 
