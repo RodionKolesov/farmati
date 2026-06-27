@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useCart } from "@/lib/cart";
 import HeroTicker from "@/components/HeroTicker";
@@ -10,13 +11,16 @@ export default function Header() {
   const [mounted, setMounted] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [authed, setAuthed] = useState(false);
+  const pathname = usePathname();
+  useEffect(() => setMounted(true), []);
+  // Перезапрашиваем статус при каждой смене страницы — кнопка «Войти/Личный кабинет»
+  // обновляется сразу после входа/выхода, без перезагрузки.
   useEffect(() => {
-    setMounted(true);
     fetch("/api/me")
       .then((r) => r.json())
       .then((d) => { setIsAdmin(!!d.admin); setAuthed(!!d.authed); })
       .catch(() => {});
-  }, []);
+  }, [pathname]);
 
   return (
     <div className="topbar">

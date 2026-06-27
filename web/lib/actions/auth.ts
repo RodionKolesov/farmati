@@ -20,7 +20,7 @@ export async function changePassword(_prev: PwState, formData: FormData): Promis
   return { ok: true };
 }
 
-export type AuthState = { error?: string } | undefined;
+export type AuthState = { error?: string; field?: string } | undefined;
 
 export async function registerUser(_prev: AuthState, formData: FormData): Promise<AuthState> {
   const email = String(formData.get("email") ?? "").toLowerCase().trim();
@@ -29,15 +29,15 @@ export async function registerUser(_prev: AuthState, formData: FormData): Promis
   const name = String(formData.get("name") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim();
 
-  if (!name) return { error: "Укажите имя" };
-  if (!isValidEmail(email)) return { error: "Некорректный email" };
-  if (!isRussianEmail(email)) return { error: "Используйте российскую почту (@mail.ru, @yandex.ru и т.п.)" };
-  if (!isValidPhone(phone)) return { error: "Некорректный номер телефона (10–15 цифр)" };
-  if (!password || password.length < 6) return { error: "Пароль не короче 6 символов" };
-  if (password !== password2) return { error: "Пароли не совпадают" };
+  if (!name) return { error: "Укажите имя", field: "name" };
+  if (!isValidEmail(email)) return { error: "Некорректный email", field: "email" };
+  if (!isRussianEmail(email)) return { error: "Используйте российскую почту (@mail.ru, @yandex.ru и т.п.)", field: "email" };
+  if (!isValidPhone(phone)) return { error: "Некорректный номер телефона (10–15 цифр)", field: "phone" };
+  if (!password || password.length < 6) return { error: "Пароль не короче 6 символов", field: "password" };
+  if (password !== password2) return { error: "Пароли не совпадают", field: "password2" };
 
   const exists = await prisma.user.findUnique({ where: { email } });
-  if (exists) return { error: "Пользователь с таким email уже есть" };
+  if (exists) return { error: "Пользователь с таким email уже есть", field: "email" };
 
   const user = await prisma.user.create({
     data: { email, name, phone, passwordHash: hashPassword(password), bonusBalance: WELCOME_BONUS },
