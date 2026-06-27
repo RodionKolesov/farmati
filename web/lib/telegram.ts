@@ -16,6 +16,23 @@ export async function sendTelegram(chatId: string, text: string): Promise<boolea
   }
 }
 
+// Статус участника канала: member/administrator/creator = подписан, left/kicked = нет.
+// null — если бот не админ канала или ошибка.
+export async function getChatMemberStatus(chatId: string, userId: string | number): Promise<string | null> {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  if (!token) return null;
+  try {
+    const res = await fetch(
+      `https://api.telegram.org/bot${token}/getChatMember?chat_id=${encodeURIComponent(chatId)}&user_id=${encodeURIComponent(String(userId))}`,
+    );
+    const d = await res.json().catch(() => null);
+    if (!d?.ok) return null;
+    return d.result?.status ?? null;
+  } catch {
+    return null;
+  }
+}
+
 // Рассылка на все ID из TELEGRAM_NOTIFY_IDS (через запятую).
 export async function notifyAdmins(text: string): Promise<void> {
   const ids = (process.env.TELEGRAM_NOTIFY_IDS || "")

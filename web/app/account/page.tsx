@@ -8,6 +8,19 @@ import { expireBonuses, nextExpiry } from "@/lib/bonusLedger";
 import { deliveryStatusInfo } from "@/lib/orderStatus";
 import { getAdmin } from "@/lib/admin";
 import PasswordForm from "@/components/PasswordForm";
+import TelegramLinkButton from "@/components/TelegramLinkButton";
+
+const TG_MESSAGES: Record<string, { text: string; ok: boolean }> = {
+  ok: { text: "✅ 100 бонусов за подписку начислены!", ok: true },
+  already: { text: "Бонус за подписку уже был получен раньше.", ok: false },
+  notsub: { text: "Похоже, вы не подписаны на канал. Подпишитесь и попробуйте снова.", ok: false },
+  checkfail: { text: "Не удалось проверить подписку. Попробуйте позже.", ok: false },
+  used: { text: "Этот Telegram уже привязан к другому аккаунту.", ok: false },
+  login: { text: "Сначала войдите в аккаунт.", ok: false },
+  badhash: { text: "Не удалось подтвердить вход через Telegram. Попробуйте ещё раз.", ok: false },
+  expired: { text: "Срок входа через Telegram истёк. Попробуйте ещё раз.", ok: false },
+  err: { text: "Ошибка. Попробуйте позже.", ok: false },
+};
 
 export const metadata = { title: "Личный кабинет — Farmati.cosmetics" };
 
@@ -15,7 +28,9 @@ function fmt(d: Date) {
   return new Date(d).toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit", year: "2-digit" });
 }
 
-export default async function AccountPage() {
+export default async function AccountPage({ searchParams }: { searchParams: Promise<{ tg?: string }> }) {
+  const { tg } = await searchParams;
+  const tgMsg = tg ? TG_MESSAGES[tg] : undefined;
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const userId = session.user.id;
@@ -56,6 +71,22 @@ export default async function AccountPage() {
           <div className="inline-actions" style={{ marginTop: 12 }}>
             <Link className="btn btn--primary btn--sm" href="/catalog">За покупками</Link>
           </div>
+        </div>
+
+        <div className="card">
+          <h2 style={{ marginBottom: 8 }}>100 бонусов за подписку на Telegram</h2>
+          {tgMsg && <p className="msg" style={{ color: tgMsg.ok ? "var(--plus)" : "var(--minus)" }}>{tgMsg.text}</p>}
+          {user?.tgBonusGranted ? (
+            <p className="muted" style={{ fontSize: ".9rem" }}>✅ Бонус за подписку уже получен. Спасибо, что вы с нами!</p>
+          ) : (
+            <>
+              <p className="muted" style={{ fontSize: ".9rem", marginBottom: 6 }}>
+                1. Подпишитесь на канал <a href="https://t.me/BeautEnergyBusiness" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>@BeautEnergyBusiness</a>.<br />
+                2. Нажмите кнопку ниже и подтвердите вход через Telegram — мы проверим подписку и начислим <b>100 бонусов</b>.
+              </p>
+              <TelegramLinkButton />
+            </>
+          )}
         </div>
 
         <div className="card">

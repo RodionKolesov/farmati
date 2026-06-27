@@ -17,6 +17,8 @@ model User {
   name         String             @default("")
   phone        String             @default("")
   bonusBalance Int                @default(0)
+  telegramId   String?            @unique // привязанный Telegram (для бонуса за подписку)
+  tgBonusGranted Boolean          @default(false) // выдан ли бонус за подписку
   createdAt    DateTime           @default(now())
   orders       Order[]
   bonusTxs     BonusTransaction[]
