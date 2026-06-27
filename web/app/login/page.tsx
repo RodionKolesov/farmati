@@ -26,8 +26,8 @@ export default function LoginPage() {
 
           {mode === "signin" ? (
             <form action={loginAction}>
-              <label>Email</label>
-              <input name="email" type="email" required placeholder="you@mail.ru" autoComplete="email" />
+              <label>Email или логин</label>
+              <input name="email" type="text" required placeholder="Email или логин" autoComplete="username" />
               <label>Пароль</label>
               <input name="password" type="password" required minLength={6} placeholder="••••••" autoComplete="current-password" />
               <button className="btn btn--primary btn--block" style={{ marginTop: 16 }} disabled={loginPending}>
