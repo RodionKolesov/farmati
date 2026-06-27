@@ -44,7 +44,8 @@ export default async function AdminProducts({ searchParams }: { searchParams: Pr
                   <form action={updateStock} className="stock-edit">
                     <input type="hidden" name="id" value={p.id} />
                     <input name="stock" type="number" min="0" defaultValue={p.stock} />
-                    <button className={"btn-ok" + (saved === p.id ? " btn-ok--saved" : "")} title="Сохранить остаток">{saved === p.id ? "✓ Сохранено" : "ОК"}</button>
+                    <button className="btn-ok" title="Сохранить остаток">ОК</button>
+                    {saved === p.id && <span className="saved-check" title="Сохранено">✓</span>}
                   </form>
                 </td>
                 <td data-label="Фото">{p.image ? "✅" : "— нет"}</td>

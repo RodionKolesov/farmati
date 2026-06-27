@@ -410,8 +410,7 @@ a.club-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); bord
 .btn-ok { padding: 6px 14px; border-radius: 8px; border: 1px solid var(--accent); background: var(--accent); color: #fff; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s, transform .1s, box-shadow .15s; }
 .btn-ok:hover { background: var(--accent-d); transform: translateY(-1px); box-shadow: 0 3px 8px rgba(108,77,122,.3); }
 .btn-ok:active { transform: translateY(1px); box-shadow: none; background: var(--accent-d); }
-.btn-ok--saved { background: var(--plus); border-color: var(--plus); }
-.btn-ok--saved:hover { background: var(--plus); box-shadow: 0 3px 8px rgba(79,154,130,.3); }
+.saved-check { color: var(--plus); font-weight: 800; font-size: 1.15rem; line-height: 1; }
 /* Управление фото товара в админке */
 .photo-manage { display: flex; flex-wrap: wrap; gap: 12px; }
 .photo-item { position: relative; width: 110px; }
