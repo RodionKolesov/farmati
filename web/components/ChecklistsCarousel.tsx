@@ -13,7 +13,7 @@ export default function ChecklistsCarousel({ items }: { items: Item[] }) {
   // Автолистание раз в 5 сек, пауза при наведении.
   useEffect(() => {
     if (paused || n <= 1) return;
-    const t = setInterval(() => setActive((a) => (a + 1) % n), 5000);
+    const t = setInterval(() => setActive((a) => (a + 1) % n), 4000);
     return () => clearInterval(t);
   }, [paused, n]);
 

@@ -32,7 +32,6 @@ export default function Header() {
           <nav className="nav">
             <Link href="/#catalog">Каталог</Link>
             <Link href="/#courses">Курсы</Link>
-            <Link href="/club">Клуб</Link>
             <Link href="/#about">О бренде</Link>
             <Link href="/#consult">Консультация</Link>
           </nav>

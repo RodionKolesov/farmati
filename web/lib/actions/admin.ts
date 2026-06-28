@@ -310,7 +310,6 @@ export async function createChecklist(formData: FormData) {
       order: parseInt(String(formData.get("order") ?? "0"), 10) || 0,
     },
   });
-  revalidatePath("/club");
   revalidatePath("/");
   redirect("/admin/checklists");
 }
@@ -318,7 +317,6 @@ export async function createChecklist(formData: FormData) {
 export async function deleteChecklist(formData: FormData) {
   await requireAdmin();
   await prisma.checklist.delete({ where: { id: String(formData.get("id")) } });
-  revalidatePath("/club");
   revalidatePath("/");
   redirect("/admin/checklists");
 }
