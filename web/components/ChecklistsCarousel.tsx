@@ -25,33 +25,19 @@ export default function ChecklistsCarousel({ items }: { items: Item[] }) {
     <div className="chk-carousel" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
       <div className="chk-viewport">
         <div className="chk-track" style={{ transform: `translateX(-${active * 100}%)` }}>
-          {items.map((c) => {
-            const hasMedia = !!c.videoUrl || !!c.image;
-            return (
-              <div className="chk-slide" key={c.id}>
-                <div className={"chk-card" + (hasMedia ? "" : " chk-card--text")}>
-                  {hasMedia && (
-                    <div className="chk-media">
-                      {c.videoUrl ? (
-                        <VideoEmbed url={c.videoUrl} title={c.title} />
-                      ) : (
-                        <div className="chk-img" style={{ backgroundImage: `url('${c.image}')` }} />
-                      )}
-                    </div>
-                  )}
-                  <div className="chk-body">
-                    <h3>{c.title}</h3>
-                    {c.description && <div className="chk-text">{c.description}</div>}
-                    {c.fileUrl && (
-                      <a className="link" href={c.fileUrl} target="_blank" rel="noopener noreferrer" style={{ marginTop: 6 }}>
-                        📄 Скачать PDF
-                      </a>
-                    )}
-                  </div>
-                </div>
+          {items.map((c) => (
+            <div className="chk-slide" key={c.id}>
+              <div className="chk-card">
+                <div className="chk-title">{c.title}</div>
+                {c.videoUrl ? (
+                  <VideoEmbed url={c.videoUrl} title={c.title} />
+                ) : c.image ? (
+                  <img className="chk-banner" src={c.image} alt={c.title} />
+                ) : null}
+                {c.description && <div className="chk-text">{c.description}</div>}
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
 

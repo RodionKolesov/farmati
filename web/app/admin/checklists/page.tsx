@@ -16,11 +16,9 @@ export default async function AdminChecklists() {
         <form action={createChecklist} className="form-grid">
           <div><label>Заголовок</label><input name="title" required placeholder="Обзор: ночной крем с коллагеном" /></div>
           <div><label>Порядок</label><input name="order" type="number" placeholder="0" /></div>
-          <div className="full"><label>Текст поста</label><textarea name="description" rows={5} placeholder="Текст статьи / обзора. Переносы строк сохраняются." /></div>
-          <div><label>Фото к посту</label><input name="imageFile" type="file" accept="image/*" /></div>
           <div><label>Ссылка на видео (необяз.)</label><input name="videoUrl" placeholder="RuTube / YouTube — любая ссылка" /></div>
-          <div><label>PDF (необяз.)</label><input name="file" type="file" accept="application/pdf" /></div>
-          <div><label>…или ссылка на PDF</label><input name="fileUrl" placeholder="https://…" /></div>
+          <div><label>Фото / баннер (необяз., если без видео)</label><input name="imageFile" type="file" accept="image/*" /></div>
+          <div className="full"><label>Текст поста (необяз.)</label><textarea name="description" rows={5} placeholder="Текст статьи / обзора. Переносы строк сохраняются." /></div>
           <div className="full"><button className="btn btn--primary">Добавить пост</button></div>
         </form>
       </div>
@@ -31,13 +29,13 @@ export default async function AdminChecklists() {
           <p className="empty-note">Пока пусто. Добавьте первый пост выше.</p>
         ) : (
           <table className="admin-table">
-            <thead><tr><th>Название</th><th>Файл</th><th></th></tr></thead>
+            <thead><tr><th>Заголовок</th><th>Тип</th><th></th></tr></thead>
             <tbody>
               {items.map((c) => (
                 <tr key={c.id}>
-                  <td>{c.title}</td>
-                  <td>{c.fileUrl ? <a className="link" href={c.fileUrl} target="_blank">открыть</a> : "—"}</td>
-                  <td>
+                  <td data-label="Заголовок">{c.title}</td>
+                  <td data-label="Тип">{c.videoUrl ? "🎬 видео" : c.image ? "🖼 баннер" : "📝 текст"}</td>
+                  <td data-label="Действия">
                     <form action={deleteChecklist}>
                       <input type="hidden" name="id" value={c.id} />
                       <ConfirmSubmit className="link" style={{ color: "var(--minus)" }} message="Удалить чек-лист? Это действие нельзя отменить.">Удалить</ConfirmSubmit>
