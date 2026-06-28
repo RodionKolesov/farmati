@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { hasPurchasedCourse } from "@/lib/access";
 import { money } from "@/lib/money";
-import { toEmbedUrl } from "@/lib/video";
+import VideoEmbed from "@/components/VideoEmbed";
 import AddToCart from "@/components/AddToCart";
 
 export default async function CoursePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -33,9 +33,7 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
           </span>
         </div>
         {canWatch && l.videoUrl ? (
-          <div className="video">
-            <iframe src={toEmbedUrl(l.videoUrl)} title={l.title} allowFullScreen allow="autoplay; encrypted-media; fullscreen; picture-in-picture; clipboard-write" />
-          </div>
+          <VideoEmbed url={l.videoUrl} title={l.title} />
         ) : (
           <div className="lesson__locked">
             {l.free ? (

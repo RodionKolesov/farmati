@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { money } from "@/lib/money";
-import { createCourse, deleteCourse } from "@/lib/actions/admin";
+import { createCourse, deleteCourse, toggleCourseHidden } from "@/lib/actions/admin";
 import ConfirmSubmit from "@/components/ConfirmSubmit";
 
 export const dynamic = "force-dynamic";
@@ -34,13 +34,17 @@ export default async function AdminCourses() {
           <thead><tr><th>Название</th><th>Цена</th><th>Уроков</th><th></th></tr></thead>
           <tbody>
             {courses.map((c) => (
-              <tr key={c.id}>
-                <td>{c.title}</td>
-                <td>{money(c.price)}</td>
-                <td>{c._count.lessonItems}</td>
-                <td>
+              <tr key={c.id} style={c.hidden ? { opacity: 0.55 } : undefined}>
+                <td data-label="Название">{c.title}{c.hidden && <span className="muted"> · скрыт</span>}</td>
+                <td data-label="Цена">{money(c.price)}</td>
+                <td data-label="Уроков">{c._count.lessonItems}</td>
+                <td data-label="Действия">
                   <div className="inline-actions">
                     <Link className="link" href={`/admin/courses/${c.id}`}>Уроки и правка</Link>
+                    <form action={toggleCourseHidden}>
+                      <input type="hidden" name="id" value={c.id} />
+                      <button className="link">{c.hidden ? "Показать" : "Скрыть"}</button>
+                    </form>
                     <form action={deleteCourse}>
                       <input type="hidden" name="id" value={c.id} />
                       <ConfirmSubmit className="link" style={{ color: "var(--minus)" }} message="Удалить курс со всеми уроками? Это действие нельзя отменить.">Удалить</ConfirmSubmit>

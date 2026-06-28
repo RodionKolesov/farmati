@@ -240,6 +240,17 @@ export async function deleteCourse(formData: FormData) {
   redirect("/admin/courses");
 }
 
+// Скрыть/показать курс в каталоге (в базе остаётся).
+export async function toggleCourseHidden(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const course = await prisma.course.findUnique({ where: { id } });
+  if (!course) redirect("/admin/courses");
+  await prisma.course.update({ where: { id }, data: { hidden: !course!.hidden } });
+  refresh();
+  redirect("/admin/courses");
+}
+
 // ───────────── Уроки ─────────────
 export async function createLesson(formData: FormData) {
   await requireAdmin();

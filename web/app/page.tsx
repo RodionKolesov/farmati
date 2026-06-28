@@ -8,7 +8,7 @@ import Certificates from "@/components/Certificates";
 export default async function Home() {
   const [products, courses, reviews, certRows] = await Promise.all([
     prisma.product.findMany({ where: { stock: { gt: 0 } }, take: 8 }),
-    prisma.course.findMany({ take: 3 }),
+    prisma.course.findMany({ where: { hidden: false }, take: 3 }),
     prisma.review.findMany({ orderBy: [{ order: "asc" }, { createdAt: "desc" }], take: 9 }),
     prisma.certificate.findMany({ orderBy: [{ order: "asc" }, { createdAt: "desc" }] }),
   ]);

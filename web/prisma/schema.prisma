@@ -48,6 +48,7 @@ model Course {
   duration    String      @default("")
   image       String
   summary     String      @default("")
+  hidden      Boolean     @default(false) // true = скрыт из каталога
   badge       String?
   items       OrderItem[]
   lessonItems Lesson[]
