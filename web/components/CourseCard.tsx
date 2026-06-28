@@ -24,11 +24,14 @@ export default function CourseCard({ c }: { c: Course }) {
             <b>{money(c.price)}</b>
             {c.oldPrice && <s>{money(c.oldPrice)}</s>}
           </div>
-          <AddToCart
-            item={{ kind: "course", slug: c.slug, title: c.title, price: c.price, image: c.image }}
-            variant="button"
-            label="В корзину"
-          />
+          <div className="course__btns">
+            <Link className="btn btn--ghost btn--sm" href={`/course/${c.slug}`}>Перейти в курс</Link>
+            <AddToCart
+              item={{ kind: "course", slug: c.slug, title: c.title, price: c.price, image: c.image }}
+              variant="button"
+              label="В корзину"
+            />
+          </div>
         </div>
       </div>
     </article>

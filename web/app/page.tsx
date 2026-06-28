@@ -4,15 +4,18 @@ import ProductCard from "@/components/ProductCard";
 import CourseCard from "@/components/CourseCard";
 import ConsultForm from "@/components/ConsultForm";
 import Certificates from "@/components/Certificates";
+import ChecklistsCarousel from "@/components/ChecklistsCarousel";
 
 export default async function Home() {
-  const [products, courses, reviews, certRows] = await Promise.all([
+  const [products, courses, reviews, certRows, checklistRows] = await Promise.all([
     prisma.product.findMany({ where: { stock: { gt: 0 } }, take: 8 }),
     prisma.course.findMany({ where: { hidden: false }, take: 3 }),
     prisma.review.findMany({ orderBy: [{ order: "asc" }, { createdAt: "desc" }], take: 9 }),
     prisma.certificate.findMany({ orderBy: [{ order: "asc" }, { createdAt: "desc" }] }),
+    prisma.checklist.findMany({ orderBy: [{ order: "asc" }, { createdAt: "desc" }] }),
   ]);
   const certs = certRows.map((c) => ({ src: c.image, alt: c.title || "Диплом / сертификат" }));
+  const checklistItems = checklistRows.map((c) => ({ id: c.id, title: c.title, description: c.description, fileUrl: c.fileUrl, image: c.image }));
 
   return (
     <main>
@@ -90,6 +93,16 @@ export default async function Home() {
           <Link className="btn btn--ghost section__more" href="/courses">Все курсы</Link>
         </div>
       </section>
+
+      {/* Чек-листы (карусель) */}
+      {checklistItems.length > 0 && (
+        <section className="section section--soft" id="checklists">
+          <div className="container">
+            <div className="section__head"><span className="eyebrow">Полезное</span><h2>Чек-листы и рекомендации</h2></div>
+            <ChecklistsCarousel items={checklistItems} />
+          </div>
+        </section>
+      )}
 
       {/* Бонусы */}
       <section className="section bonus" id="bonus">
