@@ -116,21 +116,18 @@ export default async function Home() {
           <div className="bonus__cards">
             <div className="tier">
               <span className="tier__num">01</span>
-              <strong className="tier__value">5%</strong>
-              <span className="tier__label">Старт</span>
-              <small>бонусами всем при регистрации</small>
+              <strong className="tier__value">100</strong>
+              <small>приветственных бонусов за регистрацию</small>
             </div>
             <div className="tier">
               <span className="tier__num">02</span>
-              <strong className="tier__value">+ бонусы</strong>
-              <span className="tier__label">Курсы</span>
-              <small>за каждый купленный курс</small>
+              <strong className="tier__value">5%</strong>
+              <small>кэшбэк бонусами с каждой покупки</small>
             </div>
             <div className="tier">
               <span className="tier__num">03</span>
               <strong className="tier__value">до 100%</strong>
-              <span className="tier__label">Скидка</span>
-              <small>оплата бонусами в корзине</small>
+              <small>оплата бонусами прямо в корзине</small>
             </div>
           </div>
         </div>
