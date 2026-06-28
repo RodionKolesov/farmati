@@ -32,7 +32,7 @@ export default async function Home() {
           <div className="hero__cta">
             <Link className="btn btn--primary" href="/login">Вступить в клуб</Link>
             <Link className="btn btn--ghost" href="/catalog">Подобрать уход</Link>
-            <Link className="btn btn--ghost hero__cta-wide" href="#consult">Консультация косметолога</Link>
+            <Link className="btn btn--ghost hero__cta-wide" href="#consult">Бесплатная консультация косметолога</Link>
           </div>
         </div>
         <p className="hero__tagline">Красота начинается не с идеальной кожи, а с заботы о себе.</p>
