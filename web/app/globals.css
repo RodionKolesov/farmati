@@ -223,27 +223,30 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .course__btns { display: flex; gap: 8px; }
 .course__btns > * { flex: 1 1 0; white-space: nowrap; }
 
-/* Карусель чек-листов на главной */
-.chk-carousel { position: relative; max-width: 780px; margin: 0 auto; }
+/* Карусель «Полезное»: посты — фото/видео + читаемый текст */
+.chk-carousel { position: relative; max-width: 900px; margin: 0 auto; }
 .chk-viewport { overflow: hidden; border-radius: var(--radius); }
 .chk-track { display: flex; transition: transform .5s ease; }
 .chk-slide { min-width: 100%; }
-.chk-card { display: flex; gap: 0; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; min-height: 240px; }
-.chk-img { width: 42%; background-size: cover; background-position: center; flex-shrink: 0; }
-.chk-body { padding: 26px; display: flex; flex-direction: column; gap: 12px; justify-content: center; flex: 1; }
-.chk-body h3 { font-size: 1.4rem; }
-.chk-body p { color: var(--muted); line-height: 1.5; }
+.chk-card { display: flex; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; height: 440px; }
+.chk-card--text { display: block; }
+.chk-media { width: 48%; flex-shrink: 0; background: #f7eef2; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.chk-media .chk-img { width: 100%; height: 100%; background-size: cover; background-position: center; }
+.chk-media .video { width: 100%; margin: 0; border-radius: 0; }
+.chk-body { flex: 1; padding: 28px 30px; overflow-y: auto; }
+.chk-body h3 { font-size: 1.5rem; margin-bottom: 12px; }
+.chk-text { white-space: pre-wrap; line-height: 1.65; color: var(--ink); }
 .chk-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: none; background: #fff; box-shadow: var(--shadow); cursor: pointer; font-size: 1.6rem; color: var(--accent); z-index: 2; display: grid; place-items: center; line-height: 1; transition: background .15s; }
 .chk-nav:hover { background: var(--accent); color: #fff; }
-.chk-nav--prev { left: -14px; }
-.chk-nav--next { right: -14px; }
+.chk-nav--prev { left: -16px; }
+.chk-nav--next { right: -16px; }
 .chk-dots { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
 .chk-dots button { width: 9px; height: 9px; border-radius: 50%; border: none; background: var(--line); cursor: pointer; padding: 0; transition: background .15s; }
 .chk-dots button.is-active { background: var(--accent); }
-@media (max-width: 640px) {
-  .chk-card { flex-direction: column; min-height: 0; }
-  .chk-img { width: 100%; height: 180px; }
-  .chk-body { padding: 18px; }
+@media (max-width: 760px) {
+  .chk-card { flex-direction: column; height: 70vh; max-height: 560px; }
+  .chk-media { width: 100%; height: 230px; flex-shrink: 0; }
+  .chk-body { padding: 20px; }
   .chk-nav--prev { left: 4px; }
   .chk-nav--next { right: 4px; }
 }

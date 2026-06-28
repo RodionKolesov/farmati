@@ -15,7 +15,7 @@ export default async function Home() {
     prisma.checklist.findMany({ orderBy: [{ order: "asc" }, { createdAt: "desc" }] }),
   ]);
   const certs = certRows.map((c) => ({ src: c.image, alt: c.title || "Диплом / сертификат" }));
-  const checklistItems = checklistRows.map((c) => ({ id: c.id, title: c.title, description: c.description, fileUrl: c.fileUrl, image: c.image }));
+  const checklistItems = checklistRows.map((c) => ({ id: c.id, title: c.title, description: c.description, videoUrl: c.videoUrl, fileUrl: c.fileUrl, image: c.image }));
 
   return (
     <main>
@@ -98,7 +98,7 @@ export default async function Home() {
       {checklistItems.length > 0 && (
         <section className="section section--soft" id="checklists">
           <div className="container">
-            <div className="section__head"><span className="eyebrow">Полезное</span><h2>Чек-листы и рекомендации</h2></div>
+            <div className="section__head"><span className="eyebrow">Полезное</span><h2>Статьи, обзоры и советы</h2></div>
             <ChecklistsCarousel items={checklistItems} />
           </div>
         </section>

@@ -304,6 +304,7 @@ export async function createChecklist(formData: FormData) {
     data: {
       title,
       description: String(formData.get("description") ?? "").trim(),
+      videoUrl: toEmbedUrl(String(formData.get("videoUrl") ?? "")),
       fileUrl: fileUrl ?? String(formData.get("fileUrl") ?? "").trim(),
       image: image ?? "",
       order: parseInt(String(formData.get("order") ?? "0"), 10) || 0,

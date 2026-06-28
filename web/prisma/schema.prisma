@@ -126,8 +126,9 @@ model BonusTransaction {
 model Checklist {
   id          String   @id @default(cuid())
   title       String
-  description String   @default("")
-  fileUrl     String   @default("") // ссылка на PDF в /public/checklists
+  description String   @default("") // текст поста / статьи
+  videoUrl    String   @default("") // ссылка на видео (необяз.)
+  fileUrl     String   @default("") // PDF (необяз.)
   image       String   @default("")
   order       Int      @default(0)
   createdAt   DateTime @default(now())
