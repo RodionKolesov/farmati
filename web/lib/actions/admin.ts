@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
 import { slugify } from "@/lib/slug";
 import { productImages } from "@/lib/images";
+import { toEmbedUrl } from "@/lib/video";
 import { DELIVERY_STATUSES } from "@/lib/orderStatus";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
@@ -247,7 +248,7 @@ export async function createLesson(formData: FormData) {
     data: {
       courseId,
       title: String(formData.get("title") ?? "").trim(),
-      videoUrl: String(formData.get("videoUrl") ?? "").trim(),
+      videoUrl: toEmbedUrl(String(formData.get("videoUrl") ?? "")),
       free: formData.get("free") === "on",
       order: parseInt(String(formData.get("order") ?? "0"), 10) || 0,
     },
@@ -264,7 +265,7 @@ export async function updateLesson(formData: FormData) {
     where: { id },
     data: {
       title: String(formData.get("title") ?? "").trim(),
-      videoUrl: String(formData.get("videoUrl") ?? "").trim(),
+      videoUrl: toEmbedUrl(String(formData.get("videoUrl") ?? "")),
       free: formData.get("free") === "on",
       order: parseInt(String(formData.get("order") ?? "0"), 10) || 0,
     },
