@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { money } from "@/lib/money";
-import { createProduct, deleteProduct, updateStock } from "@/lib/actions/admin";
+import { createProduct, deleteProduct, updateStock, toggleProductHidden } from "@/lib/actions/admin";
 import ConfirmSubmit from "@/components/ConfirmSubmit";
 
 export const dynamic = "force-dynamic";
@@ -36,8 +36,8 @@ export default async function AdminProducts({ searchParams }: { searchParams: Pr
           <thead><tr><th>Название</th><th>Категория</th><th>Цена</th><th>Остаток</th><th>Фото</th><th></th></tr></thead>
           <tbody>
             {products.map((p) => (
-              <tr key={p.id} style={p.stock <= 0 ? { opacity: 0.55 } : undefined}>
-                <td data-label="Название">{p.name}{p.stock <= 0 && <span className="muted"> · скрыт</span>}</td>
+              <tr key={p.id} style={p.hidden || p.stock <= 0 ? { opacity: 0.55 } : undefined}>
+                <td data-label="Название">{p.name}{(p.hidden || p.stock <= 0) && <span className="muted"> · скрыт{p.hidden ? " вручную" : ""}</span>}</td>
                 <td data-label="Категория">{p.category}</td>
                 <td data-label="Цена">{money(p.price)}</td>
                 <td data-label="Остаток">
@@ -52,6 +52,10 @@ export default async function AdminProducts({ searchParams }: { searchParams: Pr
                 <td data-label="Действия">
                   <div className="inline-actions">
                     <Link className="link" href={`/admin/products/${p.id}`}>Изменить</Link>
+                    <form action={toggleProductHidden}>
+                      <input type="hidden" name="id" value={p.id} />
+                      <button className="link">{p.hidden ? "Показать" : "Скрыть"}</button>
+                    </form>
                     <form action={deleteProduct}>
                       <input type="hidden" name="id" value={p.id} />
                       <ConfirmSubmit className="link" style={{ color: "var(--minus)" }} message={`Удалить товар «${p.name}»? Это действие нельзя отменить.`}>Удалить</ConfirmSubmit>

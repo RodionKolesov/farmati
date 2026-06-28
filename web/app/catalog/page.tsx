@@ -4,7 +4,7 @@ import CatalogFilter from "@/components/CatalogFilter";
 export const metadata = { title: "Каталог — Farmati.cosmetics" };
 
 export default async function CatalogPage() {
-  const products = await prisma.product.findMany({ where: { stock: { gt: 0 } } });
+  const products = await prisma.product.findMany({ where: { stock: { gt: 0 }, hidden: false } });
   return (
     <main className="page">
       <div className="container">

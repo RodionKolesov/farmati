@@ -35,6 +35,7 @@ model Product {
   description String      @default("")
   badge       String?
   stock       Int         @default(0) // остаток на складе; 0 = скрыт из каталога
+  hidden      Boolean     @default(false) // true = скрыт из каталога вручную
   items       OrderItem[]
 }
 
@@ -131,6 +132,7 @@ model Checklist {
   fileUrl     String   @default("") // PDF (необяз.)
   image       String   @default("")
   order       Int      @default(0)
+  hidden      Boolean  @default(false) // true = скрыт с главной
   createdAt   DateTime @default(now())
 }
 
@@ -140,6 +142,7 @@ model Certificate {
   image     String
   title     String   @default("")
   order     Int      @default(0)
+  hidden    Boolean  @default(false) // true = скрыт с главной
   createdAt DateTime @default(now())
 }
 
@@ -152,5 +155,6 @@ model Review {
   beforeImage String   @default("")
   afterImage  String   @default("")
   order       Int      @default(0)
+  hidden      Boolean  @default(false) // true = скрыт с главной
   createdAt   DateTime @default(now())
 }

@@ -393,6 +393,11 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .form-grid .full { grid-column: 1 / -1; }
 .inline-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.row-edit { margin-top: 8px; }
+.row-edit > summary { cursor: pointer; color: var(--accent); font-size: 0.88rem; text-decoration: underline; list-style: none; display: inline-block; }
+.row-edit > summary::-webkit-details-marker { display: none; }
+.row-edit[open] > summary { margin-bottom: 10px; font-weight: 600; }
+.row-edit .form-grid { max-width: 540px; }
 @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
 
 /* Generic page / forms (cart, checkout, account, auth) */

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { createChecklist, deleteChecklist } from "@/lib/actions/admin";
+import { createChecklist, updateChecklist, deleteChecklist, toggleChecklistHidden } from "@/lib/actions/admin";
 import ConfirmSubmit from "@/components/ConfirmSubmit";
 
 export const dynamic = "force-dynamic";
@@ -32,14 +32,32 @@ export default async function AdminChecklists() {
             <thead><tr><th>Заголовок</th><th>Тип</th><th></th></tr></thead>
             <tbody>
               {items.map((c) => (
-                <tr key={c.id}>
-                  <td data-label="Заголовок">{c.title}</td>
+                <tr key={c.id} style={c.hidden ? { opacity: 0.55 } : undefined}>
+                  <td data-label="Заголовок">{c.title}{c.hidden && <span className="muted"> · скрыт</span>}</td>
                   <td data-label="Тип">{c.videoUrl ? "🎬 видео" : c.image ? "🖼 баннер" : "📝 текст"}</td>
                   <td data-label="Действия">
-                    <form action={deleteChecklist}>
-                      <input type="hidden" name="id" value={c.id} />
-                      <ConfirmSubmit className="link" style={{ color: "var(--minus)" }} message="Удалить чек-лист? Это действие нельзя отменить.">Удалить</ConfirmSubmit>
-                    </form>
+                    <div className="inline-actions">
+                      <form action={toggleChecklistHidden}>
+                        <input type="hidden" name="id" value={c.id} />
+                        <button className="link">{c.hidden ? "Показать" : "Скрыть"}</button>
+                      </form>
+                      <form action={deleteChecklist}>
+                        <input type="hidden" name="id" value={c.id} />
+                        <ConfirmSubmit className="link" style={{ color: "var(--minus)" }} message="Удалить пост? Это действие нельзя отменить.">Удалить</ConfirmSubmit>
+                      </form>
+                    </div>
+                    <details className="row-edit">
+                      <summary>Изменить</summary>
+                      <form action={updateChecklist} className="form-grid">
+                        <input type="hidden" name="id" value={c.id} />
+                        <div><label>Заголовок</label><input name="title" required defaultValue={c.title} /></div>
+                        <div><label>Порядок</label><input name="order" type="number" defaultValue={c.order} /></div>
+                        <div><label>Ссылка на видео</label><input name="videoUrl" defaultValue={c.videoUrl} placeholder="RuTube / YouTube" /></div>
+                        <div><label>Заменить фото / баннер (необяз.)</label><input name="imageFile" type="file" accept="image/*" /></div>
+                        <div className="full"><label>Текст поста</label><textarea name="description" rows={5} defaultValue={c.description} /></div>
+                        <div className="full"><button className="btn btn--primary btn--sm">Сохранить</button></div>
+                      </form>
+                    </details>
                   </td>
                 </tr>
               ))}

@@ -134,6 +134,17 @@ export async function deleteProduct(formData: FormData) {
   redirect("/admin/products");
 }
 
+// Скрыть/показать товар в каталоге (в базе остаётся, остаток не трогаем).
+export async function toggleProductHidden(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const p = await prisma.product.findUnique({ where: { id } });
+  if (!p) redirect("/admin/products");
+  await prisma.product.update({ where: { id }, data: { hidden: !p!.hidden } });
+  refresh();
+  redirect("/admin/products");
+}
+
 // ── Управление фото товара (добавить / удалить / порядок) ──
 async function saveProductImages(id: string, list: string[]) {
   await prisma.product.update({
@@ -314,6 +325,37 @@ export async function createChecklist(formData: FormData) {
   redirect("/admin/checklists");
 }
 
+export async function updateChecklist(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const title = String(formData.get("title") ?? "").trim();
+  if (!title) redirect("/admin/checklists");
+  const slug = slugify(title) || "checklist";
+  const image = await saveTo(formData.get("imageFile"), slug, "checklists", IMG_EXTS, "jpg");
+  await prisma.checklist.update({
+    where: { id },
+    data: {
+      title,
+      description: String(formData.get("description") ?? "").trim(),
+      videoUrl: toEmbedUrl(String(formData.get("videoUrl") ?? "")),
+      order: parseInt(String(formData.get("order") ?? "0"), 10) || 0,
+      ...(image ? { image } : {}),
+    },
+  });
+  revalidatePath("/");
+  redirect("/admin/checklists");
+}
+
+export async function toggleChecklistHidden(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const item = await prisma.checklist.findUnique({ where: { id } });
+  if (!item) redirect("/admin/checklists");
+  await prisma.checklist.update({ where: { id }, data: { hidden: !item!.hidden } });
+  revalidatePath("/");
+  redirect("/admin/checklists");
+}
+
 export async function deleteChecklist(formData: FormData) {
   await requireAdmin();
   await prisma.checklist.delete({ where: { id: String(formData.get("id")) } });
@@ -330,6 +372,29 @@ export async function createCertificate(formData: FormData) {
   await prisma.certificate.create({
     data: { image, title, order: parseInt(String(formData.get("order") ?? "0"), 10) || 0 },
   });
+  revalidatePath("/");
+  redirect("/admin/certificates");
+}
+
+export async function updateCertificate(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const title = String(formData.get("title") ?? "").trim();
+  const image = await saveTo(formData.get("image"), slugify(title) || "cert", "certs", IMG_EXTS, "jpg");
+  await prisma.certificate.update({
+    where: { id },
+    data: { title, order: parseInt(String(formData.get("order") ?? "0"), 10) || 0, ...(image ? { image } : {}) },
+  });
+  revalidatePath("/");
+  redirect("/admin/certificates");
+}
+
+export async function toggleCertificateHidden(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const item = await prisma.certificate.findUnique({ where: { id } });
+  if (!item) redirect("/admin/certificates");
+  await prisma.certificate.update({ where: { id }, data: { hidden: !item!.hidden } });
   revalidatePath("/");
   redirect("/admin/certificates");
 }
@@ -359,6 +424,39 @@ export async function createReview(formData: FormData) {
       order: parseInt(String(formData.get("order") ?? "0"), 10) || 0,
     },
   });
+  revalidatePath("/");
+  redirect("/admin/reviews");
+}
+
+export async function updateReview(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const author = String(formData.get("author") ?? "").trim();
+  if (!author) redirect("/admin/reviews");
+  const slug = slugify(author) || "review";
+  const before = await saveTo(formData.get("beforeImage"), slug + "-before", "reviews", IMG_EXTS, "jpg");
+  const after = await saveTo(formData.get("afterImage"), slug + "-after", "reviews", IMG_EXTS, "jpg");
+  await prisma.review.update({
+    where: { id },
+    data: {
+      author,
+      text: String(formData.get("text") ?? "").trim(),
+      rating: Math.min(5, Math.max(1, parseInt(String(formData.get("rating") ?? "5"), 10) || 5)),
+      order: parseInt(String(formData.get("order") ?? "0"), 10) || 0,
+      ...(before ? { beforeImage: before } : {}),
+      ...(after ? { afterImage: after } : {}),
+    },
+  });
+  revalidatePath("/");
+  redirect("/admin/reviews");
+}
+
+export async function toggleReviewHidden(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const item = await prisma.review.findUnique({ where: { id } });
+  if (!item) redirect("/admin/reviews");
+  await prisma.review.update({ where: { id }, data: { hidden: !item!.hidden } });
   revalidatePath("/");
   redirect("/admin/reviews");
 }
