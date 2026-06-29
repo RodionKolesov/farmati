@@ -9,7 +9,7 @@ import ChecklistsCarousel from "@/components/ChecklistsCarousel";
 export default async function Home() {
   const [products, courses, reviews, certRows, checklistRows] = await Promise.all([
     prisma.product.findMany({ where: { stock: { gt: 0 }, hidden: false }, take: 8 }),
-    prisma.course.findMany({ where: { hidden: false }, take: 3 }),
+    prisma.course.findMany({ where: { hidden: false }, take: 3, include: { lessonItems: { where: { free: true }, select: { id: true } } } }),
     prisma.review.findMany({ where: { hidden: false }, orderBy: [{ order: "asc" }, { createdAt: "desc" }], take: 9 }),
     prisma.certificate.findMany({ where: { hidden: false }, orderBy: [{ order: "asc" }, { createdAt: "desc" }] }),
     prisma.checklist.findMany({ where: { hidden: false }, orderBy: [{ order: "asc" }, { createdAt: "desc" }] }),

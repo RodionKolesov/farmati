@@ -13,7 +13,7 @@ export default async function AdminReviews() {
         <form action={createReview} className="form-grid">
           <div><label>Имя</label><input name="author" required placeholder="Анна" /></div>
           <div><label>Оценка (1–5)</label><input name="rating" type="number" min={1} max={5} defaultValue={5} /></div>
-          <div><label>Порядок</label><input name="order" type="number" placeholder="0" /></div>
+          <div><label>Порядок</label><input name="order" type="number" min={1} defaultValue={items.length + 1} /></div>
           <div className="full"><label>Текст отзыва</label><textarea name="text" rows={2} placeholder="«Кожа стала заметно свежее…»" /></div>
           <div><label>Фото «до» (необяз.)</label><input name="beforeImage" type="file" accept="image/*" /></div>
           <div><label>Фото «после» (необяз.)</label><input name="afterImage" type="file" accept="image/*" /></div>

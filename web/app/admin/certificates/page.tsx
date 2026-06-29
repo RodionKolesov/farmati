@@ -12,7 +12,7 @@ export default async function AdminCertificates() {
         <h2 style={{ marginBottom: 12 }}>Добавить диплом / сертификат</h2>
         <form action={createCertificate} className="form-grid">
           <div><label>Фото диплома/сертификата</label><input name="image" type="file" accept="image/*" required /></div>
-          <div><label>Порядок</label><input name="order" type="number" placeholder="0" /></div>
+          <div><label>Порядок</label><input name="order" type="number" min={1} defaultValue={items.length + 1} /></div>
           <div className="full"><label>Подпись (необязательно)</label><input name="title" placeholder="Например: Facialist Level 1 — Natural Biolifting" /></div>
           <div className="full"><button className="btn btn--primary">Добавить</button></div>
         </form>

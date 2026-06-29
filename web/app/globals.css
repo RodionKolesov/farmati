@@ -213,7 +213,8 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .course-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
 .course { background: var(--card); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; transition: transform .18s, box-shadow .18s; }
 .course:hover { transform: translateY(-4px); box-shadow: 0 22px 55px rgba(108,77,122,.16); }
-.course__media { aspect-ratio: 16/10; background-size: cover; background-position: center; transition: transform .5s ease; }
+.course__media { position: relative; aspect-ratio: 16/10; background-size: cover; background-position: center; transition: transform .5s ease; }
+.course__free-badge { position: absolute; top: 12px; left: 12px; display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,.94); color: var(--accent-d); font-size: 0.76rem; font-weight: 700; padding: 6px 12px; border-radius: 999px; box-shadow: 0 6px 18px rgba(108,77,122,.22); backdrop-filter: blur(2px); }
 .course:hover .course__media { transform: scale(1.06); }
 .course__body { padding: 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
 .course__body h3 { font-size: 1.3rem; }
@@ -223,26 +224,35 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .course__btns { display: flex; gap: 8px; }
 .course__btns > * { flex: 1 1 0; white-space: nowrap; }
 
-/* Карусель «Полезное»: посты — название + плеер/баннер + текст (как у урока) */
-.chk-carousel { position: relative; max-width: 720px; margin: 0 auto; }
-.chk-viewport { overflow: hidden; border-radius: var(--radius); }
-.chk-track { display: flex; align-items: stretch; transition: transform .5s ease; }
-.chk-slide { min-width: 100%; display: flex; }
-.chk-card { display: flex; flex-direction: column; width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-.chk-title { padding: 14px 20px; font-family: var(--serif); font-weight: 700; font-size: 1.2rem; }
-.chk-card .video { margin: 0; border-radius: 0; }
+/* Блок «Полезное»: крупный активный материал + список всех материалов сбоку */
+.chk { display: grid; grid-template-columns: 1.55fr 1fr; gap: 22px; align-items: stretch; }
+.chk-feature { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+.chk-feature__media { position: relative; background: #f7eef2; }
+.chk-feature__media .video { margin: 0; border-radius: 0; }
 .chk-banner { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: #f7eef2; }
-.chk-text { padding: 16px 20px; line-height: 1.6; white-space: pre-wrap; color: var(--ink); }
-.chk-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: none; background: #fff; box-shadow: var(--shadow); cursor: pointer; font-size: 1.6rem; color: var(--accent); z-index: 2; display: grid; place-items: center; line-height: 1; transition: background .15s; }
-.chk-nav:hover { background: var(--accent); color: #fff; }
-.chk-nav--prev { left: -58px; }
-.chk-nav--next { right: -58px; }
-.chk-dots { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
-.chk-dots button { width: 9px; height: 9px; border-radius: 50%; border: none; background: var(--line); cursor: pointer; padding: 0; transition: background .15s; }
-.chk-dots button.is-active { background: var(--accent); }
-@media (max-width: 760px) {
-  .chk-nav--prev { left: 4px; }
-  .chk-nav--next { right: 4px; }
+.chk-feature__ph { aspect-ratio: 16 / 9; display: grid; place-items: center; font-size: 3.4rem; background: linear-gradient(135deg, var(--bg-soft), #fff); }
+.chk-feature__body { padding: 22px 24px 26px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.chk-tag { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); background: var(--bg-soft); padding: 5px 12px; border-radius: 999px; }
+.chk-feature__title { font-family: var(--serif); font-weight: 700; font-size: clamp(1.4rem, 2.6vw, 1.9rem); line-height: 1.2; }
+.chk-feature__text { color: var(--ink); line-height: 1.65; white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+.chk-feature__body .btn { align-self: flex-start; margin-top: auto; }
+
+.chk-side { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.chk-side__head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--line); font-weight: 700; }
+.chk-side__head b { background: var(--accent); color: #fff; font-size: 0.78rem; min-width: 24px; height: 24px; padding: 0 7px; border-radius: 999px; display: inline-grid; place-items: center; }
+.chk-side__list { display: flex; flex-direction: column; overflow-y: auto; max-height: 460px; }
+.chk-item { display: flex; align-items: center; gap: 13px; width: 100%; text-align: left; padding: 14px 18px; border: none; border-bottom: 1px solid var(--line); background: none; cursor: pointer; font: inherit; color: var(--ink); transition: background .15s; }
+.chk-item:last-child { border-bottom: none; }
+.chk-item:hover { background: var(--bg-soft); }
+.chk-item.is-active { background: var(--bg-soft); box-shadow: inset 4px 0 0 var(--accent); }
+.chk-item__ico { width: 40px; height: 40px; flex-shrink: 0; display: grid; place-items: center; font-size: 1.1rem; background: var(--bg-soft); border-radius: 12px; }
+.chk-item.is-active .chk-item__ico { background: #fff; }
+.chk-item__main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.chk-item__title { font-weight: 600; font-size: 0.95rem; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.chk-item__kind { font-size: 0.74rem; color: var(--muted); }
+@media (max-width: 860px) {
+  .chk { grid-template-columns: 1fr; }
+  .chk-side__list { max-height: 320px; }
 }
 
 /* Блок «100 бонусов за подписку на Telegram» */

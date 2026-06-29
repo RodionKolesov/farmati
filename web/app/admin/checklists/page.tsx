@@ -15,7 +15,7 @@ export default async function AdminChecklists() {
         </p>
         <form action={createChecklist} className="form-grid">
           <div><label>Заголовок</label><input name="title" required placeholder="Обзор: ночной крем с коллагеном" /></div>
-          <div><label>Порядок</label><input name="order" type="number" placeholder="0" /></div>
+          <div><label>Порядок</label><input name="order" type="number" min={1} defaultValue={items.length + 1} /></div>
           <div><label>Ссылка на видео (необяз.)</label><input name="videoUrl" placeholder="RuTube / YouTube — любая ссылка" /></div>
           <div><label>Фото / баннер (необяз., если без видео)</label><input name="imageFile" type="file" accept="image/*" /></div>
           <div className="full"><label>Текст поста (необяз.)</label><textarea name="description" rows={5} placeholder="Текст статьи / обзора. Переносы строк сохраняются." /></div>

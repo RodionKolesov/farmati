@@ -21,8 +21,7 @@ export default async function AdminCourses() {
           <div><label>Старая цена, ₽ (необяз.)</label><input name="oldPrice" type="number" placeholder="6900" /></div>
           <div><label>Длительность</label><input name="duration" placeholder="3 часа" /></div>
           <div><label>Уроков (число для карточки)</label><input name="lessonsCount" type="number" placeholder="10" /></div>
-          <div><label>Обложка (загрузить файл)</label><input name="imageFile" type="file" accept="image/*" /></div>
-          <div><label>…или ссылка на обложку</label><input name="image" placeholder="https://…" /></div>
+          <div><label>Обложка (файл)</label><input name="imageFile" type="file" accept="image/*" required /></div>
           <div className="full"><label>Короткое описание</label><textarea name="summary" rows={2} /></div>
           <div className="full"><button className="btn btn--primary">Добавить курс</button></div>
         </form>

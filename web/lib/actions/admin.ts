@@ -215,7 +215,7 @@ export async function createCourse(formData: FormData) {
       oldPrice: formData.get("oldPrice") ? parseInt(String(formData.get("oldPrice")), 10) : null,
       duration: String(formData.get("duration") ?? "").trim(),
       lessonsCount: parseInt(String(formData.get("lessonsCount") ?? "0"), 10) || 0,
-      image: uploaded ?? String(formData.get("image") ?? "").trim(),
+      image: uploaded ?? "",
       summary: String(formData.get("summary") ?? "").trim(),
     },
   });
@@ -236,8 +236,9 @@ export async function updateCourse(formData: FormData) {
       oldPrice: formData.get("oldPrice") ? parseInt(String(formData.get("oldPrice")), 10) : null,
       duration: String(formData.get("duration") ?? "").trim(),
       lessonsCount: parseInt(String(formData.get("lessonsCount") ?? "0"), 10) || 0,
-      image: uploaded ?? String(formData.get("image") ?? "").trim(),
       summary: String(formData.get("summary") ?? "").trim(),
+      // Обложку меняем только если загружен новый файл — иначе оставляем прежнюю.
+      ...(uploaded ? { image: uploaded } : {}),
     },
   });
   refresh();

@@ -26,8 +26,7 @@ export default async function EditCourse({ params }: { params: Promise<{ id: str
           <div><label>Старая цена</label><input name="oldPrice" type="number" defaultValue={c.oldPrice ?? ""} /></div>
           <div><label>Длительность</label><input name="duration" defaultValue={c.duration} /></div>
           <div><label>Уроков (для карточки)</label><input name="lessonsCount" type="number" defaultValue={c.lessonsCount} /></div>
-          <div><label>Загрузить обложку</label><input name="imageFile" type="file" accept="image/*" /></div>
-          <div><label>…или ссылка на обложку</label><input name="image" defaultValue={c.image} /></div>
+          <div><label>Обложка (файл, необяз. — без замены остаётся прежняя)</label><input name="imageFile" type="file" accept="image/*" /></div>
           <div className="full"><label>Описание</label><textarea name="summary" rows={2} defaultValue={c.summary} /></div>
           <div className="full"><button className="btn btn--primary">Сохранить курс</button></div>
         </form>
@@ -40,7 +39,7 @@ export default async function EditCourse({ params }: { params: Promise<{ id: str
           <input type="hidden" name="courseId" value={c.id} />
           <div className="full"><label>Название урока</label><input name="title" required placeholder="Урок 1. Подготовка кожи" /></div>
           <div className="full"><label>Ссылка на видео (embed YouTube / VK / Kinescope)</label><input name="videoUrl" placeholder="https://www.youtube.com/embed/XXXX" /></div>
-          <div><label>Порядок</label><input name="order" type="number" defaultValue={c.lessonItems.length} /></div>
+          <div><label>Порядок</label><input name="order" type="number" min={1} defaultValue={c.lessonItems.length + 1} /></div>
           <div style={{ display: "flex", alignItems: "end", gap: 8 }}>
             <label style={{ margin: 0, display: "flex", alignItems: "center", gap: 8 }}>
               <input type="checkbox" name="free" style={{ width: "auto" }} /> Бесплатный (после регистрации)
