@@ -6,10 +6,14 @@ import { createPayment, type ReceiptItem } from "@/lib/yookassa";
 import { finalizeOrder } from "@/lib/orderFinalize";
 import { expireBonuses, spendBonusFIFO } from "@/lib/bonusLedger";
 import { isValidEmail, isValidPhone } from "@/lib/validate";
+import { cheapestPvzTariff, cdekConfigured } from "@/lib/cdek";
 
 type DeliveryMethod = "courier" | "pickup" | "cdek" | "post";
 type ClientItem = { kind: "product" | "course"; slug: string; qty: number };
-type CheckoutData = { name: string; phone: string; email: string; method: DeliveryMethod; address: string; comment: string };
+type CheckoutData = {
+  name: string; phone: string; email: string; method: DeliveryMethod; address: string; comment: string;
+  pvzCode?: string; pvzAddress?: string; pvzCityCode?: number; cdekCost?: number;
+};
 
 const DELIVERY_FREE_FROM = 3500; // бесплатная доставка курьером от этой суммы
 const DELIVERY_FLAT = 350;        // иначе фикс. стоимость курьера по городу
@@ -21,6 +25,26 @@ const METHODS: DeliveryMethod[] = ["courier", "pickup", "cdek", "post"];
 function deliveryCostFor(method: DeliveryMethod, subtotal: number): number {
   if (method === "courier") return subtotal >= DELIVERY_FREE_FROM ? 0 : DELIVERY_FLAT;
   return 0;
+}
+
+const ITEM_WEIGHT_G = Number(process.env.CDEK_ITEM_WEIGHT_G || 300);
+
+// Стоимость доставки СДЭК до выбранного ПВЗ.
+// Если в .env задан город отправителя — считаем на сервере (надёжно, не доверяя клиенту).
+// Иначе берём цену, рассчитанную виджетом на клиенте (фолбэк до настройки отправителя).
+async function resolveCdekCost(
+  checkout: CheckoutData,
+  items: { qty: number; productId?: string }[],
+): Promise<number> {
+  const productUnits = items.reduce((s, i) => s + (i.productId ? i.qty : 0), 0);
+  const weight = Math.max(1, productUnits * ITEM_WEIGHT_G);
+  if (cdekConfigured() && checkout.pvzCityCode) {
+    try {
+      const t = await cheapestPvzTariff(checkout.pvzCityCode, weight);
+      if (t) return t.sum;
+    } catch { /* СДЭК не должен ронять оформление — уходим в фолбэк */ }
+  }
+  return Math.max(0, Math.round(checkout.cdekCost ?? 0));
 }
 
 // Телефон для чека ЮKassa — только цифры (E.164), напр. 79135679912. Иначе ЮKassa отклоняет чек.
@@ -104,6 +128,8 @@ export async function createOrder(
   if (!isValidEmail(checkout?.email)) return { ok: false, error: "Укажите корректный email" };
   if (method !== "pickup" && !checkout?.address?.trim())
     return { ok: false, error: "Укажите адрес или город доставки" };
+  if (method === "cdek" && !checkout?.pvzCode)
+    return { ok: false, error: "Выберите пункт выдачи СДЭК" };
 
   // Авторитетные цены — из БД, не доверяем клиенту.
   const orderItems: { title: string; price: number; qty: number; productId?: string; courseId?: string }[] = [];
@@ -128,7 +154,9 @@ export async function createOrder(
   const user = await prisma.user.findUnique({ where: { id: userId } });
   const balance = user?.bonusBalance ?? 0;
   const spend = Math.max(0, Math.min(Math.floor(bonusToSpend || 0), balance, subtotal));
-  const delivery = deliveryCostFor(method, subtotal);
+  const delivery = method === "cdek"
+    ? await resolveCdekCost(checkout, orderItems)
+    : deliveryCostFor(method, subtotal);
   const amount = subtotal - spend + delivery;
 
   // Создаём заказ + позиции, сразу резервируем (списываем) бонусы.
@@ -142,6 +170,9 @@ export async function createOrder(
         amount,
         deliveryMethod: method,
         deliveryCost: delivery,
+        cdekPvzCode: checkout.pvzCode ?? "",
+        cdekPvzAddress: checkout.pvzAddress ?? "",
+        cdekCityCode: checkout.pvzCityCode ?? null,
         customerName: checkout.name.trim(),
         customerPhone: checkout.phone.trim(),
         customerEmail: checkout.email.trim(),

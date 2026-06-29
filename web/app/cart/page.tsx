@@ -1,12 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useCart } from "@/lib/cart";
 import { money } from "@/lib/money";
 import { earnedFor, EARN_RATE } from "@/lib/bonus";
 import { isValidEmail, isValidPhone } from "@/lib/validate";
 import { createOrder } from "@/lib/actions/order";
+import type { CdekPoint } from "@/components/CdekWidget";
+
+const CdekWidget = dynamic(() => import("@/components/CdekWidget"), { ssr: false });
 
 const FREE_FROM = 3500;
 const FLAT = 350;
@@ -27,6 +31,10 @@ export default function CartPage() {
   const [method, setMethod] = useState<"courier" | "pickup" | "cdek" | "post">("courier");
   const [address, setAddress] = useState("");
   const [comment, setComment] = useState("");
+  // СДЭК: выбранный пункт выдачи + рассчитанная стоимость
+  const [pvz, setPvz] = useState<CdekPoint | null>(null);
+  const [cdekCost, setCdekCost] = useState<number | null>(null);
+  const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -48,19 +56,28 @@ export default function CartPage() {
   const hasPhysical = items.some((i) => i.kind === "product");
   const maxSpend = Math.min(balance, sub);
   const spendClamped = Math.max(0, Math.min(spend, maxSpend));
-  const delivery = hasPhysical && method === "courier" ? (sub >= FREE_FROM ? 0 : FLAT) : 0;
+  const courierDelivery = hasPhysical && method === "courier" ? (sub >= FREE_FROM ? 0 : FLAT) : 0;
+  const cdekDelivery = hasPhysical && method === "cdek" ? (cdekCost ?? 0) : 0;
+  const delivery = courierDelivery + cdekDelivery;
   const total = sub - spendClamped + delivery;
   const deliveryLabel =
-    method === "cdek" || method === "post"
-      ? "рассчитается после оформления"
-      : delivery === 0
-        ? "бесплатно"
-        : money(delivery);
+    method === "cdek"
+      ? pvz
+        ? cdekCost != null
+          ? money(cdekCost)
+          : "уточним после оформления"
+        : "выберите пункт выдачи"
+      : method === "post"
+        ? "рассчитается после оформления"
+        : courierDelivery === 0
+          ? "бесплатно"
+          : money(courierDelivery);
 
   async function pay() {
     if (!name.trim()) { setError("Укажите имя"); return; }
     if (!isValidPhone(phone)) { setError("Укажите корректный номер телефона"); return; }
     if (!isValidEmail(email)) { setError("Укажите корректный email"); return; }
+    if (hasPhysical && method === "cdek" && !pvz) { setError("Выберите пункт выдачи СДЭК на карте"); return; }
     setBusy(true);
     setError(null);
     const payload = items.map((i) => ({ kind: i.kind, slug: i.slug, qty: i.qty }));
@@ -69,8 +86,12 @@ export default function CartPage() {
       phone,
       email,
       method: hasPhysical ? method : "pickup",
-      address,
+      address: method === "cdek" && pvz ? pvz.address : address,
       comment,
+      pvzCode: pvz?.code,
+      pvzAddress: pvz?.address,
+      pvzCityCode: pvz?.cityCode,
+      cdekCost: cdekCost ?? undefined,
     });
     if (res.ok) {
       window.location.href = res.url;
@@ -158,13 +179,30 @@ export default function CartPage() {
                         Самовывоз (бесплатно)
                       </label>
                     </div>
-                    {method !== "pickup" && (
+                    {(method === "courier" || method === "post") && (
                       <div>
-                        <label>{method === "courier" ? "Адрес доставки" : "Город, адрес или пункт выдачи"}</label>
-                        <input value={address} onChange={(e) => setAddress(e.target.value)} placeholder={method === "courier" ? "Город, улица, дом, квартира" : "Например: Москва, СДЭК на ул. Ленина, 5"} />
+                        <label>{method === "courier" ? "Адрес доставки" : "Город, адрес или отделение"}</label>
+                        <input value={address} onChange={(e) => setAddress(e.target.value)} placeholder={method === "courier" ? "Город, улица, дом, квартира" : "Например: Москва, Почта 101000"} />
                       </div>
                     )}
-                    {(method === "cdek" || method === "post") && (
+                    {method === "cdek" && (
+                      <div style={{ marginTop: 4 }}>
+                        {pvz ? (
+                          <div className="pvz-chosen">
+                            <div>
+                              <b>Пункт выдачи СДЭК</b>
+                              <div className="muted" style={{ fontSize: ".85rem" }}>{pvz.address}</div>
+                            </div>
+                            <button type="button" className="link" onClick={() => setShowMap(true)}>Изменить</button>
+                          </div>
+                        ) : (
+                          <button type="button" className="btn btn--ghost btn--sm" onClick={() => setShowMap(true)}>
+                            📍 Выбрать пункт выдачи на карте
+                          </button>
+                        )}
+                      </div>
+                    )}
+                    {method === "post" && (
                       <p className="muted" style={{ fontSize: ".8rem", marginTop: 6 }}>
                         Стоимость доставки рассчитаем после оформления и сообщим вам.
                       </p>
@@ -211,6 +249,17 @@ export default function CartPage() {
           </div>
         </div>
       </div>
+      {showMap && (
+        <div className="cdek-modal" onClick={() => setShowMap(false)}>
+          <div className="cdek-modal__box" onClick={(e) => e.stopPropagation()}>
+            <div className="cdek-modal__head">
+              <b>Выберите пункт выдачи СДЭК</b>
+              <button className="cdek-modal__close" onClick={() => setShowMap(false)} aria-label="Закрыть">×</button>
+            </div>
+            <CdekWidget onChoose={(p, sum) => { setPvz(p); setCdekCost(sum); setShowMap(false); }} />
+          </div>
+        </div>
+      )}
     </main>
   );
 }

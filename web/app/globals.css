@@ -227,6 +227,14 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .expand__text.course__summary { color: var(--muted); font-size: 0.92rem; }
 .expand__btn { align-self: flex-start; background: none; border: none; padding: 0; color: var(--accent); font: inherit; font-size: 0.86rem; font-weight: 600; cursor: pointer; }
 .expand__btn:hover { text-decoration: underline; }
+
+/* Выбор ПВЗ СДЭК: карточка выбранного пункта + модалка с картой */
+.pvz-chosen { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: var(--bg-soft); }
+.cdek-modal { position: fixed; inset: 0; background: rgba(58,43,64,.55); display: grid; place-items: center; z-index: 1000; padding: 16px; }
+.cdek-modal__box { background: #fff; border-radius: 16px; width: min(900px, 100%); max-height: 90vh; overflow: auto; padding: 16px; box-shadow: var(--shadow); }
+.cdek-modal__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.cdek-modal__close { border: none; background: none; font-size: 1.6rem; line-height: 1; cursor: pointer; color: var(--muted); }
+.cdek-modal__close:hover { color: var(--ink); }
 .course__meta { list-style: none; display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.82rem; color: var(--muted); }
 .course__foot { margin-top: auto; display: flex; flex-direction: column; gap: 10px; padding-top: 8px; }
 .course__btns { display: flex; gap: 8px; }

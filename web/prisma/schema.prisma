@@ -75,8 +75,13 @@ model Order {
   subtotal       Int                // сумма позиций до бонусов
   bonusEarned    Int                @default(0)
   bonusSpent     Int                @default(0)
-  deliveryMethod String             @default("courier") // courier | pickup
+  deliveryMethod String             @default("courier") // courier | pickup | cdek | post
   deliveryCost   Int                @default(0)
+  cdekPvzCode    String             @default("") // код выбранного ПВЗ СДЭК
+  cdekPvzAddress String             @default("") // адрес ПВЗ (для отображения)
+  cdekCityCode   Int?               // код города ПВЗ в СДЭК (для тарифа/заказа)
+  cdekUuid       String             @default("") // uuid заказа в СДЭК (после автосоздания)
+  cdekTrack      String             @default("") // трек-номер СДЭК
   customerName   String             @default("")
   customerPhone  String             @default("")
   customerEmail  String             @default("")
