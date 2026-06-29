@@ -219,6 +219,14 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .course__body { padding: 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
 .course__body h3 { font-size: 1.3rem; }
 .course__body > p { color: var(--muted); font-size: 0.92rem; }
+
+/* Сворачивание описания («Читать далее…») */
+.expand { display: flex; flex-direction: column; gap: 4px; }
+.expand__text { margin: 0; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+.expand__text--open { display: block; overflow: visible; }
+.expand__text.course__summary { color: var(--muted); font-size: 0.92rem; }
+.expand__btn { align-self: flex-start; background: none; border: none; padding: 0; color: var(--accent); font: inherit; font-size: 0.86rem; font-weight: 600; cursor: pointer; }
+.expand__btn:hover { text-decoration: underline; }
 .course__meta { list-style: none; display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.82rem; color: var(--muted); }
 .course__foot { margin-top: auto; display: flex; flex-direction: column; gap: 10px; padding-top: 8px; }
 .course__btns { display: flex; gap: 8px; }

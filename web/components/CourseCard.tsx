@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AddToCart from "./AddToCart";
+import ExpandableText from "./ExpandableText";
 import { money } from "@/lib/money";
 import type { Course } from "@prisma/client";
 
@@ -34,7 +35,7 @@ export default function CourseCard({ c }: { c: CourseWithFree }) {
       </Link>
       <div className="course__body">
         <h3>{c.title}</h3>
-        <p>{c.summary}</p>
+        {c.summary && <ExpandableText text={c.summary} lines={3} className="course__summary" />}
         <ul className="course__meta">
           <li>📹 {c.lessonsCount} {plural(c.lessonsCount, "урок", "урока", "уроков")}</li>
           {c.duration && <li>⏱ {c.duration}</li>}
