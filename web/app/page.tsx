@@ -61,7 +61,8 @@ export default async function Home() {
       </section>
 
       {/* Бонусы за подписку на Telegram */}
-      <section className="section">
+      {/* paddingTop убран: над блоком уже есть 70px от секции «О бренде» — иначе белый зазор сверху удваивается (140px) и кажется больше нижнего */}
+      <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">
           <div className="tg-promo">
             <div className="tg-promo__icon">
