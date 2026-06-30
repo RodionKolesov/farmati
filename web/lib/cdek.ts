@@ -123,3 +123,67 @@ export async function cdekServiceProxy(
 
   return { status: 400, body: { message: "Unknown action" } };
 }
+
+// --- Автосоздание заказа в СДЭК (после оплаты) ---
+const ITEM_WEIGHT_G = Number(process.env.CDEK_ITEM_WEIGHT_G || 300);
+
+// Готовы ли данные отправителя для автосоздания накладной.
+export function cdekSenderReady(): boolean {
+  return cdekConfigured() && Boolean(process.env.CDEK_SHIPMENT_POINT && process.env.CDEK_SENDER_PHONE);
+}
+
+function normPhone(raw: string): string {
+  let d = (raw || "").replace(/\D/g, "");
+  if (d.length === 11 && d.startsWith("8")) d = "7" + d.slice(1);
+  if (d.length === 10) d = "7" + d;
+  return d ? "+" + d : "";
+}
+
+export async function createCdekOrder(input: {
+  orderId: string;
+  pvzCode: string;
+  cityCode: number | null;
+  recipientName: string;
+  recipientPhone: string;
+  items: { title: string; price: number; qty: number; productId: string }[];
+}): Promise<{ ok: boolean; uuid?: string; error?: string }> {
+  if (!cdekSenderReady()) return { ok: false, error: "Отправитель СДЭК не настроен" };
+  const units = input.items.reduce((s, i) => s + i.qty, 0);
+  const totalWeight = Math.max(1, units * ITEM_WEIGHT_G);
+
+  const tariff = input.cityCode ? await cheapestPvzTariff(input.cityCode, totalWeight) : null;
+  if (!tariff) return { ok: false, error: "Не удалось подобрать тариф до ПВЗ" };
+
+  const payload = {
+    type: 1,
+    tariff_code: tariff.tariff_code,
+    shipment_point: process.env.CDEK_SHIPMENT_POINT,
+    delivery_point: input.pvzCode,
+    recipient: { name: input.recipientName || "Получатель", phones: [{ number: normPhone(input.recipientPhone) }] },
+    sender: { name: process.env.CDEK_SENDER_NAME || "Отправитель", phones: [{ number: normPhone(process.env.CDEK_SENDER_PHONE || "") }] },
+    packages: [{
+      number: input.orderId.slice(-12),
+      weight: totalWeight,
+      items: input.items.map((it) => ({
+        name: (it.title || "Товар").slice(0, 255),
+        ware_key: it.productId.slice(0, 50),
+        payment: { value: 0 },
+        cost: it.price,
+        weight: ITEM_WEIGHT_G,
+        amount: it.qty,
+      })),
+    }],
+  };
+
+  const { status, body } = await api(`/v2/orders`, { method: "POST", body: JSON.stringify(payload) });
+  const uuid = body?.entity?.uuid;
+  if ((status === 200 || status === 202) && uuid) return { ok: true, uuid };
+  const errs = body?.requests?.flatMap?.((r: any) => r.errors || []) || body?.errors || [];
+  return { ok: false, error: errs.length ? JSON.stringify(errs) : `status ${status}` };
+}
+
+// Трек-номер СДЭК (присваивается не сразу — может вернуться пустым).
+export async function getCdekTrack(uuid: string): Promise<string> {
+  const { ok, body } = await api(`/v2/orders/${uuid}`);
+  return ok ? (body?.entity?.cdek_number || "") : "";
+}

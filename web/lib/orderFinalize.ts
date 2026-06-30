@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { earnedFor } from "@/lib/bonus";
 import { grantBonus } from "@/lib/bonusLedger";
 import { notifyAdmins } from "@/lib/telegram";
+import { createCdekOrder, getCdekTrack, cdekSenderReady } from "@/lib/cdek";
 
 const DELIVERY_LABELS: Record<string, string> = { courier: "Курьер", pickup: "Самовывоз", cdek: "СДЭК до ПВЗ", post: "Почта России" };
 
@@ -33,6 +34,31 @@ export async function finalizeOrder(orderId: string, paymentId?: string): Promis
       }
     }
   });
+
+  // Автосоздание накладной в СДЭК (только после оплаты). Не критично для заказа:
+  // при сбое заказ остаётся оплаченным, админу уходит уведомление создать вручную.
+  if (order.deliveryMethod === "cdek" && order.cdekPvzCode && !order.cdekUuid && cdekSenderReady()) {
+    try {
+      const phys = await prisma.orderItem.findMany({ where: { orderId, productId: { not: null } } });
+      const res = await createCdekOrder({
+        orderId: order.id,
+        pvzCode: order.cdekPvzCode,
+        cityCode: order.cdekCityCode,
+        recipientName: order.customerName,
+        recipientPhone: order.customerPhone,
+        items: phys.map((i) => ({ title: i.title, price: i.price, qty: i.qty, productId: i.productId! })),
+      });
+      if (res.ok && res.uuid) {
+        let track = "";
+        try { track = await getCdekTrack(res.uuid); } catch { /* трек присвоится позже */ }
+        await prisma.order.update({ where: { id: orderId }, data: { cdekUuid: res.uuid, cdekTrack: track } });
+      } else {
+        await notifyAdmins(`⚠️ Заказ #${order.id.slice(-6)}: не удалось создать в СДЭК автоматически.\nПричина: ${res.error}\nСоздайте вручную: ПВЗ ${order.cdekPvzCode}.`);
+      }
+    } catch {
+      // СДЭК не должен влиять на статус оплаты заказа
+    }
+  }
 
   // Уведомление в Telegram о новом оплаченном заказе (не критично — ошибки внутри гасятся).
   try {

@@ -37,6 +37,13 @@ export default async function AdminOrders() {
                 {o.deliveryMethod === "cdek" && o.cdekPvzCode
                   ? <div className="muted">ПВЗ <b>{o.cdekPvzCode}</b>{o.cdekPvzAddress ? ` · ${o.cdekPvzAddress}` : ""}</div>
                   : o.address && <div className="muted">{o.address}</div>}
+                {o.deliveryMethod === "cdek" && (
+                  o.cdekTrack
+                    ? <div className="muted">📦 СДЭК: {o.cdekTrack}</div>
+                    : o.cdekUuid
+                      ? <div className="muted">📦 СДЭК создан (трек скоро)</div>
+                      : o.status === "paid" && <div style={{ color: "var(--minus)" }}>⚠️ не создан в СДЭК</div>
+                )}
                 {o.deliveryCost > 0 && <div className="muted">{money(o.deliveryCost)}</div>}
                 {o.comment && <div className="muted">💬 {o.comment}</div>}
               </td>
