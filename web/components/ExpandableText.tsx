@@ -24,8 +24,19 @@ export default function ExpandableText({
       setClamped(el.scrollHeight > el.clientHeight + 1);
     };
     measure();
+    // Пере-замер после загрузки веб-шрифтов и с задержками: иначе на телефоне
+    // высота считается по запасному шрифту и кнопка «Читать далее» может не появиться.
+    const raf = requestAnimationFrame(measure);
+    const t1 = setTimeout(measure, 300);
+    const t2 = setTimeout(measure, 1200);
+    try { (document as any).fonts?.ready?.then(measure); } catch { /* нет fonts API */ }
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(t1);
+      clearTimeout(t2);
+      window.removeEventListener("resize", measure);
+    };
   }, [text, lines, expanded]);
 
   return (

@@ -59,13 +59,15 @@ export default function Header() {
                 <span>{authed ? "Личный кабинет" : "Войти"}</span>
               </Link>
             )}
-            <Link className="icon-btn" href="/cart">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M6 8h12l-1 11.5a1 1 0 0 1-1 .9H8a1 1 0 0 1-1-.9L6 8z" />
-                <path d="M9 8V6.5a3 3 0 0 1 6 0V8" />
-              </svg>
+            <Link className="icon-btn cart-link" href="/cart">
+              <span className="cart-ico">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M6 8h12l-1 11.5a1 1 0 0 1-1 .9H8a1 1 0 0 1-1-.9L6 8z" />
+                  <path d="M9 8V6.5a3 3 0 0 1 6 0V8" />
+                </svg>
+                {mounted && count > 0 && <span className="badge badge--cart">{count}</span>}
+              </span>
               <span>Корзина</span>
-              {mounted && count > 0 && <span className="badge">{count}</span>}
             </Link>
           </div>
         </div>
