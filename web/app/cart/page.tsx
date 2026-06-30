@@ -61,6 +61,7 @@ export default function CartPage() {
   function choosePvz(p: CdekPoint, widgetSum: number | null) {
     setPvz(p);
     setShowMap(false);
+    if (sub >= FREE_FROM) { setCdekCost(0); setCdekCalcing(false); return; } // от 3500 — бесплатно
     setCdekCost(null);
     setCdekCalcing(true);
     fetch(`/api/cdek/price?cityCode=${p.cityCode || 0}&units=${Math.max(1, productUnits)}`)
@@ -72,18 +73,20 @@ export default function CartPage() {
   const maxSpend = Math.min(balance, sub);
   const spendClamped = Math.max(0, Math.min(spend, maxSpend));
   const courierDelivery = hasPhysical && method === "courier" ? (sub >= FREE_FROM ? 0 : FLAT) : 0;
-  const cdekDelivery = hasPhysical && method === "cdek" ? (cdekCost ?? 0) : 0;
+  const cdekDelivery = hasPhysical && method === "cdek" ? (sub >= FREE_FROM ? 0 : (cdekCost ?? 0)) : 0;
   const delivery = courierDelivery + cdekDelivery;
   const total = sub - spendClamped + delivery;
   const deliveryLabel =
     method === "cdek"
       ? !pvz
         ? "выберите пункт выдачи"
-        : cdekCalcing
-          ? "считаем…"
-          : cdekCost != null
-            ? money(cdekCost)
-            : "уточним после оформления"
+        : sub >= FREE_FROM
+          ? "бесплатно"
+          : cdekCalcing
+            ? "считаем…"
+            : cdekCost != null
+              ? money(cdekCost)
+              : "уточним после оформления"
       : method === "post"
         ? "рассчитается после оформления"
         : courierDelivery === 0
@@ -259,7 +262,7 @@ export default function CartPage() {
                 {error && <p className="msg err">{error}</p>}
                 <p className="muted" style={{ fontSize: ".78rem", marginTop: 10 }}>
                   После оплаты начислим {earnedFor(total - delivery)} бонусов ({Math.round(EARN_RATE * 100)}% от товаров).
-                  {hasPhysical && sub < FREE_FROM && method === "courier" && ` Доставка бесплатно от ${money(FREE_FROM)}.`}
+                  {hasPhysical && sub < FREE_FROM && (method === "courier" || method === "cdek") && ` Доставка бесплатно от ${money(FREE_FROM)}.`}
                 </p>
               </>
             )}

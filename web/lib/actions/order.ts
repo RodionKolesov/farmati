@@ -155,7 +155,7 @@ export async function createOrder(
   const balance = user?.bonusBalance ?? 0;
   const spend = Math.max(0, Math.min(Math.floor(bonusToSpend || 0), balance, subtotal));
   const delivery = method === "cdek"
-    ? await resolveCdekCost(checkout, orderItems)
+    ? (subtotal >= DELIVERY_FREE_FROM ? 0 : await resolveCdekCost(checkout, orderItems))
     : deliveryCostFor(method, subtotal);
   const amount = subtotal - spend + delivery;
 
