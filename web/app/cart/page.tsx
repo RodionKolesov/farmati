@@ -34,6 +34,7 @@ export default function CartPage() {
   // СДЭК: выбранный пункт выдачи + рассчитанная стоимость
   const [pvz, setPvz] = useState<CdekPoint | null>(null);
   const [cdekCost, setCdekCost] = useState<number | null>(null);
+  const [cdekCalcing, setCdekCalcing] = useState(false);
   const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
@@ -54,6 +55,20 @@ export default function CartPage() {
 
   const sub = subtotal();
   const hasPhysical = items.some((i) => i.kind === "product");
+  const productUnits = items.filter((i) => i.kind === "product").reduce((s, i) => s + i.qty, 0);
+
+  // Выбор ПВЗ: сразу считаем цену на нашем бэкенде (тот же расчёт, что при списании).
+  function choosePvz(p: CdekPoint, widgetSum: number | null) {
+    setPvz(p);
+    setShowMap(false);
+    setCdekCost(null);
+    setCdekCalcing(true);
+    fetch(`/api/cdek/price?cityCode=${p.cityCode || 0}&units=${Math.max(1, productUnits)}`)
+      .then((r) => r.json())
+      .then((d) => setCdekCost(typeof d.sum === "number" ? d.sum : widgetSum))
+      .catch(() => setCdekCost(widgetSum))
+      .finally(() => setCdekCalcing(false));
+  }
   const maxSpend = Math.min(balance, sub);
   const spendClamped = Math.max(0, Math.min(spend, maxSpend));
   const courierDelivery = hasPhysical && method === "courier" ? (sub >= FREE_FROM ? 0 : FLAT) : 0;
@@ -62,11 +77,13 @@ export default function CartPage() {
   const total = sub - spendClamped + delivery;
   const deliveryLabel =
     method === "cdek"
-      ? pvz
-        ? cdekCost != null
-          ? money(cdekCost)
-          : "уточним после оформления"
-        : "выберите пункт выдачи"
+      ? !pvz
+        ? "выберите пункт выдачи"
+        : cdekCalcing
+          ? "считаем…"
+          : cdekCost != null
+            ? money(cdekCost)
+            : "уточним после оформления"
       : method === "post"
         ? "рассчитается после оформления"
         : courierDelivery === 0
@@ -236,8 +253,8 @@ export default function CartPage() {
                   <div className="line"><span>Доставка</span><span>{deliveryLabel}</span></div>
                 )}
                 <div className="line total"><span>К оплате</span><span>{money(total)}</span></div>
-                <button className="btn btn--primary btn--block" style={{ marginTop: 16 }} onClick={pay} disabled={busy}>
-                  {busy ? "Создаём платёж…" : "Перейти к оплате"}
+                <button className="btn btn--primary btn--block" style={{ marginTop: 16 }} onClick={pay} disabled={busy || (hasPhysical && method === "cdek" && cdekCalcing)}>
+                  {busy ? "Создаём платёж…" : hasPhysical && method === "cdek" && cdekCalcing ? "Считаем доставку…" : "Перейти к оплате"}
                 </button>
                 {error && <p className="msg err">{error}</p>}
                 <p className="muted" style={{ fontSize: ".78rem", marginTop: 10 }}>
@@ -256,7 +273,7 @@ export default function CartPage() {
               <b>Выберите пункт выдачи СДЭК</b>
               <button className="cdek-modal__close" onClick={() => setShowMap(false)} aria-label="Закрыть">×</button>
             </div>
-            <CdekWidget onChoose={(p, sum) => { setPvz(p); setCdekCost(sum); setShowMap(false); }} />
+            <CdekWidget onChoose={choosePvz} />
           </div>
         </div>
       )}
