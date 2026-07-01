@@ -469,3 +469,19 @@ export async function deleteReview(formData: FormData) {
   redirect("/admin/reviews");
 }
 
+// ───────────── Участники клуба ─────────────
+// Удаление участника: сначала чистим его бонусные транзакции и заказы
+// (у этих связей нет onDelete: Cascade в схеме), затем самого пользователя.
+export async function deleteUser(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  if (!id) redirect("/admin/users");
+  await prisma.$transaction([
+    prisma.bonusTransaction.deleteMany({ where: { userId: id } }),
+    prisma.order.deleteMany({ where: { userId: id } }), // OrderItem удаляются каскадно
+    prisma.user.delete({ where: { id } }),
+  ]);
+  revalidatePath("/admin/users");
+  redirect("/admin/users");
+}
+

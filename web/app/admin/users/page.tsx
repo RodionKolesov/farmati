@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/prisma";
+import { deleteUser } from "@/lib/actions/admin";
+import ConfirmSubmit from "@/components/ConfirmSubmit";
 
 export const dynamic = "force-dynamic";
 
@@ -41,7 +43,7 @@ export default async function AdminUsers({ searchParams }: { searchParams: Promi
 
       <table className="admin-table">
         <thead>
-          <tr><th>Дата</th><th>Имя</th><th>Email</th><th>Телефон</th><th>Бонусы</th><th>Заказов</th></tr>
+          <tr><th>Дата</th><th>Имя</th><th>Email</th><th>Телефон</th><th>Бонусы</th><th>Заказов</th><th></th></tr>
         </thead>
         <tbody>
           {users.map((u) => (
@@ -52,6 +54,18 @@ export default async function AdminUsers({ searchParams }: { searchParams: Promi
               <td data-label="Телефон">{u.phone ? <a href={`tel:${u.phone}`}>{u.phone}</a> : "—"}</td>
               <td data-label="Бонусы" className="plus">{u.bonusBalance}</td>
               <td data-label="Заказов">{u._count.orders}</td>
+              <td data-label="Действия">
+                <form action={deleteUser}>
+                  <input type="hidden" name="id" value={u.id} />
+                  <ConfirmSubmit
+                    className="link"
+                    style={{ color: "var(--minus)" }}
+                    message={`Удалить участника ${u.name || u.email}? Вместе с ним удалятся его заказы и бонусные операции. Это действие нельзя отменить.`}
+                  >
+                    Удалить
+                  </ConfirmSubmit>
+                </form>
+              </td>
             </tr>
           ))}
         </tbody>
