@@ -258,7 +258,8 @@ h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
 .chk-feature { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
 .chk-feature__media { position: relative; background: #f7eef2; }
 .chk-feature__media .video { margin: 0; border-radius: 0; }
-.chk-banner { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: #f7eef2; }
+/* Фото чек-листа показываем целиком, в оригинальных пропорциях (без обрезки 16:9). */
+.chk-banner { width: 100%; height: auto; display: block; background: #f7eef2; }
 .chk-feature__ph { aspect-ratio: 16 / 9; display: grid; place-items: center; font-size: 3.4rem; background: linear-gradient(135deg, var(--bg-soft), #fff); }
 .chk-feature__body { padding: 22px 24px 26px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
 .chk-tag { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); background: var(--bg-soft); padding: 5px 12px; border-radius: 999px; }
